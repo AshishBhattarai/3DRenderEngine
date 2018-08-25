@@ -1,0 +1,27 @@
+#include "entity_shader.hpp"
+
+void EntityShader::getUniformLocations() {
+	// matrices
+	loc_transformMat = getUniformLoc("transform_mat");
+	loc_normalMat = getUniformLoc("normal_mat");
+
+	// fog
+	loc_fogDensity = getUniformLoc("fogDensity");
+	loc_fogGradient = getUniformLoc("fogGradient");
+
+	// material
+	loc_materialSpecular = getUniformLoc("material.specularFactor");
+	loc_materialShine = getUniformLoc("material.shininess");
+	loc_hasSpecular = getUniformLoc("material.hasSpecular");
+
+	// set texture units
+	loadInt("material.texture_diffuse", DIFFUSE_UINT);
+	loadInt("material.texture_specular", SPECULAR_UINT);
+}
+
+EntityShader::EntityShader():
+		Shader(VERTEX_FILE, FRAGMENT_FILE) {
+	this->start();
+	getUniformLocations();
+	this->stop();
+}
