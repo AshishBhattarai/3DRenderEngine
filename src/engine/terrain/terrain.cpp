@@ -118,16 +118,16 @@ std::unique_ptr<TexturedMesh> Terrain::generateTerrain(int size, int vertexCount
 }
 
 // common constrcutor
-Terrain::Terrain(int gridX, int gridZ, int size, int vertexCount, Mode mode) :
+Terrain::Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Mode mode) :
 	posX(gridX*size),
 	posZ(gridZ*size),
 	mode(mode),
-	gridSize((float)size/(vertexCount - 1)), // Total / grids per row&col
+	gridSize((float)size/(vertexCount - 1)), // Total grids per row&col
 	heights(vertexCount, std::vector<float>(vertexCount)) //reserve
 {}
 
 // flat Terrain
-Terrain::Terrain(int gridX, int gridZ, int size, int vertexCount, Texture::Map textures) :
+Terrain::Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Texture::Map textures) :
 	Terrain(gridX, gridZ, size, vertexCount, FLAT)
 {
 	mesh = generateTerrain(size, vertexCount);
@@ -136,7 +136,7 @@ Terrain::Terrain(int gridX, int gridZ, int size, int vertexCount, Texture::Map t
 }
 
 // height map Terrain
-Terrain::Terrain(int gridX, int gridZ, int size, float maxHeight, Image& heightMap,
+Terrain::Terrain(u_int gridX, u_int gridZ, int size, float maxHeight, Image& heightMap,
 	Texture::Map textures) :
 	Terrain(gridX, gridZ, size, heightMap.getWidth(), HEIGHT_MAP)
 {
@@ -163,10 +163,10 @@ float Terrain::getTerrainHeight(float posX, float posZ) {
 	float terX = posX - this->posX;
 	float terZ = posZ - this->posZ;
 	// get grid(x,y) - index for heights array
-	int gridX = abs(floor(terX/gridSize));
-	int gridZ = abs(floor(terZ/gridSize));
+	u_int gridX = abs(floor(terX/gridSize));
+	u_int gridZ = abs(floor(terZ/gridSize));
 	// check if index lies inside the Terrain
-	if(gridX < 0 || gridX >= vertexCount-1 || gridZ < 0 || gridZ >= vertexCount -1)
+	if(gridX >= vertexCount-1 || gridZ >= vertexCount -1)
 		return 0.0f;
 	// get the position inside the grid square
 	float x = fmod(terX, gridSize) / gridSize;

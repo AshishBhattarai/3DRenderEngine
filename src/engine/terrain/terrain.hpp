@@ -46,13 +46,13 @@ private:
 		// function to calculate Terrain height (empty by default)
 
 	// intilizing constructor
-	Terrain(int gridX, int gridZ, int size, int vertexCount, Mode mode);
+	Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Mode mode);
 
 public:
 	// flat Terrain constructor
-	Terrain(int gridX, int gridZ, int size, int vertexCount, Texture::Map textures);
+	Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Texture::Map textures);
 	// height map constructor
-	Terrain(int gridX, int gridZ, int size, float maxHeight, Image& heightMap,
+	Terrain(u_int gridX, u_int gridZ, int size, float maxHeight, Image& heightMap,
 	Texture::Map textures);
 
 	// get height at a world position

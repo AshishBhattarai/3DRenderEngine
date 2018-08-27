@@ -14,7 +14,7 @@ TerrainGrid::	TerrainGrid(u_int numGridX, u_int numGridZ, int size,
 
 void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Texture::Map textures) {
 	// check if the index is correct
-	if(gridX < 0 || gridX >= numGridX || gridZ < 0 || gridZ >= numGridZ) return;
+	if(gridX >= numGridX || gridZ >= numGridZ) return;
 
 	// add Terrain
 	grid[gridX][gridZ] = std::make_shared<Terrain>(gridX, gridZ, terSize,
@@ -26,7 +26,7 @@ void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Texture::Map textures) {
 void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, float maxHeight,
 	Image& heightMap, Texture::Map textures)
 {
-	if(gridX < 0 || gridX >= numGridX || gridZ < 0 || gridZ >= numGridZ) return;
+	if(gridX >= numGridX || gridZ >= numGridZ) return;
 
 	// add Terrain
 	grid[gridX][gridZ] = std::make_shared<Terrain>(gridX, gridZ, terSize,
@@ -42,7 +42,7 @@ Terrain* TerrainGrid::getTerrain(u_int gridX, u_int gridZ) {
 }
 
 // get grid for correspoind world x, z
-std::pair<u_int,u_int> TerrainGrid::posToGrid(float x, float z) {
+std::pair<u_int, u_int> TerrainGrid::posToGrid(float x, float z) {
 	u_int gridX = (u_int)(x/terSize);
 	u_int gridZ = (u_int)(z/terSize);
 	if(!numTerrain || gridX > numGridX || gridZ > numGridZ)
