@@ -20,13 +20,14 @@ private:
 	static constexpr float TER_SHINE = 1.0f;
 	static constexpr float MAX_PIXEL_COLOR = 256 + 256 + 256;// max color val of the pixel = r + g + b
 
+	int vertexCount;
 	// world position
 	float posX;
 	float posZ;
 	// size per Terrain suqare grid
 	float gridSize;
 	// heights
-	std::vector<std::vector<float>> heights;
+	std::vector<float> heights;
 
 	// mesh
 	std::unique_ptr<TexturedMesh> mesh;
@@ -37,11 +38,11 @@ private:
 	glm::vec3 calcNormalAt(int x, int z, float max_Height, Image& heightMap);
 
 	// generates the Terrain mesh -
-	void generateVertices(int size, int vertexCount, std::vector<TexturedMesh::Vertex>& vertices, std::vector<glm::vec2>& texCoords);
-	void generateIndices(int vertexCount, std::vector<u_int>& indices);
+	void generateVertices(int size, std::vector<TexturedMesh::Vertex>& vertices, std::vector<glm::vec2>& texCoords);
+	void generateIndices(std::vector<u_int>& indices);
 	void generateHeightWMap(std::vector<TexturedMesh::Vertex>& vertices, float maxHeight, Image& image);
 
-	std::unique_ptr<TexturedMesh> generateTerrain(int size, int vertexCount,
+	std::unique_ptr<TexturedMesh> generateTerrain(int size,
 		std::function<void(std::vector<TexturedMesh::Vertex>&)> caculateHeight = {});
 		// function to calculate Terrain height (empty by default)
 
@@ -69,6 +70,10 @@ public:
 
 	const TexturedMesh* getMesh() const {
 		return mesh.get();
+	}
+
+	const std::vector<float>& getHeights() const {
+		return heights;
 	}
 
 	// setter

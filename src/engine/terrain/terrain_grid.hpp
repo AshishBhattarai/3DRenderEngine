@@ -9,19 +9,20 @@
 // represents a grid of Terrains
 
 class TerrainGrid {
-public:
-	static constexpr float MAX_HEIGHT = 50; // default
-
 private:
 	using Grid = std::vector<std::vector<std::shared_ptr<Terrain>>>;
 	// defualts
 	static constexpr int SIZE = 1000;
-	static constexpr int VERTEX_COUNT = 128;
+	static constexpr int VERTEX_COUNT = 256;
 	static constexpr int TILING_FACTOR = 50;
+	static constexpr float MAX_HEIGHT = 50;
 
 	int terSize; // Terrain size
 	int vertexCount; // total num of vertex
+	float maxHeight;
 	int tilingFactor; // texture tiling factor - no. of times the texture gets tiled
+
+	float colOffset; // collision(height map) offset
 
 	// Terrain grid
 	Grid grid;
@@ -31,12 +32,13 @@ private:
 
 public:
 	TerrainGrid(u_int numGridX, u_int numGridZ, int size = SIZE,
-		int vertexCount = VERTEX_COUNT, int tilingFactor = TILING_FACTOR);
+		int vertexCount = VERTEX_COUNT, float maxHeight = MAX_HEIGHT,
+		int tilingFactor = TILING_FACTOR);
 
 	// add a Terrain to the grid - overrides old Terrain if there is any
 	void addTerrain(u_int gridX, u_int gridZ, Texture::Map textures);
 	// Terrains with heightmap
-	void addTerrain(u_int gridX, u_int gridZ, float maxHeight, Image& heightMap, Texture::Map textures);
+	void addTerrain(u_int gridX, u_int gridZ, Image& heightMap, Texture::Map textures);
 
 	// get Terrain in grid x, z
 	Terrain* getTerrain(u_int gridX, u_int gridZ);
@@ -60,8 +62,20 @@ public:
 		return terSize;
 	}
 
-	float getVertexCount() const {
+	float getTerrainMaxHeight() const {
+		return maxHeight;
+	}
+
+	float getMaxHeight() const {
+		return maxHeight;
+	}
+
+	float getTerrainVertexCount() const {
 		return vertexCount;
+	}
+
+	float getColOffset() const {
+		return colOffset;
 	}
 
 	float getNumGridX() const {

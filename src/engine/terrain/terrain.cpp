@@ -29,7 +29,7 @@ glm::vec3 Terrain::calcNormalAt(int x, int z, float maxHeight, Image& heightMap)
 }
 
 // generate vertex data
-void Terrain::generateVertices(int size, int vertexCount,
+void Terrain::generateVertices(int size,
 	std::vector<TexturedMesh::Vertex>& vertices, std::vector<glm::vec2>& texCoords)
 {
 	for(int z = 0; z < vertexCount; ++z) { // z - h
@@ -52,7 +52,7 @@ void Terrain::generateVertices(int size, int vertexCount,
 }
 
 // generate indices data
-void Terrain::generateIndices(int vertexCount, std::vector<u_int>& indices) {
+void Terrain::generateIndices(std::vector<u_int>& indices) {
 	// generate indices for tringle strips
 	for(int z = 0; z < vertexCount-1; ++z) { // height
 		for(int x = 0; x < vertexCount; ++x) { // width
@@ -74,23 +74,22 @@ void Terrain::generateIndices(int vertexCount, std::vector<u_int>& indices) {
 void Terrain::generateHeightWMap(std::vector<TexturedMesh::Vertex>& vertices,
 	float maxHeight, Image& image)
 {
-	int i = 0;
-	int vertexCount = image.getWidth();
+	int i;
 	for(int z = 0; z < vertexCount; ++z) {
 		for(int x = 0; x < vertexCount; ++x) {
-			// height
-			heights[x][z] = calcHeightAt(x, z, maxHeight, image);
-			vertices[i].position.y = heights[x][z];
+			i = x + z*(vertexCount);
+			// calc height
+			heights[i] = calcHeightAt(x, z, maxHeight, image);
+			//vertex height
+			vertices[i].position.y = heights[i];
 			// normals
 			vertices[i].normal = calcNormalAt(x, z, maxHeight, image);
-			// next
-			++i;
 		}
 	}
 }
 
 // takes Terrain size, vertex count, and repeate factor for Terrain texture
-std::unique_ptr<TexturedMesh> Terrain::generateTerrain(int size, int vertexCount,
+std::unique_ptr<TexturedMesh> Terrain::generateTerrain(int size,
 	std::function<void(std::vector<TexturedMesh::Vertex>&)> generateHeight)
 {
 	int total_vertices = vertexCount * vertexCount;
@@ -105,9 +104,9 @@ std::unique_ptr<TexturedMesh> Terrain::generateTerrain(int size, int vertexCount
 	indices.reserve(2*vertexCount*vertexCount);
 
 	// vertices
-	generateVertices(size, vertexCount, vertices, texCoords);
+	generateVertices(size, vertices, texCoords);
 	// indices
-	generateIndices(vertexCount, indices);
+	generateIndices(indices);
 	// height
 	if(generateHeight) {
 		generateHeight(vertices);
@@ -119,18 +118,19 @@ std::unique_ptr<TexturedMesh> Terrain::generateTerrain(int size, int vertexCount
 
 // common constrcutor
 Terrain::Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Mode mode) :
+	vertexCount(vertexCount),
 	posX(gridX*size),
 	posZ(gridZ*size),
 	mode(mode),
 	gridSize((float)size/(vertexCount - 1)), // Total grids per row&col
-	heights(vertexCount, std::vector<float>(vertexCount)) //reserve
+	heights((vertexCount)*(vertexCount), 0.0f) // reserve
 {}
 
 // flat Terrain
 Terrain::Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Texture::Map textures) :
 	Terrain(gridX, gridZ, size, vertexCount, FLAT)
 {
-	mesh = generateTerrain(size, vertexCount);
+	mesh = generateTerrain(size);
 	mesh->setSpecularProperty(TER_SPECULAR, TER_SHINE);
 	mesh->setTextureMap(textures);
 }
@@ -140,9 +140,8 @@ Terrain::Terrain(u_int gridX, u_int gridZ, int size, float maxHeight, Image& hei
 	Texture::Map textures) :
 	Terrain(gridX, gridZ, size, heightMap.getWidth(), HEIGHT_MAP)
 {
-	int vertexCount = heightMap.getWidth();
 	// generateTerrain with heightMap
-	mesh = generateTerrain(size, vertexCount,
+	mesh = generateTerrain(size,
 		[this, &heightMap, &maxHeight](std::vector<TexturedMesh::Vertex>& vertices)
 	{
 		generateHeightWMap(vertices, maxHeight, heightMap);
@@ -153,9 +152,7 @@ Terrain::Terrain(u_int gridX, u_int gridZ, int size, float maxHeight, Image& hei
 }
 
 float Terrain::getTerrainHeight(float posX, float posZ) {
-	float vertexCount = heights.size();
-	float height;
-
+	float height = 0.0f;
 	// get the position in relation to Terrain
 	/** If Terrain is scaled or rotated:
 	 * glm::vec3 rPos =  glm::inverse(Terrain_modelMat) * glm::vec4(worldPos, 1.0f);
@@ -176,18 +173,18 @@ float Terrain::getTerrainHeight(float posX, float posZ) {
 	if(x <= (1 - z)) { // upper triangle
 		// calculate height at (x, z) by interpolating know heights
 		height = Math::barryCentric(
-			glm::vec3(0.0f, heights[gridX][gridZ], 0.0f),			// point 1
-			glm::vec3(1.0f, heights[gridX + 1][gridZ], 0.0f),	// point 2
-			glm::vec3(0.0f, heights[gridX][gridZ + 1], 1.0f),	// point 3
-			glm::vec2(x, z)																		// position
+			glm::vec3(0.0f, heights[gridX + gridZ*vertexCount], 0.0f),			// point 1
+			glm::vec3(1.0f, heights[(gridX+1) + gridZ*vertexCount], 0.0f),	// point 2
+			glm::vec3(0.0f, heights[gridX + (gridZ+1)*vertexCount], 1.0f),	// point 3
+			glm::vec2(x, z)																									// position
 		);
 
 	} else { // x > (1 - z) - lower triangle
 		height = Math::barryCentric(
-			glm::vec3(1.0f, heights[gridX + 1][gridZ + 1], 1.0f),		// point 1
-			glm::vec3(1.0f, heights[gridX + 1][gridZ], 0.0f),			// point 2
-			glm::vec3(0.0f, heights[gridX][gridZ + 1], 1.0f),			// point 3
-			glm::vec2(x, z)																			// position
+			glm::vec3(1.0f, heights[(gridX+1) + (gridZ+1)*vertexCount], 1.0f),	// point 1
+			glm::vec3(1.0f, heights[(gridX+1) + gridZ*vertexCount], 0.0f),			// point 2
+			glm::vec3(0.0f, heights[gridX + (gridZ+1)*vertexCount], 1.0f),			// point 3
+			glm::vec2(x, z)																											// position
 		);
 	}
 	return height;

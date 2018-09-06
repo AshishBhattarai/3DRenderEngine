@@ -1,14 +1,16 @@
 #include "terrain_grid.hpp"
 
 TerrainGrid::	TerrainGrid(u_int numGridX, u_int numGridZ, int size,
-		int vertexCount, int tilingFactor) :
+		int vertexCount, float maxHeight, int tilingFactor) :
 		grid(numGridX, std::vector<std::shared_ptr<Terrain>>(numGridZ)),
 		numGridX(numGridX),
 		numGridZ(numGridZ),
 		terSize(size),
 		vertexCount(vertexCount),
+		maxHeight(maxHeight),
 		tilingFactor(tilingFactor),
-		numTerrain(0)
+		numTerrain(0),
+		colOffset(((float)size/(vertexCount-1))/2.0f)
 {
 }
 
@@ -23,8 +25,8 @@ void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Texture::Map textures) {
 }
 
 // with height maps
-void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, float maxHeight,
-	Image& heightMap, Texture::Map textures)
+void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Image& heightMap,
+	Texture::Map textures)
 {
 	if(gridX >= numGridX || gridZ >= numGridZ) return;
 
