@@ -7,8 +7,8 @@ float Terrain::calcHeightAt(int x, int z, float maxHeight, Image& heightMap) {
 	if ( x < 0 || x >= heightMap.getWidth() || z < 0 || z >= heightMap.getHeight())
 		return 0.0f;
 
-	// get pixel color
-  float height = heightMap.getRGB(x, z);
+	// get pixel color (bottom-left of heightmap as (0, 0))
+  float height = heightMap.getRGB(heightMap.getWidth() - 1 -x, heightMap.getHeight() - 1 - z);
 	// calc height
 	height -= (MAX_PIXEL_COLOR/2.0f); // between -MAX_PIXEL_COLOR/2 and MAX_PIXEL_COLOR/2
 	height /= (MAX_PIXEL_COLOR/2.0f);	// between -1 & 1
@@ -74,14 +74,15 @@ void Terrain::generateIndices(std::vector<u_int>& indices) {
 void Terrain::generateHeightWMap(std::vector<TexturedMesh::Vertex>& vertices,
 	float maxHeight, Image& image)
 {
-	int i;
+	int i, j;
 	for(int z = 0; z < vertexCount; ++z) {
 		for(int x = 0; x < vertexCount; ++x) {
 			i = x + z*(vertexCount);
+			j = x + z*(vertexCount+1); // +1 to comply with terrian_collision_shape
 			// calc height
-			heights[i] = calcHeightAt(x, z, maxHeight, image);
+			heights[j] = calcHeightAt(x, z, maxHeight, image);
 			//vertex height
-			vertices[i].position.y = heights[i];
+			vertices[i].position.y = heights[j];
 			// normals
 			vertices[i].normal = calcNormalAt(x, z, maxHeight, image);
 		}
@@ -123,7 +124,7 @@ Terrain::Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Mode mode)
 	posZ(gridZ*size),
 	mode(mode),
 	gridSize((float)size/(vertexCount - 1)), // Total grids per row&col
-	heights((vertexCount)*(vertexCount), 0.0f) // reserve
+	heights((vertexCount+1)*(vertexCount+1), 0.0f) // reserve
 {}
 
 // flat Terrain
@@ -168,22 +169,23 @@ float Terrain::getTerrainHeight(float posX, float posZ) {
 	// get the position inside the grid square
 	float x = fmod(terX, gridSize) / gridSize;
 	float z = fmod(terZ, gridSize) / gridSize;
+	int vc = vertexCount + 1;
 
 	// get the tringle on which posX & posZ lie
 	if(x <= (1 - z)) { // upper triangle
 		// calculate height at (x, z) by interpolating know heights
 		height = Math::barryCentric(
-			glm::vec3(0.0f, heights[gridX + gridZ*vertexCount], 0.0f),			// point 1
-			glm::vec3(1.0f, heights[(gridX+1) + gridZ*vertexCount], 0.0f),	// point 2
-			glm::vec3(0.0f, heights[gridX + (gridZ+1)*vertexCount], 1.0f),	// point 3
+			glm::vec3(0.0f, heights[gridX + gridZ*vc], 0.0f),			// point 1
+			glm::vec3(1.0f, heights[(gridX+1) + gridZ*vc], 0.0f),	// point 2
+			glm::vec3(0.0f, heights[gridX + (gridZ+1)*vc], 1.0f),	// point 3
 			glm::vec2(x, z)																									// position
 		);
 
 	} else { // x > (1 - z) - lower triangle
 		height = Math::barryCentric(
-			glm::vec3(1.0f, heights[(gridX+1) + (gridZ+1)*vertexCount], 1.0f),	// point 1
-			glm::vec3(1.0f, heights[(gridX+1) + gridZ*vertexCount], 0.0f),			// point 2
-			glm::vec3(0.0f, heights[gridX + (gridZ+1)*vertexCount], 1.0f),			// point 3
+			glm::vec3(1.0f, heights[(gridX+1) + (gridZ+1)*vc], 1.0f),	// point 1
+			glm::vec3(1.0f, heights[(gridX+1) + gridZ*vc], 0.0f),			// point 2
+			glm::vec3(0.0f, heights[gridX + (gridZ+1)*vc], 1.0f),			// point 3
 			glm::vec2(x, z)																											// position
 		);
 	}
