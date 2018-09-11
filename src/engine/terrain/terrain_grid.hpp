@@ -10,7 +10,7 @@
 
 class TerrainGrid {
 private:
-	using Grid = std::vector<std::vector<std::shared_ptr<Terrain>>>;
+	using Grid = std::vector<std::unique_ptr<Terrain>>;
 	// defualts
 	static constexpr int SIZE = 1000;
 	static constexpr int VERTEX_COUNT = 256;
@@ -55,7 +55,7 @@ public:
 	}
 
 	bool hasTerrainAt(u_int x, u_int z) const {
-		return grid[x][z].get();
+		return grid[x + z*numGridZ].get();
 	}
 
 	float getTerrainSize() const {

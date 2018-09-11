@@ -2,7 +2,7 @@
 
 TerrainGrid::	TerrainGrid(u_int numGridX, u_int numGridZ, int size,
 		int vertexCount, float maxHeight, int tilingFactor) :
-		grid(numGridX, std::vector<std::shared_ptr<Terrain>>(numGridZ)),
+		grid(numGridX*numGridZ),
 		numGridX(numGridX),
 		numGridZ(numGridZ),
 		terSize(size),
@@ -19,8 +19,9 @@ void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Texture::Map textures) {
 	if(gridX >= numGridX || gridZ >= numGridZ) return;
 
 	// add Terrain
-	grid[gridX][gridZ] = std::make_shared<Terrain>(gridX, gridZ, terSize,
-		vertexCount, textures);
+	grid[gridX + numGridZ*gridZ] = std::make_unique<Terrain>(
+		gridX, gridZ, terSize, vertexCount, textures
+	);
 	++numTerrain;
 }
 
@@ -31,8 +32,9 @@ void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Image& heightMap,
 	if(gridX >= numGridX || gridZ >= numGridZ) return;
 
 	// add Terrain
-	grid[gridX][gridZ] = std::make_shared<Terrain>(gridX, gridZ, terSize,
-		maxHeight, heightMap, textures);
+	grid[gridX + numGridZ*gridZ] = std::make_unique<Terrain>(
+		gridX, gridZ, terSize, maxHeight, heightMap, textures
+	);
 	++numTerrain;
 }
 
@@ -40,7 +42,7 @@ void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Image& heightMap,
 Terrain* TerrainGrid::getTerrain(u_int gridX, u_int gridZ) {
 	if(!numTerrain) return nullptr;
 	return (gridX < numGridX)? ((gridZ < numGridZ)?
-					grid[gridX][gridZ].get() : nullptr) : nullptr;
+					grid[gridX + numGridZ*gridZ].get() : nullptr) : nullptr;
 }
 
 // get grid for correspoind world x, z
@@ -55,5 +57,5 @@ std::pair<u_int, u_int> TerrainGrid::posToGrid(float x, float z) {
 // get height at position x, y (world position)
 float TerrainGrid::getHeightAt(float x, float z) {
 	std::pair<u_int, u_int> g = posToGrid(x, z);
-	return grid[g.first][g.second]->getTerrainHeight(x, z);
+	return grid[g.first + g.second*numGridZ]->getTerrainHeight(x, z);
 }
