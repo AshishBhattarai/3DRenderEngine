@@ -117,6 +117,7 @@ void Shader::setUniformBlockBinding(const char* name, u_int point) {
 	// check for errors
 	if(index == GL_INVALID_INDEX) {
 		CSLOG("Invalid block index for, ", name);
+		return;
 	}
 	// set block bindingpoint
 	glUniformBlockBinding(program, index, point);

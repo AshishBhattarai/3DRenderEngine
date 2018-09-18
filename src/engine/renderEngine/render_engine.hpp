@@ -79,6 +79,10 @@ public:
 	void setCamera(Camera* camera) {
 		this->camera = camera;
 	}
+
+	GLuint getGeneralVSBinding() const {
+		return vsUBO.getBindingPoint();
+	}
 };
 
 #endif

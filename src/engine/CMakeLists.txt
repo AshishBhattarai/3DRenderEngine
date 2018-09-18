@@ -17,9 +17,17 @@ add_library(engine-lib
 	shader/buffer/uniform_buffer.cpp
 	shader/entity_shader.cpp
 	shader/terrain_shader.cpp
+	shader/debug_physics_shader.cpp
 	terrain/terrain.cpp
 	terrain/terrain_grid.cpp
 	utils/image.cpp
+
+	physics/collision_shape.cpp
+	physics/physics.cpp
+	physics/physics_body.cpp
+	physics/rigid_body.cpp
+	physics/debug_drawer.cpp
+	physics/physics_importer.cpp
 )
 
 target_link_libraries(
@@ -28,6 +36,9 @@ target_link_libraries(
 	${GLAD_LIBRARIES}
 	${GLFW_LIBRARIES}
 	${ASSIMP_LIBRARIES}
+	${BULLET_LIBRARIES}
+	BulletWorldImporter
+	BulletFileLoader
 	dl
 )
 
