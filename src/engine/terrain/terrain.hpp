@@ -16,8 +16,6 @@ public:
 	};
 
 private:
-	static constexpr float TER_SPECULAR = 0.01f;
-	static constexpr float TER_SHINE = 1.0f;
 	static constexpr float MAX_PIXEL_COLOR = 256 + 256 + 256;// max color val of the pixel = r + g + b
 
 	int vertexCount;
@@ -77,8 +75,12 @@ public:
 	}
 
 	// setter
-	void setTerrainSpecular(float factor, float shine) {
-		mesh->setSpecularProperty(factor, shine);
+	void setSpecularShininess(float shininess) {
+		mesh->setSpecularShininess(shininess);
+	}
+
+	float setSpecularShininess() {
+		return mesh->getSpecularShininess();
 	}
 
 };

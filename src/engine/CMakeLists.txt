@@ -7,20 +7,26 @@ add_library(engine-lib
 	renderEngine/entity_renderer.cpp
 	renderEngine/terrain_renderer.cpp
 	renderEngine/render_engine.cpp
+
 	entities/entity.cpp
 	entities/camera.cpp
+
 	model/model.cpp
 	model/mesh.cpp
 	model/textured_mesh.cpp
 	model/texture.cpp
+
 	shader/shader.cpp
 	shader/buffer/uniform_buffer.cpp
 	shader/entity_shader.cpp
 	shader/terrain_shader.cpp
 	shader/debug_physics_shader.cpp
+
 	terrain/terrain.cpp
 	terrain/terrain_grid.cpp
+
 	utils/image.cpp
+	utils/mtl_parser.cpp
 
 	physics/collision_shape.cpp
 	physics/physics.cpp

@@ -16,11 +16,11 @@ public:
 		SPECULAR_MAP			=			001,
 
 		// terrian textures(splat map)
-		BLEND_MAP					=			100,
-		RED_TEXTURE				=			101,
-		GREEN_TEXTURE			=			102,
-		BLUE_TEXTURE			=			103,
-		BLACK_TEXTURE			=			104
+		BLEND_MAP							=			100,
+		DIFFUSE_RED_MAP				=			101,
+		DIFFUSE_GREEN_MAP			=			102,
+		DIFFUSE_BLUE_MAP			=			103,
+		DIFFUSE_BLACK_MAP			=			104
 	};
 
 	// texture map

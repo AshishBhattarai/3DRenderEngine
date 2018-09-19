@@ -9,8 +9,8 @@ public:
 	// default colors - white;
 	static constexpr float default_ambient = 0.1f;
 	static constexpr float default_diffuse = 0.5f;
-	static constexpr float default_specular = 0.9f;
-	static constexpr float default_shine = 32.0f;
+	static constexpr float default_specular = 1.0f;
+	static constexpr float default_shininess = 16.0f;
 
 	// color of the mesh
 	struct Material {

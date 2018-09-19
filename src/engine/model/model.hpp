@@ -11,6 +11,11 @@
 
 // This class represents a 3D model which is made up of multiple meshes
 
+namespace ModelFlags {
+	constexpr int FAKE_NORMAL = 0x1;
+	constexpr int	TRANSPARENT = 0x2;
+};
+
 class Model {
 public:
 	// type of model
@@ -28,8 +33,8 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Texture>> textures_loaded;
 
 	Type modelType;
+	int flags;
 	int numMeshes; // no of meshes in the model;
-	bool upNormal; // set all normals to 0.0, 1.0, 0.0
 
 	// load the model file
 	void loadModel(std::string_view path);
@@ -41,7 +46,7 @@ private:
 	std::shared_ptr<Texture> loadMaterialTexture(const aiMaterial* mat, std::string path, Texture::Type type);
 
 public:
-	Model(std::string_view path, Type type, bool upNormal = false);
+	Model(std::string_view path, Type type, int flags = 0);
 
 	int getnumMeshes() const {
 		return numMeshes;

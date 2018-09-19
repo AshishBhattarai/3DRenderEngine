@@ -5,8 +5,7 @@ void TerrainShader::getUniformLocations() {
 	loc_transformMat = getUniformLoc("transform_mat");
 	loc_normalMat = getUniformLoc("normal_mat");
 
-	loc_materialShine = getUniformLoc("material.shininess");
-	loc_materialSpecular = getUniformLoc("material.specularFactor");
+	loc_materialShininess = getUniformLoc("material.shininess");
 
 	// fog
 	loc_fogDensity = getUniformLoc("fogDensity");
@@ -14,10 +13,10 @@ void TerrainShader::getUniformLocations() {
 
 	// set texture units
 	loadInt("material.texture_blend", BLEND_UNIT);
-	loadInt("material.texture_red", 	RED_UNIT);
-	loadInt("material.texture_green", GREEN_UNIT);
-	loadInt("material.texture_blue", 	BLUE_UNIT);
-	loadInt("material.texture_black", BLACK_UNIT);
+	loadInt("material.texture_red_diffuse", 	DIFFUSE_RED_UNIT);
+	loadInt("material.texture_green_diffuse", DIFFUSE_GREEN_UNIT);
+	loadInt("material.texture_blue_diffuse", 	DIFFUSE_BLUE_UNIT);
+	loadInt("material.texture_black_diffuse", DIFFUSE_BLACK_UNIT);
 }
 
 TerrainShader::TerrainShader():

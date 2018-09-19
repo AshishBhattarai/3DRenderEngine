@@ -14,10 +14,10 @@ class TerrainShader : public Shader {
 public:
 	// texture UNITs for texture
 	static constexpr int BLEND_UNIT = 0;
-	static constexpr int RED_UNIT 	= 1;
-	static constexpr int GREEN_UNIT = 2;
-	static constexpr int BLUE_UNIT	= 3;
-	static constexpr int BLACK_UNIT = 4;
+	static constexpr int DIFFUSE_RED_UNIT 	= 1;
+	static constexpr int DIFFUSE_GREEN_UNIT = 2;
+	static constexpr int DIFFUSE_BLUE_UNIT	= 3;
+	static constexpr int DIFFUSE_BLACK_UNIT = 4;
 
 private:
 	static constexpr std::string_view VERTEX_FILE = "shaders/entity.vert"; // same as entity shader
@@ -32,8 +32,7 @@ private:
 	GLint loc_fogGradient;
 
 	// material
-	GLint loc_materialSpecular;
-	GLint loc_materialShine;
+	GLint loc_materialShininess;
 
 	// get all the locations from the shaders
 	void getUniformLocations();
@@ -51,10 +50,8 @@ public:
 	}
 
 	// material
-	void loadMaterialSpecular(float factor, float shine) {
-		uniform1f(loc_materialShine, shine);
-		uniform1f(loc_materialSpecular, factor);
-		// load factor
+	void loadMaterialShininess(float shininess) {
+		uniform1f(loc_materialShininess, shininess);
 	}
 };
 

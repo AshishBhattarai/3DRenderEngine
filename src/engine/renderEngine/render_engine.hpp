@@ -80,6 +80,11 @@ public:
 		this->camera = camera;
 	}
 
+	// TODO: Remove this later
+	const glm::mat4& getProjectionMatrix() const {
+		return projection_mat;
+	}
+
 	GLuint getGeneralVSBinding() const {
 		return vsUBO.getBindingPoint();
 	}

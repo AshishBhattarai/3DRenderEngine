@@ -49,11 +49,10 @@ void Camera::processKeyboard(Movement dir, float dt) {
 }
 
 void Camera::processMouseMovement(float xoffset, float yoffset, float dt) {
-	xoffset *= (mouseSensitivity * dt);
-	yoffset *= (mouseSensitivity * dt);
+	float speed = (mouseSensitivity * dt);
 
-	yaw += xoffset;
-	pitch += yoffset;
+	yaw += xoffset * speed;
+	pitch += yoffset * speed;
 
 			// limit pitch to avoid unwanted rotation
 	if (pitch > 89.0f)

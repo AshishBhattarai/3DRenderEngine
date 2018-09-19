@@ -22,11 +22,7 @@ void EntityRenderer::loadTransformation(const Entity& entity) {
 
 void EntityRenderer::prepareMesh(const TexturedMesh& mesh) {
 	// load textures & bind
-	shader->loadMaterialSpecular(mesh.getSpecularFactor(), mesh.getSpecularShine());
-	shader->loadHasSpecular(mesh.getTextureID(Texture::SPECULAR_MAP));
-
-	if(!mesh.getIsCullFace())
-		glDisable(GL_CULL_FACE);
+	shader->loadMaterialShininess(mesh.getSpecularShininess());
 
 	glActiveTexture(GL_TEXTURE0+shader->DIFFUSE_UINT);
 	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::DIFFUSE_MAP));

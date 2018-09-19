@@ -68,9 +68,6 @@ void RenderEngine::render() {
 	entityRenderer.render(entities);
 	entityShader.stop();
 
-	// enable again as some entites disable cull face
-	glEnable(GL_CULL_FACE);
-
 	// render terrain
 	terrainShader.start();
 	terrainRenderer.render(terrains);

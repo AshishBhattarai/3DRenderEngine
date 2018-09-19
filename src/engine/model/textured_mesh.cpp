@@ -20,17 +20,18 @@ void TexturedMesh::setupTextureCoords(std::vector<glm::vec2>& texCoords) {
 
 // no texture (only coords)
 TexturedMesh::TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
-		std::vector<glm::vec2>& texCoords, std::string name) :
+		std::vector<glm::vec2>& texCoords, float shininess, std::string name) :
 		Mesh(vertices, indices, name),
-		hasTransparent(false)
+		specular_shininess(shininess)
 {
 	setupTextureCoords(texCoords);
 }
 
 // single diffuse texture
 TexturedMesh::TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
-		std::vector<glm::vec2>& texCoords, std::shared_ptr<Texture> tex_diffuse, std::string name) :
-		TexturedMesh(vertices, indices, texCoords, name) // delegate
+		std::vector<glm::vec2>& texCoords, std::shared_ptr<Texture> tex_diffuse,
+		float shininess, std::string name) :
+		TexturedMesh(vertices, indices, texCoords, shininess, name) // delegate
 {
 	textures[tex_diffuse->getType()] = tex_diffuse;
 }
@@ -38,12 +39,10 @@ TexturedMesh::TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& ind
 // multiple(map) textures
 TexturedMesh::TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
 		std::vector<glm::vec2>& texCoords, Texture::Map&& textures,
-		float shine, float specular_factor, std::string name) :
+		float shininess, std::string name) :
 		Mesh(vertices, indices, name),
 		textures(textures),
-		specular_shine(shine),
-		specular_factor(specular_factor),
-		hasTransparent(false)
+		specular_shininess(shininess)
 {
 	setupTextureCoords(texCoords);
 }

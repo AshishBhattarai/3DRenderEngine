@@ -132,7 +132,6 @@ Terrain::Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Texture::M
 	Terrain(gridX, gridZ, size, vertexCount, FLAT)
 {
 	mesh = generateTerrain(size);
-	mesh->setSpecularProperty(TER_SPECULAR, TER_SHINE);
 	mesh->setTextureMap(textures);
 }
 
@@ -148,7 +147,6 @@ Terrain::Terrain(u_int gridX, u_int gridZ, int size, float maxHeight, Image& hei
 		generateHeightWMap(vertices, maxHeight, heightMap);
 	});
 
-	mesh->setSpecularProperty(TER_SPECULAR, TER_SHINE);
 	mesh->setTextureMap(textures);
 }
 

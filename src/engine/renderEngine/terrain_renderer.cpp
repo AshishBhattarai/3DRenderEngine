@@ -14,23 +14,23 @@ void TerrainRenderer::loadTransformation(const Terrain& terrain) {
 
 void TerrainRenderer::prepareMesh(const TexturedMesh& mesh) {
 	// load textures & bind
-	shader->loadMaterialSpecular(mesh.getSpecularFactor(), mesh.getSpecularShine());
+	shader->loadMaterialShininess(mesh.getSpecularShininess());
 
 	// blend map
 	glActiveTexture(GL_TEXTURE0+TerrainShader::BLEND_UNIT);
 	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::BLEND_MAP));
 	// red
-	glActiveTexture(GL_TEXTURE0+TerrainShader::RED_UNIT);
-	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::RED_TEXTURE));
+	glActiveTexture(GL_TEXTURE0+TerrainShader::DIFFUSE_RED_UNIT);
+	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::DIFFUSE_RED_MAP));
 	// green
-	glActiveTexture(GL_TEXTURE0+TerrainShader::GREEN_UNIT);
-	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::GREEN_TEXTURE));
+	glActiveTexture(GL_TEXTURE0+TerrainShader::DIFFUSE_GREEN_UNIT);
+	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::DIFFUSE_GREEN_MAP));
 	// blue
-	glActiveTexture(GL_TEXTURE0+TerrainShader::BLUE_UNIT);
-	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::BLUE_TEXTURE));
+	glActiveTexture(GL_TEXTURE0+TerrainShader::DIFFUSE_BLUE_UNIT);
+	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::DIFFUSE_BLUE_MAP));
 	// black
-	glActiveTexture(GL_TEXTURE0+TerrainShader::BLACK_UNIT);
-	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::BLACK_TEXTURE));
+	glActiveTexture(GL_TEXTURE0+TerrainShader::DIFFUSE_BLACK_UNIT);
+	glBindTexture(GL_TEXTURE_2D, mesh.getTextureID(Texture::DIFFUSE_BLACK_MAP));
 
 	glBindVertexArray(mesh.getVAO());
 }

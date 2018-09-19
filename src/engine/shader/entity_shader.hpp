@@ -27,9 +27,7 @@ private:
 	// material
 	GLint loc_materialAmbient;
 	GLint loc_materialDiffuse;
-	GLint loc_materialSpecular;
-	GLint loc_materialShine;
-	GLint loc_hasSpecular;
+	GLint loc_materialShininess;
 
 	// fog
 	GLint loc_fogDensity;
@@ -52,13 +50,8 @@ public:
 	}
 
 	// specular
-	void loadMaterialSpecular(float factor, float shine) {
-		uniform1f(loc_materialShine, shine);
-		uniform1f(loc_materialSpecular, factor);
-	}
-
-	void loadHasSpecular(bool val) {
-		uniform1i(loc_hasSpecular, val);
+	void loadMaterialShininess(float shininess) {
+		uniform1f(loc_materialShininess, shininess);
 	}
 };
 

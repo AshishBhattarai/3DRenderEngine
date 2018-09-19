@@ -1,6 +1,7 @@
 #version 330 core
 
 #define TILING_FACTOR 80
+#define MAX_TEXTURE_MAPS 3
 
 #define MAX_POINT_LIGHTS 100
 #define MAX_SPOT_LIGHTS 100
@@ -14,6 +15,8 @@ in VS_OUT {
 	vec3 toCameraVector; // direction form vertex/fragment to camera
 	float fogFactor;
 } fs_in;
+
+vec4 texture_maps[MAX_TEXTURE_MAPS]; // 0 - diffuse, 1 - specular
 
 // color
 struct Color {
@@ -54,12 +57,11 @@ struct SpotLight {
 struct Material {
 	// texture map / splat
 	sampler2D texture_blend;
-	sampler2D texture_red;
-	sampler2D texture_green;
-	sampler2D texture_blue;
-	sampler2D texture_black;
+	sampler2D texture_red_diffuse;
+	sampler2D texture_green_diffuse;
+	sampler2D texture_blue_diffuse;
+	sampler2D texture_black_diffuse;
 
-	float specularFactor;
 	float shininess;
 };
 
@@ -73,7 +75,7 @@ layout(std140) uniform GeneralFSData {
 };
 
 // calcuate light
-vec3 applyLight(Color color, vec3 toLight, vec3 normal, vec3 toCamera, vec3 totalColor) {
+vec3 calculateLight(Color lightColor, vec3 toLight, vec3 normal, vec3 toCamera) {
 	// diffuse
 	float diffuse = max(dot(normal, toLight), 0.0f);
 	// specular
@@ -81,28 +83,28 @@ vec3 applyLight(Color color, vec3 toLight, vec3 normal, vec3 toCamera, vec3 tota
 	float specular = pow(max(dot(reflectDir, toCamera), 0.0f), material.shininess);
 
 	// combine result
-	vec3 ambientColor = color.ambient * totalColor;
-	vec3 diffuseColor = color.diffuse * diffuse * totalColor;
-	vec3 specularColor = color.specular * material.specularFactor * specular * totalColor;
+	vec3 ambientColor = lightColor.ambient * texture_maps[0].rgb;
+	vec3 diffuseColor = lightColor.diffuse * diffuse * texture_maps[0].rgb;
+	vec3 specularColor = lightColor.specular * specular * texture_maps[1].rgb;
 	return (ambientColor + diffuseColor + specularColor);
 }
 
 // calculate directional light
-vec3 applyDirLight(DirLight light, vec3 normal, vec3 toCamera, vec3 totalColor) {
+vec3 applyDirLight(DirLight light, vec3 normal, vec3 toCamera) {
 	// frag pos to light direction
 	vec3 toLight = normalize(light.direction);
 	// calculate light
-	vec3 dirLightColor = applyLight(light.color, toLight, normal, toCamera, totalColor);
+	vec3 dirLightColor = calculateLight(light.color, toLight, normal, toCamera);
 
 	return dirLightColor;
 }
 
 // calculate point light
-vec3 applyPointLight(PointLight light, vec3 normal, vec3 toCamera, vec3 totalColor) {
+vec3 applyPointLight(PointLight light, vec3 normal, vec3 toCamera) {
 	// frag pos to light direction
 	vec3 toLight = normalize(light.position - fs_in.fragPos);
 	// calculate light
-	vec3 pointLightColor = applyLight(light.color, toLight, normal, toCamera, totalColor);
+	vec3 pointLightColor = calculateLight(light.color, toLight, normal, toCamera);
 
 	// attenuation
 	float dist = length(light.position - fs_in.fragPos); // distance
@@ -112,11 +114,11 @@ vec3 applyPointLight(PointLight light, vec3 normal, vec3 toCamera, vec3 totalCol
 }
 
 // calculate spotlight
-vec3 applySpotLight(SpotLight light, vec3 normal, vec3 toCamera, vec3 totalColor) {
+vec3 applySpotLight(SpotLight light, vec3 normal, vec3 toCamera) {
 	// frag pos to light direction
 	vec3 toLight = normalize(light.attribs.position - fs_in.fragPos);
 	// calculate light based on point light for attenuation
-	vec3 spotLightColor = applyPointLight(light.attribs, normal, toCamera, totalColor);
+	vec3 spotLightColor = applyPointLight(light.attribs, normal, toCamera);
 
 	// spotlight calc
 	float theta = dot(toLight, normalize(light.direction));
@@ -139,16 +141,18 @@ void main() {
 	// tile the textures
 	vec2 tiledCoords = fs_in.tex_coords * TILING_FACTOR;
 
-	vec4 blackColor = texture(material.texture_black, tiledCoords) * blackAmt;
-	vec4 redColor	 	=	texture(material.texture_red, tiledCoords) * blendMapColor.r;
-	vec4 greenColor	=	texture(material.texture_green, tiledCoords) * blendMapColor.g;
-	vec4 blueColor	=	texture(material.texture_blue, tiledCoords) * blendMapColor.b;
+	// diffuse colors
+	vec4 blackColor = texture(material.texture_black_diffuse, tiledCoords) * blackAmt;
+	vec4 redColor	 	=	texture(material.texture_red_diffuse, tiledCoords) * blendMapColor.r;
+	vec4 greenColor	=	texture(material.texture_green_diffuse, tiledCoords) * blendMapColor.g;
+	vec4 blueColor	=	texture(material.texture_blue_diffuse, tiledCoords) * blendMapColor.b;
+	texture_maps[0] = blackColor + redColor + greenColor + blueColor;
 
-
-	vec4 totalColor = blackColor + redColor + greenColor + blueColor;
+	// sepcular colors
+	// texture_maps[1] =
 
 	// apply directional light
-	outputColor = applyDirLight(sun, normal, toCamera, totalColor.xyz);
+	outputColor = applyDirLight(sun, normal, toCamera);
 
 	// calculate fog
 	FragColor = vec4(mix(fogColor, outputColor, fs_in.fogFactor), 1.0f);

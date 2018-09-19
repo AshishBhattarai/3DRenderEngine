@@ -12,9 +12,7 @@ class TexturedMesh : public Mesh {
 private:
 	// textures baised on type
 	Texture::Map textures;
-	float specular_shine;
-	float specular_factor; // used in case of no specular textured
-	bool hasTransparent; // is this mesh has transparent diffuse texture
+	float specular_shininess;
 
 	// texture coords
 	GLuint t_VBO;
@@ -25,17 +23,17 @@ private:
 public:
 	// only texCoords
 	TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
-		std::vector<glm::vec2>& texCoords, std::string name = "");
+		std::vector<glm::vec2>& texCoords, float shininess = 1, std::string name = "");
 
 	// single texture
 	TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
 		std::vector<glm::vec2>& texCoords, std::shared_ptr<Texture> tex_diffuse,
-		std::string name = "");
+		float shininess = 1, std::string name = "");
 
 	// texCoords + texture map
 	TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
 		std::vector<glm::vec2>& texCoords, Texture::Map&& textures,
-		float shine = 1, float specular_factor = 0, std::string name = "");
+		float shininess = 1, std::string name = "");
 
 	~TexturedMesh();
 
@@ -75,29 +73,16 @@ public:
 		textures = map;
 	}
 
-	void setSpecularProperty(float factor, float shine) {
-		specular_factor = factor;
-		specular_shine = shine;
-	}
-
-	void setHasTransparent(bool trans) {
-		hasTransparent = trans;
+	void setSpecularShininess(float shininess) {
+		specular_shininess = shininess;
 	}
 
 	bool hasTexture(Texture::Type type) const {
 		return getTextureID(type);
 	}
 
-	float getSpecularShine() const {
-		return specular_shine;
-	}
-
-	float getSpecularFactor() const {
-		return specular_factor;
-	}
-
-	bool getHasTransparent() const {
-		return hasTransparent;
+	float getSpecularShininess() const {
+		return specular_shininess;
 	}
 };
 

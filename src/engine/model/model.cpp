@@ -17,7 +17,17 @@ void Model::loadModel(std::string_view path) {
 	}
 	// if model doesn't have normals generate smooth normals
 	if(scene->mMeshes[0]->HasNormals())
-		importer.ApplyPostProcessing(aiProcess_GenSmoothNormals);
+		importer.ApplyPostProcessing (
+			aiProcess_CalcTangentSpace |
+			aiProcess_ImproveCacheLocality |
+			aiProcess_LimitBoneWeights |
+			aiProcess_RemoveRedundantMaterials |
+			aiProcess_FindInvalidData |
+			aiProcess_GenSmoothNormals |
+			aiProcess_OptimizeMeshes |
+			aiProcess_OptimizeGraph |
+			aiProcess_JoinIdenticalVertices
+		);
 	// if the meshes aren't triangulated
 	if(scene->mMeshes[0]->mFaces[0].mNumIndices > 3)
 		importer.ApplyPostProcessing(aiProcess_Triangulate);
@@ -47,8 +57,7 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 	std::string name(mesh->mName.C_Str());
 	bool hasTexture = (modelType && TEXTURED);
 	// for textured mesh
-	float specular_shine = MaterialMesh::default_shine;
-	float specular_factor(MaterialMesh::default_specular);
+	float specular_shininess = MaterialMesh::default_shininess;
 
 	// reserve space
 	vertices.reserve(mesh->mNumVertices);
@@ -66,12 +75,12 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 		vertex.position.z = mesh->mVertices[i].z;
 
 		// normals
-		if(!upNormal) {
+		if(flags & ModelFlags::FAKE_NORMAL) {
+			vertex.normal = glm::vec3(0.0f, 1.0f, 0.0);
+		} else {
 			vertex.normal.x = mesh->mNormals[i].x;
 			vertex.normal.y = mesh->mNormals[i].y;
 			vertex.normal.z = mesh->mNormals[i].z;
-		} else {
-			vertex.normal = glm::vec3(0.0f, 1.0f, 0.0);
 		}
 
 		vertices.emplace_back(std::move(vertex));
@@ -105,21 +114,21 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 				// diffuse
 				mat->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 				textures[Texture::DIFFUSE_MAP] = loadMaterialTexture(mat, path.C_Str(), Texture::DIFFUSE_MAP);
-			} else if (mat->GetTextureCount(aiTextureType_SPECULAR)) {
+			}
+			if(mat->GetTextureCount(aiTextureType_SPECULAR)) {
 				//specular
 				mat->GetTexture(aiTextureType_SPECULAR, 0, &path);
 				textures[Texture::SPECULAR_MAP] = loadMaterialTexture(mat, path.C_Str(), Texture::SPECULAR_MAP);
 			}
 
-			// load shine
-			mat->Get(AI_MATKEY_SHININESS, specular_shine);
-			mat->Get(AI_MATKEY_COLOR_SPECULAR, specular_factor);
+			// load shininess
+			mat->Get(AI_MATKEY_SHININESS, specular_shininess);
 		}
 	}
 
 	if(hasTexture)
 		return std::make_unique<TexturedMesh>(vertices, indices, texCoords,
-			std::move(textures), specular_shine, specular_factor, name);
+			std::move(textures), specular_shininess, name);
 	else
 		return std::make_unique<MaterialMesh>(vertices, indices, color, name);
 }
@@ -145,8 +154,8 @@ MaterialMesh::Material Model::loadMaterialColor(const aiMaterial* mat) {
 	if(mat->Get(AI_MATKEY_COLOR_SPECULAR, specular))
 		message("specular");
 
-	float shine(MaterialMesh::default_shine);
-	if(aiReturn_SUCCESS != mat->Get(AI_MATKEY_SHININESS, shine))
+	float shininess(MaterialMesh::default_shininess);
+	if(aiReturn_SUCCESS != mat->Get(AI_MATKEY_SHININESS, shininess))
 		message("shininess");
 
 	// name
@@ -174,9 +183,9 @@ std::shared_ptr<Texture> Model::loadMaterialTexture(const aiMaterial* mat, std::
 }
 
 
-Model::Model(std::string_view path, Type type, bool upNormal):
+Model::Model(std::string_view path, Type type, int flags):
 		numMeshes(0),
-		upNormal(upNormal),
+		flags(flags),
 		modelType(type)
 {
 	loadModel(path);

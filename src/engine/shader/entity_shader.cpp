@@ -10,9 +10,7 @@ void EntityShader::getUniformLocations() {
 	loc_fogGradient = getUniformLoc("fogGradient");
 
 	// material
-	loc_materialSpecular = getUniformLoc("material.specularFactor");
-	loc_materialShine = getUniformLoc("material.shininess");
-	loc_hasSpecular = getUniformLoc("material.hasSpecular");
+	loc_materialShininess = getUniformLoc("material.shininess");
 
 	// set texture units
 	loadInt("material.texture_diffuse", DIFFUSE_UINT);
