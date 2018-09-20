@@ -14,7 +14,7 @@ RigidBody::RigidBody(std::shared_ptr<CollisionShape> collisionShape,
 	quat.setEuler(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
 	trans.setRotation(quat);
 
-	btCollisionShape* cShape = collisionShape.get()->shape;
+	btCollisionShape* cShape = collisionShape->shape;
 	btVector3 inertia(0.0f, 0.0f, 0.0f);
 	if(mass)
 		cShape->calculateLocalInertia(mass, inertia);

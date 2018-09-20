@@ -149,7 +149,7 @@ void main() {
 	texture_maps[0] = blackColor + redColor + greenColor + blueColor;
 
 	// sepcular colors
-	// texture_maps[1] =
+	texture_maps[1] = vec4(0.0f);
 
 	// apply directional light
 	outputColor = applyDirLight(sun, normal, toCamera);
