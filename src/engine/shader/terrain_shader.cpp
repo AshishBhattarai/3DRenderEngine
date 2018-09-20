@@ -7,10 +7,6 @@ void TerrainShader::getUniformLocations() {
 
 	loc_materialShininess = getUniformLoc("material.shininess");
 
-	// fog
-	loc_fogDensity = getUniformLoc("fogDensity");
-	loc_fogGradient = getUniformLoc("fogGradient");
-
 	// set texture units
 	loadInt("material.texture_blend", BLEND_UNIT);
 	loadInt("material.texture_red_diffuse", 	DIFFUSE_RED_UNIT);

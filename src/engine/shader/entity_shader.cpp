@@ -5,10 +5,6 @@ void EntityShader::getUniformLocations() {
 	loc_transformMat = getUniformLoc("transform_mat");
 	loc_normalMat = getUniformLoc("normal_mat");
 
-	// fog
-	loc_fogDensity = getUniformLoc("fogDensity");
-	loc_fogGradient = getUniformLoc("fogGradient");
-
 	// material
 	loc_materialShininess = getUniformLoc("material.shininess");
 

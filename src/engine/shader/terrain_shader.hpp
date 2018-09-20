@@ -27,10 +27,6 @@ private:
 	GLint loc_transformMat;
 	GLint loc_normalMat;
 
-	// fog
-	GLint loc_fogDensity;
-	GLint loc_fogGradient;
-
 	// material
 	GLint loc_materialShininess;
 

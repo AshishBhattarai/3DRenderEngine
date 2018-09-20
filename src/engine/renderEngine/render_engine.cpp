@@ -42,6 +42,7 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	terrains.reserve(20);
 
 	setProjectionMatrix();
+	vsUBO.setFogProperty(FOG_DENSITY, FOG_GRADIENT);
 
 	// TODO: create a seperate fog class
 	fsUBO.setFogColor(fogColor);

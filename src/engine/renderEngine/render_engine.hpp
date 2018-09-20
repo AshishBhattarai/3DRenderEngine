@@ -19,6 +19,9 @@ private:
 	static constexpr float NEAR = 0.1f;
 	static constexpr float FAR = 800.0f;
 
+	static constexpr float FOG_DENSITY = 0.0038f;
+	static constexpr float FOG_GRADIENT = 10.0f;
+
 	glm::mat4 projection_mat;
 	glm::vec3 fogColor;
 

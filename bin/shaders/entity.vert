@@ -12,10 +12,6 @@ out VS_OUT {
 	float fogFactor; // calculate fogFactor in VS
 } vs_out;
 
-// fog density & gradient
-uniform float fogDensity = 0.0038f;
-uniform float fogGradient = 6.0f;
-
 // matrix
 uniform mat4 transform_mat;
 uniform mat3 normal_mat;
@@ -23,7 +19,9 @@ uniform mat3 normal_mat;
 layout (std140) uniform GeneralVSData {
 	mat4 projection_mat;
 	mat4 view_mat;
-	vec3 cameraPosition;
+	vec4 cameraPosition;
+	float fogDensity;
+	float fogGradient;
 };
 
 void main() {
@@ -33,7 +31,7 @@ void main() {
 	vs_out.tex_coords = tex_coords;
 	vs_out.normal = normal_mat * normal;
 	vs_out.fragPos = worldPosition.xyz;
-	vs_out.toCameraVector = cameraPosition - worldPosition.xyz;
+	vs_out.toCameraVector = cameraPosition.xyz - worldPosition.xyz;
 
 	float distance = length(vs_out.toCameraVector); //distance for vertex to the camera
 	vs_out.fogFactor = exp(-pow((distance*fogDensity), fogGradient));

@@ -7,14 +7,14 @@
 
 class UniformBuffer {
 public:
-	// NOTE: std140 offset should be multiple of 16
+	// NOTE: avoid using vec3 on uniform block, use vec4 and swizzle it (vec4.xyz).
 	// types base alignment(ie: the space(size in bytes) taken by the variable)
-	constexpr static int SIZE_BASIC 	= 	4; // int, float, bool
-	constexpr static int SIZE_VEC2 		= 	8;
-	constexpr static int SIZE_VEC3 		=	 16;
-	constexpr static int SIZE_VEC4 		=	 16;
-	constexpr static int SIZE_MATRIX4 =  4*SIZE_VEC4;
-	constexpr static int SIZE_MATRIX3 =	 3*SIZE_VEC4;
+	constexpr static int SIZE_BASIC 	= 	4; // int, float, bool (N) - N = sizeof(float)
+	constexpr static int SIZE_VEC2 		= 	8; // 2*N
+	constexpr static int SIZE_VEC3 		=	 16; // 4*N
+	constexpr static int SIZE_VEC4 		=	 16; // 4*N
+	constexpr static int SIZE_MATRIX4 =  4*SIZE_VEC4; // 16*N
+	constexpr static int SIZE_MATRIX3 =	 3*SIZE_VEC4; // 12*N
 
 private:
 	GLuint UBO;

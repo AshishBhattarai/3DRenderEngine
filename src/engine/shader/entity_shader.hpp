@@ -29,10 +29,6 @@ private:
 	GLint loc_materialDiffuse;
 	GLint loc_materialShininess;
 
-	// fog
-	GLint loc_fogDensity;
-	GLint loc_fogGradient;
-
 	// get all the locations from the shaders
 	void getUniformLocations();
 
