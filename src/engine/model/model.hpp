@@ -20,9 +20,9 @@ class Model {
 public:
 	// type of model
 	enum Type {
-		BASIC 		= 	1,
-		MATERIAL 	= 	2,
-		TEXTURED 	=	 	3
+		BASIC 						= 	1,
+		MATERIAL_COLOR 		= 	2,
+		MATERIAL_TEXTURE 	=	 	3
 	};
 
 private:

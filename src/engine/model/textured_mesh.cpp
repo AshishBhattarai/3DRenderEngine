@@ -21,9 +21,9 @@ void TexturedMesh::setupTextureCoords(std::vector<glm::vec2>& texCoords) {
 // no texture (only coords)
 TexturedMesh::TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
 		std::vector<glm::vec2>& texCoords, float shininess, std::string name) :
-		Mesh(vertices, indices, name),
-		specular_shininess(shininess)
+		MaterialMesh(vertices, indices, name)
 {
+	material.shininess = shininess;
 	setupTextureCoords(texCoords);
 }
 
@@ -40,10 +40,10 @@ TexturedMesh::TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& ind
 TexturedMesh::TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
 		std::vector<glm::vec2>& texCoords, Texture::Map&& textures,
 		float shininess, std::string name) :
-		Mesh(vertices, indices, name),
-		textures(textures),
-		specular_shininess(shininess)
+		MaterialMesh(vertices, indices, name),
+		textures(textures)
 {
+	material.shininess = shininess;
 	setupTextureCoords(texCoords);
 }
 

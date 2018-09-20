@@ -32,10 +32,9 @@ void Mesh::setupMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices) 
 }
 
 Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
-		std::string name, bool isCullFace) :
+		std::string name) :
 		indicesCount(indices.size()), //NOTE: imp don't miss this in another MESH-REDO
-		name(name),
-		isCullFace(isCullFace)
+		name(name)
 {
 		setupMesh(vertices, indices);
 }

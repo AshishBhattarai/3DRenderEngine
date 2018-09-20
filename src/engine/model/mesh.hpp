@@ -21,7 +21,6 @@ public:
 private:
 	std::string name; // name of the mesh
 	int indicesCount; // no. of indices to render
-	bool isCullFace; // disable/enable cull face
 
 	GLuint v_VBO, EBO;
 
@@ -35,7 +34,7 @@ protected:
 
 public:
 	Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
-		std::string name = "", bool isCullFace = true);
+		std::string name = "");
 	// move
 	Mesh(Mesh&& mesh);
 	// copy
@@ -45,15 +44,6 @@ public:
 
 	int incAttributesCount() {
 		return 	attributesCount++;
-	}
-
-	void setIsCullFace(bool val) {
-		isCullFace = val;
-	}
-
-	// getters
-	bool getIsCullFace() const {
-		return isCullFace;
 	}
 
 	const GLuint getVAO() const {

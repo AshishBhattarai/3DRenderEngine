@@ -1,18 +1,17 @@
 #ifndef TEXTURED_MESH_HPP
 #define TEXTURED_MESH_HPP
 
-#include "mesh.hpp"
+#include "material_mesh.hpp"
 
 #include <unordered_map>
 #include "texture.hpp"
 
 // This class repersents a mesh with texture
 
-class TexturedMesh : public Mesh {
+class TexturedMesh : public MaterialMesh {
 private:
 	// textures baised on type
 	Texture::Map textures;
-	float specular_shininess;
 
 	// texture coords
 	GLuint t_VBO;
@@ -74,7 +73,7 @@ public:
 	}
 
 	void setSpecularShininess(float shininess) {
-		specular_shininess = shininess;
+		material.shininess = shininess;
 	}
 
 	bool hasTexture(Texture::Type type) const {
@@ -82,7 +81,7 @@ public:
 	}
 
 	float getSpecularShininess() const {
-		return specular_shininess;
+		return material.shininess;
 	}
 };
 

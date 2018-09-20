@@ -10,7 +10,7 @@ public:
 	static constexpr float default_ambient = 0.1f;
 	static constexpr float default_diffuse = 0.5f;
 	static constexpr float default_specular = 1.0f;
-	static constexpr float default_shininess = 16.0f;
+	static constexpr float default_shininess = 1.0f;
 
 	// color of the mesh
 	struct Material {
@@ -21,19 +21,28 @@ public:
 		std::string name; // material name
 	};
 
-private:
+protected:
 	// mesh data
-	Material color;
+	Material material;
+
+	MaterialMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
+		std::string name = "") :
+		Mesh(vertices, indices, name)
+	{}
 
 public:
 	MaterialMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
-			Material color, std::string name = "") :
+			Material material, std::string name = "") :
 			Mesh(vertices, indices, name),
-			color(color)
+			material(material)
 	{}
 
-	const Material& getMaterialColor() {
-		return color;
+	const Material& getMaterial() {
+		return material;
+	}
+
+	void setMaterial(Material material) {
+		material = material;
 	}
 };
 

@@ -32,7 +32,7 @@ void Model::loadModel(std::string_view path) {
 	if(scene->mMeshes[0]->mFaces[0].mNumIndices > 3)
 		importer.ApplyPostProcessing(aiProcess_Triangulate);
 	//  if type is set to textured but model doesn't provide texture coords
-	if(!scene->mMeshes[0]->HasTextureCoords(0) && (modelType == TEXTURED)) {
+	if(!scene->mMeshes[0]->HasTextureCoords(0) && (modelType == MATERIAL_TEXTURE)) {
 		CSLOG("ERROR: Model type TEXTURED but the file  doesn't contain",
 					"textureCoords ", directory);
 		return;
@@ -55,7 +55,7 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 	MaterialMesh::Material color;
 	Texture::Map textures;
 	std::string name(mesh->mName.C_Str());
-	bool hasTexture = (modelType && TEXTURED);
+	bool hasTexture = (modelType && MATERIAL_TEXTURE);
 	// for textured mesh
 	float specular_shininess = MaterialMesh::default_shininess;
 
@@ -104,8 +104,8 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 		//get material
 		const aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 
-		// load colors if not texture
-		if(!hasTexture) {
+		if(modelType == MATERIAL_COLOR) {
+			// load material textures
 			color = loadMaterialColor(mat);
 		} else {
 			// load textures if they exist otherwise set 0
@@ -129,8 +129,10 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 	if(hasTexture)
 		return std::make_unique<TexturedMesh>(vertices, indices, texCoords,
 			std::move(textures), specular_shininess, name);
-	else
+	else if(modelType == MATERIAL_COLOR)
 		return std::make_unique<MaterialMesh>(vertices, indices, color, name);
+	else
+		return std::make_unique<Mesh>(vertices, indices, name);
 }
 
 MaterialMesh::Material Model::loadMaterialColor(const aiMaterial* mat) {
@@ -166,6 +168,8 @@ MaterialMesh::Material Model::loadMaterialColor(const aiMaterial* mat) {
 	MaterialMesh::Material color;
 	color.ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
 	color.diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+	color.specular = glm::vec3(specular.r, specular.g, specular.b);
+	color.shininess = shininess;
 	color.name = name.C_Str();
 
 	return color;
