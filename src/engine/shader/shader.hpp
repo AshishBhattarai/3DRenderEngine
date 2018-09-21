@@ -20,10 +20,13 @@ private:
 public:
 	Shader(std::string_view vertexPath, std::string_view fragmentPath,
 		std::string_view geometryPath = ""); // gemotryShader is optional
-	~Shader();
+	virtual ~Shader();
 
 	void start();
 	void stop();
+
+	virtual void loadTransformMatrix(const glm::mat4& matrix) {}
+	virtual void loadNormalMatrix(const glm::mat3& matrix) {}
 
 	GLint getUniformLoc(const char* name) const;
 

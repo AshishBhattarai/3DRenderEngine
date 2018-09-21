@@ -29,10 +29,11 @@ void RenderEngine::prepare() {
 
 RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		projection_mat(1.0f),
+		coloredEntityShader(),
 		entityShader(),
 		terrainShader(),
 		terrainRenderer(terrainShader),
-		entityRenderer(entityShader),
+		entityRenderer(entityShader, coloredEntityShader),
 		camera(camera),
 		sun(sun),
 		fogColor(0.1f, 0.8f, 0.8f)
@@ -49,8 +50,16 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	fsUBO.setSun(*sun);
 
 	// set uniform block binding point
-	setUniformBinding(ShaderConfig::GeneralVSData, vsUBO.getBindingPoint(), {&entityShader, &terrainShader});
-	setUniformBinding(ShaderConfig::GeneralFSData, fsUBO.getBindingPoint(), {&entityShader, &terrainShader});
+	setUniformBinding(
+		ShaderConfig::GeneralVSData,
+		vsUBO.getBindingPoint(),
+		{&coloredEntityShader, &entityShader, &terrainShader}
+	);
+	setUniformBinding(
+		ShaderConfig::GeneralFSData,
+		fsUBO.getBindingPoint(),
+		{&coloredEntityShader, &entityShader, &terrainShader}
+	);
 
 	// enables
 	glEnable(GL_CULL_FACE);
@@ -65,14 +74,10 @@ void RenderEngine::render() {
 	vsUBO.setCameraPos(camera->getPosition());
 
 	// render entity
-	entityShader.start();
 	entityRenderer.render(entities);
-	entityShader.stop();
 
 	// render terrain
-	terrainShader.start();
 	terrainRenderer.render(terrains);
-	terrainShader.stop();
 
 	entities.clear(); // clear entity_map
 	terrains.clear(); // clear Terrain

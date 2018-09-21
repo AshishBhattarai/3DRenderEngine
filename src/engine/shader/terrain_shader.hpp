@@ -27,21 +27,22 @@ private:
 	GLint loc_transformMat;
 	GLint loc_normalMat;
 
-	// material
+	// shininess
 	GLint loc_materialShininess;
 
 	// get all the locations from the shaders
 	void getUniformLocations();
+	void loadTextureUnits();
 
 public:
 	TerrainShader();
 
 	// load uniforms
-	void loadTransformMatrix(const glm::mat4& matrix) {
+	void loadTransformMatrix(const glm::mat4& matrix) override {
 		uniformMatrix4fv(loc_transformMat, matrix);
 	}
 
-	void loadNormalMatrix(const glm::mat3& matrix) {
+	void loadNormalMatrix(const glm::mat3& matrix) override {
 		uniformMatrix3fv(loc_normalMat, matrix);
 	}
 

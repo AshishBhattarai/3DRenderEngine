@@ -51,7 +51,7 @@ struct SpotLight {
 	vec3 direction;
 	PointLight attribs;
 
-	float cutoff;
+	float innerCutoff;
 	float outerCutoff;
 };
 
@@ -72,7 +72,7 @@ layout(std140) uniform GeneralFSData {
 	DirLight sun;
 };
 
-// calcuate light all - if no specular maps[0] = maps[1] = diffuse-map
+// calcuate lights
 vec3 calculateLight(Color lightColor, vec3 toLight, vec3 normal, vec3 toCamera) {
 	// diffuse
 	float diffuse = max(dot(normal, toLight), 0.0f);
@@ -120,7 +120,7 @@ vec3 applySpotLight(SpotLight light, vec3 normal, vec3 toCamera) {
 	// spotlight calc
 	float theta = dot(toLight, normalize(light.direction));
 	// spotlight intensity smooth step from outerCutoff(0) to innerCuttoff(1)
-	float intensity = smoothstep(light.outerCutoff, light.cutoff, theta);
+	float intensity = smoothstep(light.outerCutoff, light.innerCutoff, theta);
 
 	return spotLightColor * intensity;
 }

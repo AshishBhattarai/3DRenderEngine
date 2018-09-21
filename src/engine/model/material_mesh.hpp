@@ -37,7 +37,7 @@ public:
 			material(material)
 	{}
 
-	const Material& getMaterial() {
+	Material getMaterial() const {
 		return material;
 	}
 

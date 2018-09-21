@@ -16,7 +16,7 @@ private:
 public:
 	DebugPhysicsShader();
 
-	void setIsContactPoing(bool val) {
+	void setIsContactPoint(bool val) {
 		uniform1i(loc_isContactPoint, val);
 	}
 };

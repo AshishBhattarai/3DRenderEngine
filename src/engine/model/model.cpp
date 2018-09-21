@@ -9,25 +9,24 @@ void Model::loadModel(std::string_view path) {
 	Assimp::Importer importer;
 
 	// load model into assimp scene
-	const aiScene* scene = importer.ReadFile(std::string(path), aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(
+		std::string(path),
+		aiProcess_FlipUVs |
+		aiProcess_CalcTangentSpace |
+		aiProcess_ImproveCacheLocality |
+		aiProcess_LimitBoneWeights |
+		aiProcess_RemoveRedundantMaterials |
+		aiProcess_FindInvalidData |
+		aiProcess_GenSmoothNormals |
+		aiProcess_OptimizeMeshes |
+		aiProcess_OptimizeGraph |
+		aiProcess_JoinIdenticalVertices
+	);
 	//error check
 	if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 		SLOG("ERROR: ", importer.GetErrorString());
 		return;
 	}
-	// if model doesn't have normals generate smooth normals
-	if(scene->mMeshes[0]->HasNormals())
-		importer.ApplyPostProcessing (
-			aiProcess_CalcTangentSpace |
-			aiProcess_ImproveCacheLocality |
-			aiProcess_LimitBoneWeights |
-			aiProcess_RemoveRedundantMaterials |
-			aiProcess_FindInvalidData |
-			aiProcess_GenSmoothNormals |
-			aiProcess_OptimizeMeshes |
-			aiProcess_OptimizeGraph |
-			aiProcess_JoinIdenticalVertices
-		);
 	// if the meshes aren't triangulated
 	if(scene->mMeshes[0]->mFaces[0].mNumIndices > 3)
 		importer.ApplyPostProcessing(aiProcess_Triangulate);
@@ -55,7 +54,7 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 	MaterialMesh::Material color;
 	Texture::Map textures;
 	std::string name(mesh->mName.C_Str());
-	bool hasTexture = (modelType && MATERIAL_TEXTURE);
+	bool hasTexture = (modelType == MATERIAL_TEXTURE);
 	// for textured mesh
 	float specular_shininess = MaterialMesh::default_shininess;
 
@@ -125,7 +124,6 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 			mat->Get(AI_MATKEY_SHININESS, specular_shininess);
 		}
 	}
-
 	if(hasTexture)
 		return std::make_unique<TexturedMesh>(vertices, indices, texCoords,
 			std::move(textures), specular_shininess, name);

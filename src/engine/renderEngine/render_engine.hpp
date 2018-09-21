@@ -5,6 +5,7 @@
 #include "entities/camera.hpp"
 #include "entities/light.hpp"
 #include "entity_renderer.hpp"
+#include "shader/colored_entity_shader.hpp"
 #include "shader/entity_shader.hpp"
 #include "shader/terrain_shader.hpp"
 #include "shader/buffer/general_vs_ubo.hpp"
@@ -31,6 +32,7 @@ private:
 
 	// careful with order shader should be defined/declared before renderer
 	// entity
+	ColoredEntityShader coloredEntityShader;
 	EntityShader entityShader;
 	EntityRenderer entityRenderer;
 

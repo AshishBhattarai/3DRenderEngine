@@ -5,6 +5,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "entities/light.hpp"
+
 // TODO: multiple suns
 
 class GeneralFSUBO : public UniformBuffer {

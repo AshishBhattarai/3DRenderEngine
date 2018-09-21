@@ -54,7 +54,7 @@ void DebugDrawer::draw(const btVector3& from, const btVector3& to, const btVecto
 	glBufferSubData(GL_ARRAY_BUFFER, 0, DATA_SIZE*sizeof(float), points);
 
 	shader.start();
-	shader.setIsContactPoing((int)mode);
+	shader.setIsContactPoint((int)mode);
 	glBindVertexArray(VAO);
 	if(mode == LINES)
 		glDrawArrays(GL_LINES, 0, 2);

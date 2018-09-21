@@ -5,7 +5,6 @@
 
 #include <string_view>
 
-#include "entities/light.hpp"
 #include "model/mesh.hpp"
 
 // Shader for entities in the world
@@ -24,24 +23,23 @@ private:
 	GLint loc_transformMat;
 	GLint loc_normalMat;
 
-	// material
-	GLint loc_materialAmbient;
-	GLint loc_materialDiffuse;
+	// shininess
 	GLint loc_materialShininess;
 
 	// get all the locations from the shaders
 	void getUniformLocations();
+	void loadTextureUnits();
 
 public:
 	EntityShader();
 
 	// load uniforms
 	// matrices
-	void loadTransformMatrix(const glm::mat4& matrix) {
+	void loadTransformMatrix(const glm::mat4& matrix) override {
 		uniformMatrix4fv(loc_transformMat, matrix);
 	}
 
-	void loadNormalMatrix(const glm::mat3& matrix) {
+	void loadNormalMatrix(const glm::mat3& matrix) override {
 		uniformMatrix3fv(loc_normalMat, matrix);
 	}
 

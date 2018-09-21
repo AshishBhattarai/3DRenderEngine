@@ -10,6 +10,7 @@
 
 #include "entities/entity.hpp"
 
+#include "shader/colored_entity_shader.hpp"
 #include "shader/entity_shader.hpp"
 
 // This class renders entities in batch
@@ -18,13 +19,15 @@ class EntityRenderer {
 public:
 	using EntityListMap = std::unordered_map<Model*, std::vector<Entity*>>;
 private:
-	EntityShader* shader;
+	ColoredEntityShader* coloredEntityShader;
+	EntityShader* entityShader;
 
-	void loadTransformation(const Entity& entity);
+	void loadTransformation(const Entity& entity, Shader* shader);
 	void prepareMesh(const TexturedMesh& mesh);
+	void prepareMesh(const MaterialMesh& mesh);
 
 public:
-	EntityRenderer(EntityShader& shader);
+	EntityRenderer(EntityShader& entityShader, ColoredEntityShader& coloredEntityShader);
 
 	void render(EntityListMap& entities);
 };

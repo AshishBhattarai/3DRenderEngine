@@ -40,10 +40,12 @@ TerrainRenderer::TerrainRenderer(TerrainShader& shader) :
 {}
 
 void TerrainRenderer::render(std::vector<Terrain*>& terrains) {
+	shader->start();
 	for(auto& terrain : terrains) {
 		auto mesh = terrain->getMesh();
 		prepareMesh(*mesh);
 		loadTransformation(*terrain);
 		glDrawElements(GL_TRIANGLE_STRIP, mesh->getIndicesCount(), GL_UNSIGNED_INT, 0);
 	}
+	shader->stop();
 }

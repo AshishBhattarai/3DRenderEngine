@@ -140,7 +140,7 @@ void DisplayManager::calcFps() {
 }
 
 void DisplayManager::initLoop() {
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 	glfwSetCursorPos(window, mouse_lastx, mouse_lasty);
 	fps_time = delta_time = (float) glfwGetTime();
 }

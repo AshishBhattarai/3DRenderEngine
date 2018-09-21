@@ -5,6 +5,7 @@ project(engine)
 
 # flags
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -flag") append to flags
 # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -flag") append to flags
 set(OpenGL_GL_PREFERENCE "LEGACY")

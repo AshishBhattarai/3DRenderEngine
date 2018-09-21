@@ -18,6 +18,7 @@ add_library(engine-lib
 
 	shader/shader.cpp
 	shader/buffer/uniform_buffer.cpp
+	shader/colored_entity_shader.cpp
 	shader/entity_shader.cpp
 	shader/terrain_shader.cpp
 	shader/debug_physics_shader.cpp
