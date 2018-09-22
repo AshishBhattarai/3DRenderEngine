@@ -18,7 +18,7 @@ public:
 private:
 	static constexpr float MAX_PIXEL_COLOR = 256 + 256 + 256;// max color val of the pixel = r + g + b
 
-	int vertexCount;
+	u_int vertexCount;
 	// world position
 	float posX;
 	float posZ;
@@ -32,8 +32,8 @@ private:
 
 	Mode mode;
 
-	float calcHeightAt(int x, int z, float max_Height, Image& heightMap);
-	glm::vec3 calcNormalAt(int x, int z, float max_Height, Image& heightMap);
+	float calcHeightAt(u_int x, u_int z, float max_Height, Image& heightMap);
+	glm::vec3 calcNormalAt(u_int x, u_int z, float max_Height, Image& heightMap);
 
 	// generates the Terrain mesh -
 	void generateVertices(int size, std::vector<TexturedMesh::Vertex>& vertices, std::vector<glm::vec2>& texCoords);
@@ -45,11 +45,11 @@ private:
 		// function to calculate Terrain height (empty by default)
 
 	// intilizing constructor
-	Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Mode mode);
+	Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Mode mode);
 
 public:
 	// flat Terrain constructor
-	Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Texture::Map textures);
+	Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Texture::Map textures);
 	// height map constructor
 	Terrain(u_int gridX, u_int gridZ, int size, float maxHeight, Image& heightMap,
 	Texture::Map textures);

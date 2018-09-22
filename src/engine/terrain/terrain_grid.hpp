@@ -17,18 +17,19 @@ private:
 	static constexpr int TILING_FACTOR = 50;
 	static constexpr float MAX_HEIGHT = 50;
 
+	// Terrain grid
+	Grid grid;
+
+	u_int numGridX; // total no. of Terrain in grid x, starts from 1
+	u_int numGridZ; // in z
+
 	int terSize; // Terrain size
 	int vertexCount; // total num of vertex
 	float maxHeight;
 	int tilingFactor; // texture tiling factor - no. of times the texture gets tiled
+	int numTerrain; // no. of terrins in grid
 
 	float colOffset; // collision(height map) offset
-
-	// Terrain grid
-	Grid grid;
-	int numTerrain; // no. of terrins in grid
-	u_int numGridX; // total no. of Terrain in grid x, starts from 1
-	u_int numGridZ; // in z
 
 public:
 	TerrainGrid(u_int numGridX, u_int numGridZ, int size = SIZE,

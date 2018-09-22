@@ -16,16 +16,16 @@ void Image::loadImageData(const std::string& path, bool flip) {
 }
 
 Image::Image(const std::string& path, bool flip) :
-	height(0),
 	width(0),
+	height(0),
 	numChannels(0)
 {
 	loadImageData(path, flip);
 }
 
 // get rbg value of pixel
-float Image::getRGB(int x, int y) {
-	if(x < 0 || x >= height || y < 0 || y >= height)
+float Image::getRGB(u_int x, u_int y) {
+	if(x >= (u_int)height || y >= (u_int)height)
 		return 0.0f;
 
 	// index for pixel color(red), g = red_index + 1, b = red_index + 2

@@ -3,12 +3,12 @@
 #include "utils/slogger.hpp"
 #include "utils/math.hpp"
 
-float Terrain::calcHeightAt(int x, int z, float maxHeight, Image& heightMap) {
-	if ( x < 0 || x >= heightMap.getWidth() || z < 0 || z >= heightMap.getHeight())
+float Terrain::calcHeightAt(u_int x, u_int z, float maxHeight, Image& heightMap) {
+	if (x >= (u_int)heightMap.getWidth() || z >= (u_int)heightMap.getHeight())
 		return 0.0f;
 
 	// get pixel color (bottom-left of heightmap as (0, 0))
-  float height = heightMap.getRGB(heightMap.getWidth() - 1 -x, heightMap.getHeight() - 1 - z);
+  float height = heightMap.getRGB(heightMap.getWidth() - 1 - x, heightMap.getHeight() - 1 - z);
 	// calc height
 	height -= (MAX_PIXEL_COLOR/2.0f); // between -MAX_PIXEL_COLOR/2 and MAX_PIXEL_COLOR/2
 	height /= (MAX_PIXEL_COLOR/2.0f);	// between -1 & 1
@@ -18,7 +18,7 @@ float Terrain::calcHeightAt(int x, int z, float maxHeight, Image& heightMap) {
 }
 
 // calculate normal baised on heights of surrounding(neighbour) vertices, (finite difference method)
-glm::vec3 Terrain::calcNormalAt(int x, int z, float maxHeight, Image& heightMap) {
+glm::vec3 Terrain::calcNormalAt(u_int x, u_int z, float maxHeight, Image& heightMap) {
 	float heightL = calcHeightAt(x-1, z, maxHeight, heightMap); // left
 	float heightR = calcHeightAt(x+1, z, maxHeight, heightMap); // right
 	float heightU = calcHeightAt(x, z+1, maxHeight, heightMap); // up
@@ -32,8 +32,8 @@ glm::vec3 Terrain::calcNormalAt(int x, int z, float maxHeight, Image& heightMap)
 void Terrain::generateVertices(int size,
 	std::vector<TexturedMesh::Vertex>& vertices, std::vector<glm::vec2>& texCoords)
 {
-	for(int z = 0; z < vertexCount; ++z) { // z - h
-		for(int x = 0; x < vertexCount; ++x) { // x - w
+	for(u_int z = 0; z < vertexCount; ++z) { // z - h
+		for(u_int x = 0; x < vertexCount; ++x) { // x - w
 			Mesh::Vertex vertex;
 			glm::vec2 texCoord;
 			// position
@@ -54,8 +54,8 @@ void Terrain::generateVertices(int size,
 // generate indices data
 void Terrain::generateIndices(std::vector<u_int>& indices) {
 	// generate indices for tringle strips
-	for(int z = 0; z < vertexCount-1; ++z) { // height
-		for(int x = 0; x < vertexCount; ++x) { // width
+	for(u_int z = 0; z < vertexCount-1; ++z) { // height
+		for(u_int x = 0; x < vertexCount; ++x) { // width
 			// indices - in (x, z) for CCW - bottom to top
 			indices.push_back(z*(vertexCount) + x); // bottom left vertex
 			indices.push_back((z+1)*(vertexCount) + x); // top left vertex
@@ -74,9 +74,9 @@ void Terrain::generateIndices(std::vector<u_int>& indices) {
 void Terrain::generateHeightWMap(std::vector<TexturedMesh::Vertex>& vertices,
 	float maxHeight, Image& image)
 {
-	int i, j;
-	for(int z = 0; z < vertexCount; ++z) {
-		for(int x = 0; x < vertexCount; ++x) {
+	u_int i, j;
+	for(u_int z = 0; z < vertexCount; ++z) {
+		for(u_int x = 0; x < vertexCount; ++x) {
 			i = x + z*(vertexCount);
 			j = x + z*(vertexCount+1); // +1 to comply with terrian_collision_shape
 			// calc height
@@ -93,7 +93,7 @@ void Terrain::generateHeightWMap(std::vector<TexturedMesh::Vertex>& vertices,
 std::unique_ptr<TexturedMesh> Terrain::generateTerrain(int size,
 	std::function<void(std::vector<TexturedMesh::Vertex>&)> generateHeight)
 {
-	int total_vertices = vertexCount * vertexCount;
+	u_int total_vertices = vertexCount * vertexCount;
 	// vectors to store mesh data
 	std::vector<Mesh::Vertex> vertices;
 	std::vector<glm::vec2> texCoords;
@@ -118,17 +118,17 @@ std::unique_ptr<TexturedMesh> Terrain::generateTerrain(int size,
 }
 
 // common constrcutor
-Terrain::Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Mode mode) :
+Terrain::Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Mode mode) :
 	vertexCount(vertexCount),
 	posX(gridX*size),
 	posZ(gridZ*size),
-	mode(mode),
 	gridSize((float)size/(vertexCount - 1)), // Total grids per row&col
-	heights((vertexCount+1)*(vertexCount+1), 0.0f) // reserve
+	heights((vertexCount+1)*(vertexCount+1), 0.0f), // reserve
+	mode(mode)
 {}
 
 // flat Terrain
-Terrain::Terrain(u_int gridX, u_int gridZ, int size, int vertexCount, Texture::Map textures) :
+Terrain::Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Texture::Map textures) :
 	Terrain(gridX, gridZ, size, vertexCount, FLAT)
 {
 	mesh = generateTerrain(size);
@@ -167,7 +167,7 @@ float Terrain::getTerrainHeight(float posX, float posZ) {
 	// get the position inside the grid square
 	float x = fmod(terX, gridSize) / gridSize;
 	float z = fmod(terZ, gridSize) / gridSize;
-	int vc = vertexCount + 1;
+	u_int vc = vertexCount + 1;
 
 	// get the tringle on which posX & posZ lie
 	if(x <= (1 - z)) { // upper triangle

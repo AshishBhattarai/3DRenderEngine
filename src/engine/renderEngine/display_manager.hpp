@@ -27,18 +27,19 @@ private:
 	static constexpr int MAJOR_VERSION = 3;
 	static constexpr int MINOR_VERSION = 3;
 
-	int screen_width;
-	int screen_height;
-	int cursor_mode; // normal, disabled, hidden
 	int fps_cnt;
-
-	float mouse_lastx;
-	float mouse_lasty;
 	float fps_time;
 	float delta_time;
 	float delta;
 
+	int screen_width;
+	int screen_height;
+	float mouse_lastx;
+	float mouse_lasty;
+	int cursor_mode; // normal, disabled, hidden
+
 	bool display_failed;
+	GLFWwindow* window;
 
 	std::string window_title;
 	std::string fps_str;
@@ -48,7 +49,6 @@ private:
 	std::vector<mouseButtonCallback> vec_mouseBtnCallback;
 	std::vector<scrollCallback> vec_scrollCallback;
 
-	GLFWwindow* window;
 
 	DisplayManager();
 	~DisplayManager();

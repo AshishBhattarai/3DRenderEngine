@@ -42,8 +42,8 @@ CollisionShape::CollisionShape(const std::vector<float>& heights, int size,
 
 // improted
 CollisionShape::CollisionShape(btCollisionShape* shape, Type type):
-	shape(shape),
-	type(type)
+	type(type),
+	shape(shape)
 {}
 
 CollisionShape::~CollisionShape() {

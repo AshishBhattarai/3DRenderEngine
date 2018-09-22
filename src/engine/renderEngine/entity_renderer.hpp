@@ -19,8 +19,8 @@ class EntityRenderer {
 public:
 	using EntityListMap = std::unordered_map<Model*, std::vector<Entity*>>;
 private:
-	ColoredEntityShader* coloredEntityShader;
 	EntityShader* entityShader;
+	ColoredEntityShader* coloredEntityShader;
 
 	void loadTransformation(const Entity& entity, Shader* shader);
 	void prepareMesh(const TexturedMesh& mesh);

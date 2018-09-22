@@ -19,8 +19,8 @@ public:
 	};
 
 private:
-	std::string name; // name of the mesh
 	int indicesCount; // no. of indices to render
+	std::string name; // name of the mesh
 
 	GLuint v_VBO, EBO;
 
@@ -46,7 +46,7 @@ public:
 		return 	attributesCount++;
 	}
 
-	const GLuint getVAO() const {
+	GLuint getVAO() const {
 		return VAO;
 	}
 

@@ -8,8 +8,8 @@ protected:
 	glm::vec3 position;
 
 	// rotation
-	float yaw;
 	float pitch;
+	float yaw;
 	float roll;
 
 public:

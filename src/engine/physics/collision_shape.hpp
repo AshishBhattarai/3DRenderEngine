@@ -21,10 +21,10 @@ public:
 	};
 
 protected:
-	btCollisionShape* shape;
 	Type type;
+	btCollisionShape* shape;
 	// for childs
-	CollisionShape(Type type) {}
+	CollisionShape(Type type): type(type) {}
 
 public:
 	// sphere

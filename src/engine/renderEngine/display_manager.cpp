@@ -11,10 +11,10 @@ DisplayManager::DisplayManager() :
 		screen_height(DEFAULT_HEIGHT),
 		mouse_lastx(screen_width/2),
 		mouse_lasty(screen_height/2),
-		window_title("Engine1"),
+		cursor_mode(GLFW_CURSOR_HIDDEN),
 		display_failed(false),
 		window(nullptr),
-		cursor_mode(GLFW_CURSOR_HIDDEN) // disable cursor by default
+		window_title("Engine1")
 {
 	setupDisplay();
 	setupCallbacks();
@@ -140,7 +140,7 @@ void DisplayManager::calcFps() {
 }
 
 void DisplayManager::initLoop() {
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 	glfwSetCursorPos(window, mouse_lastx, mouse_lasty);
 	fps_time = delta_time = (float) glfwGetTime();
 }

@@ -34,21 +34,23 @@ private:
 
 	Type modelType;
 	int flags;
-	int numMeshes; // no of meshes in the model;
+	u_int numMeshes; // no of meshes in the model;
 
 	// load the model file
 	void loadModel(std::string_view path);
 	// conver aiMesh(assimp) to Mesh
 	std::unique_ptr<Mesh> processMesh(const aiMesh* mesh, const aiScene* scene);
 	// load the material colors
-	MaterialMesh::Material loadMaterialColor(const aiMaterial* mat);
-	// load material textures
-	std::shared_ptr<Texture> loadMaterialTexture(const aiMaterial* mat, std::string path, Texture::Type type);
+	void loadMaterialColor(const aiMaterial* mat, MaterialMesh::Material& color);
+	// loads all the textures
+	void loadMaterialTexture(const aiMaterial* mat, Texture::Map& textures);
+	// load texture data
+	std::shared_ptr<Texture> loadTexture(std::string path, Texture::Type type);
 
 public:
 	Model(std::string_view path, Type type, int flags = 0);
 
-	int getnumMeshes() const {
+	u_int getnumMeshes() const {
 		return numMeshes;
 	}
 

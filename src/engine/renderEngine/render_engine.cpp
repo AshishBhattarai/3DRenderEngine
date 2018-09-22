@@ -29,14 +29,16 @@ void RenderEngine::prepare() {
 
 RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		projection_mat(1.0f),
+		fogColor(0.1f, 0.8f, 0.8f),
+		vsUBO(),
+		fsUBO(),
 		coloredEntityShader(),
 		entityShader(),
+		entityRenderer(entityShader, coloredEntityShader),
 		terrainShader(),
 		terrainRenderer(terrainShader),
-		entityRenderer(entityShader, coloredEntityShader),
 		camera(camera),
-		sun(sun),
-		fogColor(0.1f, 0.8f, 0.8f)
+		sun(sun)
 {
 	// reserve space
 	entities.reserve(400);

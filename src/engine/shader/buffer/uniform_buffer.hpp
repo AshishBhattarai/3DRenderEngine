@@ -34,15 +34,15 @@ public:
 	// set buffer subdata
 	void setBufferData(const GLvoid* data, GLuint offset, GLuint size);
 
-	const GLuint getUBO() const {
+	GLuint getUBO() const {
 		return UBO;
 	}
 
-	const GLuint getBindingPoint() const {
+	GLuint getBindingPoint() const {
 		return bindingPoint;
 	}
 
-	const GLuint getTotalSize() const {
+	GLuint getTotalSize() const {
 		return total_size;
 	}
 };

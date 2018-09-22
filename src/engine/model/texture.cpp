@@ -34,9 +34,9 @@ void Texture::loadTexture(const std::string& path,  bool flip_y) {
 }
 
 Texture::Texture(const std::string& path, Type type, bool flip_y, float lod_bias) :
+	id(0),
 	type(type),
-	lod_bias(lod_bias),
-	id(0)
+	lod_bias(lod_bias)
 {
 	loadTexture(path, flip_y);
 }

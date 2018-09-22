@@ -21,7 +21,7 @@ public:
 	~Image();
 
 	// get r+g+b value of x,y pixel
-	float getRGB(int x, int y);
+	float getRGB(u_int x, u_int y);
 
 	// getters
 	const u_char* getData() const {

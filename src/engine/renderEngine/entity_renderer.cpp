@@ -55,7 +55,7 @@ void EntityRenderer::render(EntityListMap& entities) {
 		// start shader
 		shader->start();
 		// loop through all the meshes
-		for(int i = 0; i < pair.first->getnumMeshes(); ++i) {
+		for(u_int i = 0; i < pair.first->getnumMeshes(); ++i) {
 			const Mesh* mesh;
 			if(textured) {
 				prepareMesh(*pair.first->getTexturedMesh(i));

@@ -40,7 +40,7 @@ void Model::loadModel(std::string_view path) {
 	directory = path.substr(0, path.find_last_of('/'));
 
 	// process all the meshes in the scene
-	for(int i = 0; i < scene->mNumMeshes; ++i) {
+	for(u_int i = 0; i < scene->mNumMeshes; ++i) {
 		meshes.emplace_back(processMesh(scene->mMeshes[i], scene));
 	}
 	numMeshes = meshes.size();
@@ -64,7 +64,7 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 	if(hasTexture) texCoords.reserve(mesh->mNumVertices);
 
 	// load vertices and textureCoords
-	for(int i = 0; i < mesh->mNumVertices; ++i) {
+	for(u_int i = 0; i < mesh->mNumVertices; ++i) {
 		Mesh::Vertex vertex;
 		glm::vec2 texCoord;
 
@@ -92,38 +92,22 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 	}
 
 	// load indices
-	for(int i = 0; i < mesh->mNumFaces; ++i) { // get faces
+	for(u_int i = 0; i < mesh->mNumFaces; ++i) { // get faces
 		aiFace face = mesh->mFaces[i];
-		for(int j = 0; j < face.mNumIndices; ++j) // get indices
+		for(u_int j = 0; j < face.mNumIndices; ++j) // get indices
 			indices.emplace_back(face.mIndices[j]);
 	}
 
 	// process material color & texture
-	if(mesh->mMaterialIndex >= 0) {
-		//get material
-		const aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
+	const aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 
-		if(modelType == MATERIAL_COLOR) {
-			// load material textures
-			color = loadMaterialColor(mat);
-		} else {
-			// load textures if they exist otherwise set 0
-			aiString path;
-			if(mat->GetTextureCount(aiTextureType_DIFFUSE)) {
-				// diffuse
-				mat->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-				textures[Texture::DIFFUSE_MAP] = loadMaterialTexture(mat, path.C_Str(), Texture::DIFFUSE_MAP);
-			}
-			if(mat->GetTextureCount(aiTextureType_SPECULAR)) {
-				//specular
-				mat->GetTexture(aiTextureType_SPECULAR, 0, &path);
-				textures[Texture::SPECULAR_MAP] = loadMaterialTexture(mat, path.C_Str(), Texture::SPECULAR_MAP);
-			}
-
-			// load shininess
-			mat->Get(AI_MATKEY_SHININESS, specular_shininess);
-		}
+	if(modelType == MATERIAL_COLOR) {
+		loadMaterialColor(mat, color);
+	} else {
+		loadMaterialTexture(mat, textures);
+		mat->Get(AI_MATKEY_SHININESS, specular_shininess);
 	}
+
 	if(hasTexture)
 		return std::make_unique<TexturedMesh>(vertices, indices, texCoords,
 			std::move(textures), specular_shininess, name);
@@ -133,7 +117,7 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 		return std::make_unique<Mesh>(vertices, indices, name);
 }
 
-MaterialMesh::Material Model::loadMaterialColor(const aiMaterial* mat) {
+void Model::loadMaterialColor(const aiMaterial* mat, MaterialMesh::Material& color) {
 	// error message
 	auto message = [directory = directory](const std::string& type) {
 		SLOG("Failed to load " + type + " color for ",
@@ -163,17 +147,29 @@ MaterialMesh::Material Model::loadMaterialColor(const aiMaterial* mat) {
 	mat->Get(AI_MATKEY_NAME, name);
 
 	// createing MaterialMesh::Material
-	MaterialMesh::Material color;
 	color.ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
 	color.diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
 	color.specular = glm::vec3(specular.r, specular.g, specular.b);
 	color.shininess = shininess;
 	color.name = name.C_Str();
-
-	return color;
 }
 
-std::shared_ptr<Texture> Model::loadMaterialTexture(const aiMaterial* mat, std::string path, Texture::Type type) {
+void Model::loadMaterialTexture(const aiMaterial* mat, Texture::Map& textures) {
+	// load textures if they exist otherwise set 0
+	aiString path;
+	if(mat->GetTextureCount(aiTextureType_DIFFUSE)) {
+		// diffuse
+		mat->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+		textures[Texture::DIFFUSE_MAP] = loadTexture(path.C_Str(), Texture::DIFFUSE_MAP);
+	}
+	if(mat->GetTextureCount(aiTextureType_SPECULAR)) {
+		//specular
+		mat->GetTexture(aiTextureType_SPECULAR, 0, &path);
+		textures[Texture::SPECULAR_MAP] = loadTexture(path.C_Str(), Texture::SPECULAR_MAP);
+	}
+}
+
+std::shared_ptr<Texture> Model::loadTexture(std::string path, Texture::Type type) {
 	// absolute path
 	path = directory + '/' + path;
 
@@ -186,9 +182,9 @@ std::shared_ptr<Texture> Model::loadMaterialTexture(const aiMaterial* mat, std::
 
 
 Model::Model(std::string_view path, Type type, int flags):
-		numMeshes(0),
+		modelType(type),
 		flags(flags),
-		modelType(type)
+		numMeshes(0)
 {
 	loadModel(path);
 }
