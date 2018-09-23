@@ -36,6 +36,9 @@ private:
 	int flags;
 	u_int numMeshes; // no of meshes in the model;
 
+	glm::vec3 minbb; // min bounding box
+	glm::vec3 maxbb; // max bounding box
+
 	// load the model file
 	void loadModel(std::string_view path);
 	// conver aiMesh(assimp) to Mesh
@@ -46,6 +49,8 @@ private:
 	void loadMaterialTexture(const aiMaterial* mat, Texture::Map& textures);
 	// load texture data
 	std::shared_ptr<Texture> loadTexture(std::string path, Texture::Type type);
+	// calculate min&maxbb
+	void calculatebb(glm::vec3& position);
 
 public:
 	Model(std::string_view path, Type type, int flags = 0);
@@ -56,6 +61,14 @@ public:
 
 	Type getModelType() const {
 		return modelType;
+	}
+
+	glm::vec3 getMinbb() const {
+		return minbb;
+	}
+
+	glm::vec3 getMaxbb() const {
+		return maxbb;
 	}
 
 	const TexturedMesh* getTexturedMesh(int i = 0) const {

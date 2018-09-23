@@ -73,6 +73,8 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 		vertex.position.y = mesh->mVertices[i].y;
 		vertex.position.z = mesh->mVertices[i].z;
 
+		calculatebb(vertex.position);
+
 		// normals
 		if(flags & ModelFlags::FAKE_NORMAL) {
 			vertex.normal = glm::vec3(0.0f, 1.0f, 0.0);
@@ -180,11 +182,29 @@ std::shared_ptr<Texture> Model::loadTexture(std::string path, Texture::Type type
 	return textures_loaded[path]; // return shared pointer
 }
 
+void Model::calculatebb(glm::vec3& position) {
+	if(minbb.x > position.x)
+		minbb.x = position.x;
+	else if(maxbb.x < position.x)
+		maxbb.x = position.x;
+
+	if(minbb.y > position.y)
+		minbb.y = position.y;
+	else if(maxbb.y < position.y)
+		maxbb.y = position.y;
+
+	if(minbb.z > position.z)
+		minbb.z = position.z;
+	else if(maxbb.z < position.z)
+		maxbb.z = position.z;
+}
 
 Model::Model(std::string_view path, Type type, int flags):
 		modelType(type),
 		flags(flags),
-		numMeshes(0)
+		numMeshes(0),
+		minbb(glm::vec3(0.0f)),
+		maxbb(glm::vec3(0.0f))
 {
 	loadModel(path);
 }
