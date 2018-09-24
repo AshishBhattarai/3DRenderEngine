@@ -18,11 +18,6 @@ PhysicsEntity::PhysicsEntity(std::shared_ptr<Model> model, std::shared_ptr<Colli
 	PhysicsEntity(model, shape, glm::vec3(0.0f), glm::vec3(0.0f), mass)
 {}
 
-// PhysicsEntity::PhysicsEntity(std::shared_ptr<Model> model, std::unique_ptr<PhysicsBody>&& physicsBody) :
-// 	Entity(model),
-// 	physicsBody(physicsBody)
-// {}
-
 void PhysicsEntity::getTransMatrix(glm::mat4& trans) {
 	physicsBody->getOGLMatrix(glm::value_ptr(trans));
 	trans = glm::scale(trans, glm::vec3(scale));

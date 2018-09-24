@@ -16,7 +16,6 @@ public:
 	PhysicsEntity(std::shared_ptr<Model> model, std::shared_ptr<CollisionShape> shape,
 		const glm::vec3& position = glm::vec3(0.0f), const glm::vec3& rotation = glm::vec3(0.0f), float mass = 0.0f);
 	PhysicsEntity(std::shared_ptr<Model> model, std::shared_ptr<CollisionShape>, float mass = 0.0f);
-	// PhysicsEntity(std::shared_ptr<Model> model, std::unique_ptr<PhysicsBody>&& physicsBody);
 
 	// methods
 	void getTransMatrix(glm::mat4& trans) override;
