@@ -1,11 +1,14 @@
 #include "physics_body.hpp"
 
-PhysicsBody::PhysicsBody(std::shared_ptr<CollisionShape> collisionShape):
-	collisionShape(collisionShape)
+#include "../physics_world.hpp"
+
+PhysicsBody::PhysicsBody(std::shared_ptr<CollisionShape> collisionShape, Type type):
+	collisionShape(collisionShape),
+	type(type)
  {}
 
 PhysicsBody::~PhysicsBody() {
-	Physics::getInstance().removePhyiscBody(physicsBody);
+	PhysicsWorld::getInstance().removePhyiscBody(physicsBody);
 	delete physicsBody;
 }
 
@@ -18,6 +21,19 @@ void PhysicsBody::getOGLMatrix(void* matData) {
 void PhysicsBody::disableDebugDraw() {
 physicsBody->setCollisionFlags(physicsBody->getCollisionFlags() |
 		btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT);
+}
+
+void PhysicsBody::updateAABB() {
+	PhysicsWorld::getInstance().updateSingleAABB(physicsBody);
+}
+
+void PhysicsBody::scaleCollisionShape(const glm::vec3& scale) {
+	collisionShape->setLocalScale(scale);
+	updateAABB();
+}
+
+void PhysicsBody::addToWorld() {
+	PhysicsWorld::getInstance().addCollisionObject(physicsBody);
 }
 
 void PhysicsBody::setPosition(const glm::vec3& pos) {
@@ -46,4 +62,8 @@ glm::vec3 PhysicsBody::getRotation() const {
 	trans.getRotation().getEulerZYX(rot.y, rot.x, rot.z);
 	rot = glm::degrees(rot);
 	return rot;
+}
+
+PhysicsBody::Type PhysicsBody::getType() const {
+	return type;
 }

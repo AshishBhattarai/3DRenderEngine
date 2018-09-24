@@ -1,8 +1,10 @@
 #include "rigid_body.hpp"
 
+#include "../physics_world.hpp"
+
 RigidBody::RigidBody(std::shared_ptr<CollisionShape> collisionShape,
 	const glm::vec3& position, const glm::vec3& rotation, float mass):
-	PhysicsBody(collisionShape)
+	PhysicsBody(collisionShape, PhysicsBody::RIGID)
 {
 	// create a rigid body
 	btTransform trans;
@@ -23,6 +25,10 @@ RigidBody::RigidBody(std::shared_ptr<CollisionShape> collisionShape,
 	motionState = new btDefaultMotionState(trans);
 	// rigidbody constructor
 	this->physicsBody = new btRigidBody(mass, motionState, cShape, inertia);
+}
+
+void RigidBody::addToWorld() {
+	PhysicsWorld::getInstance().addRigidBody((btRigidBody*)physicsBody);
 }
 
 RigidBody::~RigidBody() {

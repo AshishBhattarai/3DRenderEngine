@@ -29,12 +29,15 @@ add_library(engine-lib
 	utils/image.cpp
 	utils/mtl_parser.cpp
 
-	physics/collision_shape.cpp
-	physics/physics.cpp
-	physics/physics_body.cpp
-	physics/rigid_body.cpp
+
+	physics/physics_world.cpp
 	physics/debug_drawer.cpp
 	physics/physics_importer.cpp
+	physics/physics_entity.cpp
+	physics/collision_shape/collision_shape.cpp
+	physics/physics_body/physics_body.cpp
+	physics/physics_body/rigid_body.cpp
+	physics/physics_body/static_body.cpp
 )
 
 target_link_libraries(

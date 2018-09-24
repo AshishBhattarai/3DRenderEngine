@@ -5,9 +5,7 @@
 #include <glm/glm.hpp>
 #include <bullet/BulletDynamics/Dynamics/btRigidBody.h>
 
-#include "collision_shape.hpp"
 #include "physics_body.hpp"
-#include "physics.hpp"
 
 class RigidBody : public PhysicsBody {
 private:
@@ -19,9 +17,7 @@ public:
 
 	~RigidBody();
 
-	void addToWorld(Physics& phys) override {
-		phys.addRigidBody((btRigidBody*)physicsBody);
-	}
+	void addToWorld() override;
 
 	// for setters and getters -- remove later
 	btRigidBody* body() {

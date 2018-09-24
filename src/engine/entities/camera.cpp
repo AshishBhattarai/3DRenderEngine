@@ -3,8 +3,8 @@
 // update camera orientation and axis
 void Camera::updateCameraDirection() {
 	// update orientation
-	orientation = glm::angleAxis(glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));
-	orientation *= glm::angleAxis(glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+	orientation = glm::angleAxis(glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	orientation *= glm::angleAxis(glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	// orientation *= glm::quat(glm::angleAxis(glm::radians(roll), glm::vec3(0.0f, 0.0f, 1.0f)));
 
 	orientation = glm::normalize(orientation);
@@ -17,8 +17,8 @@ void Camera::updateCameraDirection() {
 	up 		= glm::vec3(viewMat[0][1], viewMat[1][1], viewMat[2][1]);
 }
 
-Camera::Camera(glm::vec3 position, float pitch, float yaw, float roll):
-		BaseEntity(position, pitch, yaw, roll),
+Camera::Camera(const glm::vec3& position, const glm::vec3& rotation):
+		BaseEntity(position, rotation),
 		movementSpeed(SPEED),
 		mouseSensitivity(SENSITIVITY)
 {
@@ -51,14 +51,14 @@ void Camera::processKeyboard(Movement dir, float dt) {
 void Camera::processMouseMovement(float xoffset, float yoffset, float dt) {
 	float speed = (mouseSensitivity * dt);
 
-	yaw += xoffset * speed;
-	pitch += yoffset * speed;
+	rotation.y += xoffset * speed;
+	rotation.x += yoffset * speed;
 
-			// limit pitch to avoid unwanted rotation
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
+	// limit pitch to avoid unwanted rotation
+	if (rotation.x > 89.0f)
+		rotation.x = 89.0f;
+	if (rotation.x < -89.0f)
+		rotation.x = -89.0f;
 
 
 	updateCameraDirection();

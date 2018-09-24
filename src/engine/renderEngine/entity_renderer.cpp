@@ -2,18 +2,10 @@
 
 #include "model/model.hpp"
 
-void EntityRenderer::loadTransformation(const Entity& entity, Shader* shader) {
-	// translate
-	glm::mat4 transform_mat = glm::translate(glm::mat4(1.0f), entity.getPosition());
-	// rotate
-	transform_mat = glm::rotate(transform_mat, glm::radians(entity.getPitch()),
-			glm::vec3(1.0f, 0.0f, 0.0f));
-	transform_mat = glm::rotate(transform_mat, glm::radians(entity.getYaw()),
-			glm::vec3(0.0f, 1.0f, 0.0f));
-	transform_mat = glm::rotate(transform_mat, glm::radians(entity.getRoll()),
-			glm::vec3(0.0f, 0.0f, 1.0f));
-	// scale
-	transform_mat = glm::scale(transform_mat, glm::vec3(entity.getScale()));
+void EntityRenderer::loadTransformation(Entity* entity, Shader* shader) {
+	// transformation
+	glm::mat4 transform_mat;
+	entity->getTransMatrix(transform_mat);
 
 	// load to shader
 	shader->loadTransformMatrix(transform_mat);
@@ -66,7 +58,7 @@ void EntityRenderer::render(EntityListMap& entities) {
 			}
 			// entites
 			for(auto& entity : pair.second) {
-				loadTransformation(*entity, shader); // load transformation
+				loadTransformation(entity, shader); // load transformation
 				// draw
 				glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, 0);
 			}

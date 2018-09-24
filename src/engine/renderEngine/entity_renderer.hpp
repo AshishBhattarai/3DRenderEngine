@@ -22,7 +22,7 @@ private:
 	EntityShader* entityShader;
 	ColoredEntityShader* coloredEntityShader;
 
-	void loadTransformation(const Entity& entity, Shader* shader);
+	void loadTransformation(Entity* entity, Shader* shader);
 	void prepareMesh(const TexturedMesh& mesh);
 	void prepareMesh(const MaterialMesh& mesh);
 

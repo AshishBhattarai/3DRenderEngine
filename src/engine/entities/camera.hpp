@@ -47,8 +47,7 @@ private:
 	}
 
 public:
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), float pitch = PITCH,
-		float yaw = YAW, float roll = ROLL);
+	Camera(const glm::vec3& position = glm::vec3(0.0f), const glm::vec3& rotation = glm::vec3(0.0f));
 
 	void processKeyboard(Movement dir, float dt);
 	void processMouseMovement(float xoffset, float yoffset, float dt);
@@ -59,21 +58,30 @@ public:
 		return viewMat;
 	}
 
-	void setPitch(float p) {
-		pitch = p;
+	void setPosition(const glm::vec3& pos) override {
+		position = pos;
 		updateCameraDirection();
 	}
 
-	void setRoll(float r) {
-		roll = r;
+	void setRotation(const glm::vec3& rot) override {
+		rotation = rot;
 		updateCameraDirection();
 	}
 
-	void setYaw(float y) {
-		yaw = y;
+	void setPitch(float p) override {
+		rotation.x = p;
 		updateCameraDirection();
 	}
 
+	void setYaw(float y) override {
+		rotation.y = y;
+		updateCameraDirection();
+	}
+
+	void setRoll(float r) override {
+		rotation.z = r;
+		updateCameraDirection();
+	}
 };
 
 #endif

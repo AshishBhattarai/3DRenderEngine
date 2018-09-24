@@ -5,8 +5,8 @@
 #include <bullet/BulletFileLoader/btBulletFile.h>
 #include <memory>
 
-#include "collision_shape.hpp"
-#include "rigid_body.hpp"
+#include "collision_shape/collision_shape.hpp"
+#include "physics_body/rigid_body.hpp"
 
 class PhysicsImporter : private btWorldImporter {
 private:

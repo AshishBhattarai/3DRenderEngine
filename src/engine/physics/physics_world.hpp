@@ -1,12 +1,13 @@
-#ifndef PHYSICS_HPP
-#define PHYSICS_HPP
+#ifndef PHYSICS_WORLD_HPP
+#define PHYSICS_WORLD_HPP
 
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 
 // singleton class represents physics world
 
-class Physics {
+class DebugDrawer;
+class PhysicsWorld {
 private:
 	// default physics values
 	static constexpr float GRAVITY 		= -10.0f;
@@ -18,19 +19,21 @@ private:
 	btSequentialImpulseConstraintSolver* solver;
 	btDiscreteDynamicsWorld* dynamicsWorld;
 
-	Physics();
-	~Physics();
+	DebugDrawer* debug_drawer;
+
+	PhysicsWorld();
+	~PhysicsWorld();
 
 public:
 	// instance
-	static Physics& getInstance() {
-		static Physics instance;
+	static PhysicsWorld& getInstance() {
+		static PhysicsWorld instance;
 		return instance;
 	}
 
 	// disable copying
-	Physics(const Physics&) = delete;
-	Physics& operator=(const Physics&) = delete;
+	PhysicsWorld(const PhysicsWorld&) = delete;
+	PhysicsWorld& operator=(const PhysicsWorld&) = delete;
 
 	void processPhysics(float delta) {
 		dynamicsWorld->stepSimulation(delta, MAX_STEPS);
@@ -40,12 +43,16 @@ public:
 		dynamicsWorld->addRigidBody(body);
 	}
 
+	void addCollisionObject(btCollisionObject* object) {
+		dynamicsWorld->addCollisionObject(object);
+	}
+
 	void removePhyiscBody(btCollisionObject* physicsBody) {
 		dynamicsWorld->removeCollisionObject(physicsBody);
 	}
 
-	void setDebugDrawer(btIDebugDraw* drawer) {
-		dynamicsWorld->setDebugDrawer(drawer);
+	void updateSingleAABB(btCollisionObject* physicsBody) {
+		dynamicsWorld->updateSingleAabb(physicsBody);
 	}
 
 	void debugDraw() {

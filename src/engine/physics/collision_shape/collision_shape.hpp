@@ -8,6 +8,7 @@
 
 class CollisionShape {
 friend class RigidBody;
+friend class StaticBody;
 public:
 	enum Type {
 		SPHERE					=		SPHERE_SHAPE_PROXYTYPE,

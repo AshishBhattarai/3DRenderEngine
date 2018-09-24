@@ -6,50 +6,53 @@
 class BaseEntity {
 protected:
 	glm::vec3 position;
-
-	// rotation
-	float pitch;
-	float yaw;
-	float roll;
+	glm::vec3 rotation;
 
 public:
-	BaseEntity(glm::vec3 position = glm::vec3(0.0f), float pitch = 0.0f,
-		float yaw = 0.0f, float roll = 0.0f) :
+	BaseEntity(const glm::vec3& position = glm::vec3(0.0f),
+		const glm::vec3& rotation = glm::vec3(0.0f)) :
 		position(position),
-		pitch(pitch),
-		yaw(yaw),
-		roll(roll) {}
+		rotation(rotation)
+		{}
 
-	void setPosition(glm::vec3 pos) {
+	virtual void setPosition(const glm::vec3& pos) {
 		position = pos;
 	}
 
-	void setPitch(float x) {
-		pitch = x;
+	virtual void setRotation(const glm::vec3& rot) {
+		rotation = rot;
 	}
 
-	void setYaw(float y) {
-		yaw = y;
+	virtual void setPitch(float x) {
+		rotation.x = x;
 	}
 
-	void setRoll(float z) {
-		roll = z;
+	virtual void setYaw(float y) {
+		rotation.y = y;
 	}
 
-	glm::vec3 getPosition() const {
+	virtual void setRoll(float z) {
+		rotation.z = z;
+	}
+
+	virtual glm::vec3 getPosition() const {
 		return position;
 	}
 
-	float getPitch() const {
-		return pitch;
+	virtual glm::vec3 getRotation() const {
+		return rotation;
 	}
 
-	float getYaw() const {
-		return yaw;
+	virtual float getPitch() const {
+		return rotation.x;
 	}
 
-	float getRoll() const {
-		return roll;
+	virtual float getYaw() const {
+		return rotation.y;
+	}
+
+	virtual float getRoll() const {
+		return rotation.z;
 	}
 };
 

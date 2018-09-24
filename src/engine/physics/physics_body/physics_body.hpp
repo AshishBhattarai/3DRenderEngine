@@ -5,15 +5,21 @@
 #include <glm/glm.hpp>
 #include <bullet/BulletCollision/CollisionDispatch/btCollisionObject.h>
 
-#include "collision_shape.hpp"
-#include "physics.hpp"
+#include "../collision_shape/collision_shape.hpp"
 
 class PhysicsBody {
+public:
+	enum Type {
+		STATIC = 0,
+		RIGID  = 1
+	};
+
 protected:
 	std::shared_ptr<CollisionShape> collisionShape;
 	btCollisionObject* physicsBody;
+	Type type;
 
-	PhysicsBody(std::shared_ptr<CollisionShape> collisionShape);
+	PhysicsBody(std::shared_ptr<CollisionShape> collisionShape, Type type);
 
 public:
 	PhysicsBody(const PhysicsBody&) = delete;
@@ -24,7 +30,9 @@ public:
 	// methods
 	void getOGLMatrix(void* matData);
 	void disableDebugDraw();
-	virtual void addToWorld(Physics& phys) = 0;
+	void updateAABB();
+	void scaleCollisionShape(const glm::vec3& scale);
+	virtual void addToWorld();
 
 	// setters
 	void setPosition(const glm::vec3& pos);
@@ -33,6 +41,7 @@ public:
 	// getters
 	glm::vec3 getPosition() const;
 	glm::vec3 getRotation() const;
+	PhysicsBody::Type getType() const;
 };
 
 #endif

@@ -1,6 +1,9 @@
-#include "physics.hpp"
+#include "physics_world.hpp"
 
-Physics::Physics() {
+#include "debug_drawer.hpp"
+
+PhysicsWorld::PhysicsWorld()
+{
 	// init physics world
 	broadphase = new btDbvtBroadphase();
 	collConfig = new btDefaultCollisionConfiguration();
@@ -9,13 +12,18 @@ Physics::Physics() {
 
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collConfig);
 	dynamicsWorld->setGravity(btVector3(0.0, GRAVITY, 0.0f));
+
+	debug_drawer = new DebugDrawer();
+	dynamicsWorld->setDebugDrawer(debug_drawer);
 }
 
-Physics::~Physics() {
+PhysicsWorld::~PhysicsWorld() {
 	// clearnup
 	delete dynamicsWorld;
 	delete solver;
 	delete dispatcher;
 	delete broadphase;
 	delete collConfig;
+	dynamicsWorld->setDebugDrawer(0);
+	delete debug_drawer;
 }
