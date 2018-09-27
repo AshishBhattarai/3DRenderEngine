@@ -58,6 +58,18 @@ public:
 		return viewMat;
 	}
 
+	glm::vec3 getFrontDirection() const {
+		return front;
+	}
+
+	glm::vec3 getRightDirection() const {
+		return right;
+	}
+
+	glm::vec3 getUpDirection() const {
+		return up;
+	}
+
 	void setPosition(const glm::vec3& pos) override {
 		position = pos;
 		updateCameraDirection();

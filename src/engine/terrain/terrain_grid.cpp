@@ -9,17 +9,16 @@ TerrainGrid::	TerrainGrid(u_int numGridX, u_int numGridZ, int size,
 		vertexCount(vertexCount),
 		maxHeight(maxHeight),
 		tilingFactor(tilingFactor),
-		numTerrain(0),
-		colOffset(((float)size/(vertexCount-1))/2.0f)
+		numTerrain(0)
 {
 }
 
-void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Texture::Map textures) {
+void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Texture::Map& textures) {
 	// check if the index is correct
 	if(gridX >= numGridX || gridZ >= numGridZ) return;
 
-	// add Terrain
-	grid[gridX + numGridZ*gridZ] = std::make_unique<Terrain>(
+	// add PhysicsTerrain
+	grid[gridX + numGridZ*gridZ] = std::make_unique<PhysicsTerrain>(
 		gridX, gridZ, terSize, vertexCount, textures
 	);
 	++numTerrain;
@@ -27,19 +26,19 @@ void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Texture::Map textures) {
 
 // with height maps
 void TerrainGrid::addTerrain(u_int gridX, u_int gridZ, Image& heightMap,
-	Texture::Map textures)
+	Texture::Map& textures)
 {
 	if(gridX >= numGridX || gridZ >= numGridZ) return;
 
-	// add Terrain
-	grid[gridX + numGridZ*gridZ] = std::make_unique<Terrain>(
+	// add PhysicsTerrain
+	grid[gridX + numGridZ*gridZ] = std::make_unique<PhysicsTerrain>(
 		gridX, gridZ, terSize, maxHeight, heightMap, textures
 	);
 	++numTerrain;
 }
 
-// get Terrain in grid x, z
-Terrain* TerrainGrid::getTerrain(u_int gridX, u_int gridZ) {
+// get PhysicsTerrain in grid x, z
+PhysicsTerrain* TerrainGrid::getTerrain(u_int gridX, u_int gridZ) {
 	if(!numTerrain) return nullptr;
 	return (gridX < numGridX)? ((gridZ < numGridZ)?
 					grid[gridX + numGridZ*gridZ].get() : nullptr) : nullptr;

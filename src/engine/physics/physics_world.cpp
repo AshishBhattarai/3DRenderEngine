@@ -27,3 +27,7 @@ PhysicsWorld::~PhysicsWorld() {
 	dynamicsWorld->setDebugDrawer(0);
 	delete debug_drawer;
 }
+
+void PhysicsWorld::setVSDataBinding(u_int point) {
+	debug_drawer->setVSDataBinding(point);
+}

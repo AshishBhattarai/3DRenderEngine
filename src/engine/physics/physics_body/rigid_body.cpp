@@ -28,7 +28,7 @@ RigidBody::RigidBody(std::shared_ptr<CollisionShape> collisionShape,
 }
 
 void RigidBody::addToWorld() {
-	PhysicsWorld::getInstance().addRigidBody((btRigidBody*)physicsBody);
+	PhysicsWorld::getInstance().addRigidBody(static_cast<btRigidBody*>(physicsBody));
 }
 
 RigidBody::~RigidBody() {

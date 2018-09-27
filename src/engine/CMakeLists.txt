@@ -10,6 +10,7 @@ add_library(engine-lib
 
 	entities/entity.cpp
 	entities/camera.cpp
+	entities/physics_entity.cpp
 
 	model/model.cpp
 	model/mesh.cpp
@@ -25,15 +26,14 @@ add_library(engine-lib
 
 	terrain/terrain.cpp
 	terrain/terrain_grid.cpp
+	terrain/physics_terrain.cpp
 
 	utils/image.cpp
 	utils/mtl_parser.cpp
 
-
 	physics/physics_world.cpp
 	physics/debug_drawer.cpp
 	physics/physics_importer.cpp
-	physics/physics_entity.cpp
 	physics/collision_shape/collision_shape.cpp
 	physics/physics_body/physics_body.cpp
 	physics/physics_body/rigid_body.cpp

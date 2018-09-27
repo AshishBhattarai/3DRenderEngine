@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include "physics_body/physics_body.hpp"
+#include "physics/physics_body/physics_body.hpp"
 
 class PhysicsEntity : public Entity {
 private:

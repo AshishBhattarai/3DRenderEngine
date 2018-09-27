@@ -3,9 +3,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-void TerrainRenderer::loadTransformation(const Terrain& terrain) {
+void TerrainRenderer::loadTransformation(Terrain& terrain) {
 	// translate
-	glm::mat4 transform_mat = glm::translate(glm::mat4(1.0f), glm::vec3(terrain.getPosX(), 0.0f, terrain.getPosZ()));
+	glm::mat4 transform_mat;
+	terrain.getTransMatrix(transform_mat);
 
 	// load to shader
 	shader->loadTransformMatrix(transform_mat);

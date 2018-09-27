@@ -17,45 +17,47 @@ public:
 
 private:
 	static constexpr float MAX_PIXEL_COLOR = 256 + 256 + 256;// max color val of the pixel = r + g + b
+	// mesh
+	std::unique_ptr<TexturedMesh> mesh;
+	Mode mode;
 
+protected:
 	u_int vertexCount;
+	int size;
 	// world position
 	float posX;
 	float posZ;
 	// size per Terrain suqare grid
 	float gridSize;
 	// heights
+	float maxHeight;
 	std::vector<float> heights;
 
-	// mesh
-	std::unique_ptr<TexturedMesh> mesh;
-
-	Mode mode;
-
-	float calcHeightAt(u_int x, u_int z, float max_Height, Image& heightMap);
-	glm::vec3 calcNormalAt(u_int x, u_int z, float max_Height, Image& heightMap);
+	float calcHeightAt(u_int x, u_int z, Image& heightMap);
+	glm::vec3 calcNormalAt(u_int x, u_int z, Image& heightMap);
 
 	// generates the Terrain mesh -
-	void generateVertices(int size, std::vector<TexturedMesh::Vertex>& vertices, std::vector<glm::vec2>& texCoords);
+	void generateVertices(std::vector<TexturedMesh::Vertex>& vertices, std::vector<glm::vec2>& texCoords);
 	void generateIndices(std::vector<u_int>& indices);
-	void generateHeightWMap(std::vector<TexturedMesh::Vertex>& vertices, float maxHeight, Image& image);
+	void generateHeightWMap(std::vector<TexturedMesh::Vertex>& vertices, Image& image);
 
-	std::unique_ptr<TexturedMesh> generateTerrain(int size,
-		std::function<void(std::vector<TexturedMesh::Vertex>&)> caculateHeight = {});
+	std::unique_ptr<TexturedMesh> generateTerrain(std::function<void(std::vector<TexturedMesh::Vertex>&)> caculateHeight = {});
 		// function to calculate Terrain height (empty by default)
 
 	// intilizing constructor
-	Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Mode mode);
+	Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, float maxHeight, Mode mode);
 
 public:
 	// flat Terrain constructor
-	Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Texture::Map textures);
+	Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Texture::Map& textures);
 	// height map constructor
 	Terrain(u_int gridX, u_int gridZ, int size, float maxHeight, Image& heightMap,
-	Texture::Map textures);
+	Texture::Map& textures);
 
 	// get height at a world position
 	float getTerrainHeight(float posX, float posZ);
+
+	void getTransMatrix(glm::mat4& trans);
 
 	// getters
 	float getPosX() const {

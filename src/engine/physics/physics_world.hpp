@@ -68,6 +68,7 @@ public:
 		return glm::vec3(rg.x(), rg.y(), rg.z());
 	}
 
+	void setVSDataBinding(u_int point);
 };
 
 #endif

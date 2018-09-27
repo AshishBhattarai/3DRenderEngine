@@ -4,13 +4,13 @@
 #include <memory>
 #include <utility>
 
-#include "terrain.hpp"
+#include "physics_terrain.hpp"
 
 // represents a grid of Terrains
 
 class TerrainGrid {
 private:
-	using Grid = std::vector<std::unique_ptr<Terrain>>;
+	using Grid = std::vector<std::unique_ptr<PhysicsTerrain>>;
 	// defualts
 	static constexpr int SIZE = 1000;
 	static constexpr int VERTEX_COUNT = 256;
@@ -29,20 +29,18 @@ private:
 	int tilingFactor; // texture tiling factor - no. of times the texture gets tiled
 	int numTerrain; // no. of terrins in grid
 
-	float colOffset; // collision(height map) offset
-
 public:
 	TerrainGrid(u_int numGridX, u_int numGridZ, int size = SIZE,
 		int vertexCount = VERTEX_COUNT, float maxHeight = MAX_HEIGHT,
 		int tilingFactor = TILING_FACTOR);
 
 	// add a Terrain to the grid - overrides old Terrain if there is any
-	void addTerrain(u_int gridX, u_int gridZ, Texture::Map textures);
+	void addTerrain(u_int gridX, u_int gridZ, Texture::Map& textures);
 	// Terrains with heightmap
-	void addTerrain(u_int gridX, u_int gridZ, Image& heightMap, Texture::Map textures);
+	void addTerrain(u_int gridX, u_int gridZ, Image& heightMap, Texture::Map& textures);
 
 	// get Terrain in grid x, z
-	Terrain* getTerrain(u_int gridX, u_int gridZ);
+	PhysicsTerrain* getTerrain(u_int gridX, u_int gridZ);
 
 	// get grid for correspoind world x, z, returns 0 if no Terrain in gri
 	std::pair<u_int, u_int> posToGrid(float x, float z);
@@ -73,10 +71,6 @@ public:
 
 	float getTerrainVertexCount() const {
 		return vertexCount;
-	}
-
-	float getColOffset() const {
-		return colOffset;
 	}
 
 	float getNumGridX() const {

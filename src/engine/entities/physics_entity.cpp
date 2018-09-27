@@ -1,7 +1,7 @@
 #include "physics_entity.hpp"
 
-#include "physics_body/static_body.hpp"
-#include "physics_body/rigid_body.hpp"
+#include "physics/physics_body/static_body.hpp"
+#include "physics/physics_body/rigid_body.hpp"
 
 PhysicsEntity::PhysicsEntity(std::shared_ptr<Model> model, std::shared_ptr<CollisionShape> shape,
 	const glm::vec3& position, const glm::vec3& rotation, float mass) :

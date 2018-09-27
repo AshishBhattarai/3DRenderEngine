@@ -48,14 +48,12 @@ void EntityRenderer::render(EntityListMap& entities) {
 		shader->start();
 		// loop through all the meshes
 		for(u_int i = 0; i < pair.first->getnumMeshes(); ++i) {
-			const Mesh* mesh;
-			if(textured) {
+			if(textured)
 				prepareMesh(*pair.first->getTexturedMesh(i));
-				mesh = pair.first->getTexturedMesh(i);
-			} else {
+			else
 				prepareMesh(*pair.first->getMaterialMesh(i));
-				mesh = pair.first->getMaterialMesh(i);
-			}
+			// get mesh data
+			const Mesh* mesh = pair.first->getRawMesh(i);
 			// entites
 			for(auto& entity : pair.second) {
 				loadTransformation(entity, shader); // load transformation

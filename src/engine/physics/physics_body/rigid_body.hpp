@@ -18,11 +18,6 @@ public:
 	~RigidBody();
 
 	void addToWorld() override;
-
-	// for setters and getters -- remove later
-	btRigidBody* body() {
-		return (btRigidBody*)physicsBody;
-	}
 };
 
 #endif

@@ -10,7 +10,7 @@ class TerrainRenderer {
 private:
 	TerrainShader* shader;
 
-	void loadTransformation(const Terrain& terrain);
+	void loadTransformation(Terrain& terrain);
 	void prepareMesh(const TexturedMesh& mesh);
 	// void loadTransformation(const Terrain& Terrain);
 
