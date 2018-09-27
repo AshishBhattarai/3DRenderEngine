@@ -41,5 +41,6 @@ float Image::getRGB(u_int x, u_int y) {
 
 // free image
 Image::~Image() {
-	stbi_image_free(data);
+	if(data)
+		stbi_image_free(data);
 }

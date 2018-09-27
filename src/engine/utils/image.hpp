@@ -23,6 +23,10 @@ public:
 	// get r+g+b value of x,y pixel
 	float getRGB(u_int x, u_int y);
 
+	bool failed() const {
+		return !data;
+	}
+
 	// getters
 	const u_char* getData() const {
 		return data;

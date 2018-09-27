@@ -5,6 +5,7 @@
 void Texture::loadTexture(const std::string& path,  bool flip_y) {
 	// load image
 	Image image(path, flip_y);
+	if(image.failed()) return;
 
 	// type
 	GLenum type;

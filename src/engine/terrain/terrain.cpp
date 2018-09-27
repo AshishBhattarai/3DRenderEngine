@@ -126,7 +126,10 @@ Terrain::Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, float ma
 	gridSize((float)size/(vertexCount - 1)), // Total grids per row&col
 	maxHeight(maxHeight),
 	heights((vertexCount+1)*(vertexCount+1), 0.0f) // reserve
-{}
+{
+	// incase the the vertex count is 0 - to avoid crash
+	if(!vertexCount) this->vertexCount = 1;
+}
 
 // flat Terrain
 Terrain::Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Texture::Map& textures) :
