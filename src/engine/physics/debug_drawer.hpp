@@ -34,7 +34,7 @@ public:
 
 	void reportErrorWarning(const char *) {}
 	void draw3dText(const btVector3 &, const char *) {}
-	void setDebugMode(int p) {}
+	void setDebugMode(int) {}
 
 	int getDebugMode() const {
 		return (btIDebugDraw::DBG_DrawWireframe | btIDebugDraw::DBG_FastWireframe |

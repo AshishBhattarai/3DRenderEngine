@@ -33,6 +33,9 @@ public:
 	float getYaw() const override;
 	float getRoll() const override;
 
+	glm::vec3 getMaxBB() const override;
+	glm::vec3 getMinBB() const override;
+
 	PhysicsBody* getPhysicsBody() const;
 };
 

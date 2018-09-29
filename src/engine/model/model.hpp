@@ -63,20 +63,20 @@ public:
 		return modelType;
 	}
 
-	glm::vec3 getMinbb() const {
+	glm::vec3 getMinBB() const {
 		return minbb;
 	}
 
-	glm::vec3 getMaxbb() const {
+	glm::vec3 getMaxBB() const {
 		return maxbb;
 	}
 
 	const TexturedMesh* getTexturedMesh(int i = 0) const {
-		return dynamic_cast<const TexturedMesh*>(meshes[i].get());
+		return static_cast<const TexturedMesh*>(meshes[i].get());
 	}
 
 	const MaterialMesh* getMaterialMesh(int i = 0) const {
-		return dynamic_cast<const MaterialMesh*>(meshes[i].get());
+		return static_cast<const MaterialMesh*>(meshes[i].get());
 	}
 
 	// get raw mesh maybe to make a copy or idk

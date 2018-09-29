@@ -28,6 +28,10 @@ PhysicsWorld::~PhysicsWorld() {
 	delete debug_drawer;
 }
 
+DebugDrawer* PhysicsWorld::getDebugDrawer() const {
+	return debug_drawer;
+}
+
 void PhysicsWorld::setVSDataBinding(u_int point) {
 	debug_drawer->setVSDataBinding(point);
 }

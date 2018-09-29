@@ -76,6 +76,14 @@ float PhysicsEntity::getRoll() const {
 	return physicsBody->getRotation().z;
 }
 
+glm::vec3 PhysicsEntity::getMinBB() const {
+	return physicsBody->getMinBB();
+}
+
+glm::vec3 PhysicsEntity::getMaxBB() const {
+	return physicsBody->getMaxBB();
+}
+
 PhysicsBody* PhysicsEntity::getPhysicsBody() const {
 	return physicsBody.get();
 }

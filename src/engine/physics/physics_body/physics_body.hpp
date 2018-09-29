@@ -41,6 +41,8 @@ public:
 	// getters
 	glm::vec3 getPosition() const;
 	glm::vec3 getRotation() const;
+	glm::vec3 getMinBB() const;
+	glm::vec3 getMaxBB() const;
 	PhysicsBody::Type getType() const;
 };
 

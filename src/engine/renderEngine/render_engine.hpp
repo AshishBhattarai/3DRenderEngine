@@ -11,6 +11,8 @@
 #include "shader/buffer/general_vs_ubo.hpp"
 #include "shader/buffer/general_fs_ubo.hpp"
 #include "terrain_renderer.hpp"
+#include "render_filter.hpp"
+#include "utils/type_conversion.hpp"
 
 // renders the world(everything) with help of other sub renderers
 
@@ -43,6 +45,9 @@ private:
 	Camera* camera;
 	Light* sun;
 
+	RenderFilter renderFilter;
+	btDbvt* dbvt;
+
 	// list to render
 	std::vector<Terrain*> terrains;
 	EntityRenderer::EntityListMap entities;
@@ -52,14 +57,26 @@ private:
 	void setMatUniformBinding(std::initializer_list<Shader*> list);
 	void setUniformBinding(const std::string& bname, u_int bpoint, std::initializer_list<Shader*> list);
 	void prepare(); // prepare for rendering
+	void frustumCull();
+	void clearRenderData();
 
 public:
 	RenderEngine(Camera* camera, Light* sun);
+	~RenderEngine();
 
 	// add entites to map
-	void processEntity(Entity* entity) {
-		Model* model = entity->getModel(); // get model
-		entities[model].emplace_back(entity); // add to the map
+	void processEntity(std::vector<std::unique_ptr<Entity>>& entities) {
+		for(auto& e : entities) {
+			Entity* entity = e.get();
+			// create render object
+			RenderObject* obj = new RenderObject;
+			obj->data =  static_cast<void*>(entity);
+			obj->type = RenderObject::ENTITY;
+			// create a broadphase
+			btVector3 minBB = VEC3::glmToBt(entity->getMinBB());
+			btVector3 maxBB = VEC3::glmToBt(entity->getMaxBB());
+			dbvt->insert(btDbvtVolume::FromMM(minBB, maxBB), static_cast<void*>(obj));
+		}
 	}
 
 	// add Terrains to map

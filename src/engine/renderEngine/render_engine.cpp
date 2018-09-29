@@ -3,6 +3,8 @@
 #include "display_manager.hpp"
 #include "shader/shader_config.hpp"
 
+#include "utils/math.hpp"
+
 void RenderEngine::setProjectionMatrix() {
 	// setup projection matrix
 	DisplayManager& display = DisplayManager::getInstance();
@@ -27,6 +29,32 @@ void RenderEngine::prepare() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void RenderEngine::frustumCull() {
+	// perform frustum culling
+	std::array<glm::vec4, 6> frustum = Math::extractViewFrustum(projection_mat, camera->getViewMatrix());
+	btVector3 plane_normals[6];
+	btScalar plane_offsets[6];
+
+	for(int i = 0; i < 6; ++i) {
+		// frustum[i] = glm::normalize(frustum[i]);
+		plane_normals[i] = btVector3(frustum[i].x, frustum[i].y, frustum[i].z);
+		plane_offsets[i] = btScalar(frustum[i].w);
+	}
+
+	btDbvt::collideKDOP(dbvt->m_root, plane_normals, plane_offsets, 6, renderFilter);
+}
+
+void RenderEngine::clearRenderData() {
+	entities.clear(); // clear entity_map
+	terrains.clear(); // clear Terrain
+
+	// clear dbvt
+	if(dbvt) {
+		delete dbvt;
+		dbvt = new btDbvt; // new dbvt for next frame
+	}
+}
+
 RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		projection_mat(1.0f),
 		fogColor(0.1f, 0.8f, 0.8f),
@@ -38,7 +66,9 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		terrainShader(),
 		terrainRenderer(terrainShader),
 		camera(camera),
-		sun(sun)
+		sun(sun),
+		renderFilter(entities, terrains),
+		dbvt(new btDbvt)
 {
 	// reserve space
 	entities.reserve(400);
@@ -68,8 +98,13 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	glEnable(GL_DEPTH_TEST);
 }
 
+RenderEngine::~RenderEngine() {
+	delete dbvt;
+}
+
 void RenderEngine::render() {
 	prepare();
+	frustumCull();
 
 	// update global uniforms
 	vsUBO.setViewMatrix(camera->getViewMatrix());
@@ -81,6 +116,5 @@ void RenderEngine::render() {
 	// render terrain
 	terrainRenderer.render(terrains);
 
-	entities.clear(); // clear entity_map
-	terrains.clear(); // clear Terrain
+	clearRenderData();
 }

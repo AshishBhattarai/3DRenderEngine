@@ -1,5 +1,6 @@
 #include "physics_body.hpp"
 
+#include "utils/type_conversion.hpp"
 #include "../physics_world.hpp"
 
 PhysicsBody::PhysicsBody(std::shared_ptr<CollisionShape> collisionShape, Type type):
@@ -62,6 +63,14 @@ glm::vec3 PhysicsBody::getRotation() const {
 	trans.getRotation().getEulerZYX(rot.y, rot.x, rot.z);
 	rot = glm::degrees(rot);
 	return rot;
+}
+
+glm::vec3 PhysicsBody::getMinBB() const {
+	return VEC3::btToGlm(physicsBody->getBroadphaseHandle()->m_aabbMin);
+}
+
+glm::vec3 PhysicsBody::getMaxBB() const {
+	return VEC3::btToGlm(physicsBody->getBroadphaseHandle()->m_aabbMax);
 }
 
 PhysicsBody::Type PhysicsBody::getType() const {

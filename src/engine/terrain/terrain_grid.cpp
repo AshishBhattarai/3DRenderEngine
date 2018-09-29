@@ -48,7 +48,7 @@ PhysicsTerrain* TerrainGrid::getTerrain(u_int gridX, u_int gridZ) {
 std::pair<u_int, u_int> TerrainGrid::posToGrid(float x, float z) {
 	u_int gridX = (u_int)(x/terSize);
 	u_int gridZ = (u_int)(z/terSize);
-	if(!numTerrain || gridX > numGridX || gridZ > numGridZ)
+	if(!numTerrain || gridX >= numGridX || gridZ >= numGridZ)
 		return std::make_pair(0, 0);
 	return std::make_pair(gridX, gridZ);
 }

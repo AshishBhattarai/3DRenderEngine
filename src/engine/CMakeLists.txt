@@ -7,6 +7,7 @@ add_library(engine-lib
 	renderEngine/entity_renderer.cpp
 	renderEngine/terrain_renderer.cpp
 	renderEngine/render_engine.cpp
+	renderEngine/render_filter.cpp
 
 	entities/entity.cpp
 	entities/camera.cpp

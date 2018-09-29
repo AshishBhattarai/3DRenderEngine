@@ -13,6 +13,12 @@
 class Entity : public BaseEntity {
 private:
 	std::shared_ptr<Model> model;
+	glm::vec3 minBB;
+	glm::vec3 maxBB;
+
+	void applyRotationBB();
+	void applyTranslationBB();
+	void applyScaleBB();
 
 protected:
 	// uniform scale
@@ -23,6 +29,7 @@ public:
 		const glm::vec3& rotation = glm::vec3(0.0f), float scale = 1.0f);
 
 	virtual void getTransMatrix(glm::mat4& mat);
+	void updateAABB();
 
 	void increasePosition(float dx, float dy, float dz) {
 		position.x += dx;
@@ -40,16 +47,24 @@ public:
 		this->model = model;
 	}
 
-	Model* getModel() const{
-		return model.get();
-	}
-
 	virtual void setScale(float s) {
 		scale = s;
 	}
 
 	virtual float getScale() const {
 		return scale;
+	}
+
+	Model* getModel() const{
+		return model.get();
+	}
+
+	virtual glm::vec3 getMinBB() const {
+		return minBB;
+	}
+
+	virtual glm::vec3 getMaxBB() const {
+		return maxBB;
 	}
 };
 

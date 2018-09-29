@@ -68,6 +68,8 @@ public:
 		return glm::vec3(rg.x(), rg.y(), rg.z());
 	}
 
+	DebugDrawer* getDebugDrawer() const;
+
 	void setVSDataBinding(u_int point);
 };
 
