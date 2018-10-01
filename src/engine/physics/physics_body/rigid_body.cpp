@@ -1,6 +1,7 @@
 #include "rigid_body.hpp"
 
 #include "../physics_world.hpp"
+#include "utils/type_conversion.hpp"
 
 RigidBody::RigidBody(std::shared_ptr<CollisionShape> collisionShape,
 	const glm::vec3& position, const glm::vec3& rotation, float mass):
@@ -24,13 +25,34 @@ RigidBody::RigidBody(std::shared_ptr<CollisionShape> collisionShape,
 	// motion state
 	motionState = new btDefaultMotionState(trans);
 	// rigidbody constructor
-	this->physicsBody = new btRigidBody(mass, motionState, cShape, inertia);
+	this->rigidBody = new btRigidBody(mass, motionState, cShape, inertia);
+	this->physicsBody = rigidBody;
+}
+
+RigidBody::~RigidBody() {
+	delete motionState;
 }
 
 void RigidBody::addToWorld() {
 	PhysicsWorld::getInstance().addRigidBody(static_cast<btRigidBody*>(physicsBody));
 }
 
-RigidBody::~RigidBody() {
-	delete motionState;
+glm::vec3 RigidBody::getLinearVelocity() {
+	return VEC3::btToGlm(rigidBody->getLinearVelocity());
+}
+
+void RigidBody::setFriction(float fri) {
+	rigidBody->setFriction(fri);
+}
+
+void RigidBody::setRestitution(float res) {
+	rigidBody->setRestitution(res);
+}
+
+void RigidBody::setRollingFriction(float fri) {
+	rigidBody->setRollingFriction(fri);
+}
+
+void RigidBody::applyCentralImpulse(const glm::vec3& imp) {
+	rigidBody->applyCentralImpulse(VEC3::glmToBt(imp));
 }

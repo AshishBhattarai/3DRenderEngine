@@ -5,8 +5,6 @@
 
 #include <string_view>
 
-#include "model/mesh.hpp"
-
 // Shader for entities in the world
 
 class EntityShader : public Shader {

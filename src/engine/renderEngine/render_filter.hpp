@@ -22,11 +22,11 @@ struct RenderObject {
 // ICollide::Process is called on collision of frustum plane and objs aabb
 class RenderFilter : public btDbvt::ICollide {
 private:
-	std::unordered_map<Model*, std::vector<Entity*>>& entities;
+	std::vector<Entity*>& entities;
 	std::vector<Terrain*>& terrains;
 
 public:
-	RenderFilter(std::unordered_map<Model*, std::vector<Entity*>>& entities, std::vector<Terrain*>& terrains);
+	RenderFilter(std::vector<Entity*>& entities, std::vector<Terrain*>& terrains);
 
 	void Process(const btDbvtNode* node, btScalar scalar);
 	void Process(const btDbvtNode* node);

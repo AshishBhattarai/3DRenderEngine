@@ -9,6 +9,7 @@
 
 class RigidBody : public PhysicsBody {
 private:
+	btRigidBody* rigidBody;
 	btDefaultMotionState* motionState;
 
 public:
@@ -18,6 +19,12 @@ public:
 	~RigidBody();
 
 	void addToWorld() override;
+
+	glm::vec3 getLinearVelocity();
+	void setFriction(float fri);
+	void setRestitution(float res);
+	void setRollingFriction(float fri);
+	void applyCentralImpulse(const glm::vec3& imp);
 };
 
 #endif

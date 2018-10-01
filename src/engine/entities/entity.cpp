@@ -8,7 +8,10 @@ Entity::Entity(std::shared_ptr<Model> model, const glm::vec3& position,
 		model(model),
 		minBB(model->getMinBB()),
 		maxBB(model->getMaxBB()),
-		scale(scale)
+		occu_query(GL_ANY_SAMPLES_PASSED_CONSERVATIVE), // faster than GL_ANY_SAMPLES_PASSED but not always accurate
+		scale(scale),
+		aabb_mesh(),
+		flags(0)
 {
 	updateAABB();
 }
@@ -35,4 +38,6 @@ void Entity::updateAABB() {
 	mat = glm::translate(glm::mat4(1.0f), position);
 	minBB = glm::vec3(mat * glm::vec4(minBB, 1.0f));
 	maxBB = glm::vec3(mat * glm::vec4(maxBB, 1.0f));
+
+	aabb_mesh.updateData(minBB, maxBB);
 }

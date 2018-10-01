@@ -35,6 +35,7 @@ public:
 
 	glm::vec3 getMaxBB() const override;
 	glm::vec3 getMinBB() const override;
+	void updateAABB() override;
 
 	PhysicsBody* getPhysicsBody() const;
 };

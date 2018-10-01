@@ -7,14 +7,24 @@
 #include <memory>
 
 #include "model/model.hpp"
+#include "model/aabb_mesh.hpp"
+#include "renderEngine/opengl_query.hpp"
 
 // Represent the entities which will be rendered
+
+namespace EntityFlags {
+	constexpr int PHYSICS 	=	 	01;
+	constexpr int STATIC		= 	02;
+	constexpr int OCCLUDER  =		04;
+}
 
 class Entity : public BaseEntity {
 private:
 	std::shared_ptr<Model> model;
 	glm::vec3 minBB;
 	glm::vec3 maxBB;
+
+	OpenglQuery occu_query;
 
 	void applyRotationBB();
 	void applyTranslationBB();
@@ -23,13 +33,15 @@ private:
 protected:
 	// uniform scale
 	float scale;
+	AABBMesh aabb_mesh;
+	int flags;
 
 public:
 	Entity(std::shared_ptr<Model> model, const glm::vec3& position = glm::vec3(0.0f),
 		const glm::vec3& rotation = glm::vec3(0.0f), float scale = 1.0f);
 
 	virtual void getTransMatrix(glm::mat4& mat);
-	void updateAABB();
+	virtual void updateAABB();
 
 	void increasePosition(float dx, float dy, float dz) {
 		position.x += dx;
@@ -55,7 +67,7 @@ public:
 		return scale;
 	}
 
-	Model* getModel() const{
+	const Model* getModel() const {
 		return model.get();
 	}
 
@@ -65,6 +77,22 @@ public:
 
 	virtual glm::vec3 getMaxBB() const {
 		return maxBB;
+	}
+
+	AABBMesh* getAABBMesh() {
+		return &aabb_mesh;
+	}
+
+	OpenglQuery* getOcclusionQuery() {
+		return &occu_query;
+	}
+
+	int getFlags() const {
+		return flags;
+	}
+
+	void setFlags(int flag) {
+		flags = flag;
 	}
 };
 

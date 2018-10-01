@@ -23,13 +23,13 @@ private:
 	ColoredEntityShader* coloredEntityShader;
 
 	void loadTransformation(Entity* entity, Shader* shader);
-	void prepareMesh(const TexturedMesh& mesh);
-	void prepareMesh(const MaterialMesh& mesh);
+	void prepareMesh(const TexturedMesh* mesh);
+	void prepareMesh(const MaterialMesh* mesh);
 
 public:
 	EntityRenderer(EntityShader& entityShader, ColoredEntityShader& coloredEntityShader);
 
-	void render(EntityListMap& entities);
+	void render(std::vector<Entity*>& entities);
 };
 
 #endif

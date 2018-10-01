@@ -1,6 +1,8 @@
 #ifndef RENDER_ENGINE_HPP
 #define RENDER_ENGINE_HPP
 
+#include <list>
+
 #include "entities/entity.hpp"
 #include "entities/camera.hpp"
 #include "entities/light.hpp"
@@ -13,12 +15,13 @@
 #include "terrain_renderer.hpp"
 #include "render_filter.hpp"
 #include "utils/type_conversion.hpp"
+#include "bounding_box_renderer.hpp"
 
 // renders the world(everything) with help of other sub renderers
 
 class RenderEngine {
 private:
-	static constexpr float FOV = 45.0f;
+	static constexpr float FOV = 70.0f;
 	static constexpr float NEAR = 0.1f;
 	static constexpr float FAR = 800.0f;
 
@@ -42,6 +45,9 @@ private:
 	TerrainShader terrainShader;
 	TerrainRenderer terrainRenderer;
 
+	BoundingBoxShader bbShader;
+	BoundingBoxRenderer bbRenderer;
+
 	Camera* camera;
 	Light* sun;
 
@@ -50,7 +56,7 @@ private:
 
 	// list to render
 	std::vector<Terrain*> terrains;
-	EntityRenderer::EntityListMap entities;
+	std::vector<Entity*> entities;
 
 	void setProjectionMatrix();
 	// load mat Uniform binding point to the shaders(list arguments)
@@ -58,6 +64,10 @@ private:
 	void setUniformBinding(const std::string& bname, u_int bpoint, std::initializer_list<Shader*> list);
 	void prepare(); // prepare for rendering
 	void frustumCull();
+	void sortEntities();
+	void occlusionCull(std::vector<Entity*>& entity_list);
+	void drawEntityBB();
+
 	void clearRenderData();
 
 public:
@@ -75,6 +85,7 @@ public:
 			// create a broadphase
 			btVector3 minBB = VEC3::glmToBt(entity->getMinBB());
 			btVector3 maxBB = VEC3::glmToBt(entity->getMaxBB());
+			// this->entities.push_back(entity);
 			dbvt->insert(btDbvtVolume::FromMM(minBB, maxBB), static_cast<void*>(obj));
 		}
 	}

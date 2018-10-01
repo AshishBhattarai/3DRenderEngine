@@ -8,6 +8,8 @@ add_library(engine-lib
 	renderEngine/terrain_renderer.cpp
 	renderEngine/render_engine.cpp
 	renderEngine/render_filter.cpp
+	renderEngine/bounding_box_renderer.cpp
+	renderEngine/opengl_query.cpp
 
 	entities/entity.cpp
 	entities/camera.cpp
@@ -17,6 +19,7 @@ add_library(engine-lib
 	model/mesh.cpp
 	model/textured_mesh.cpp
 	model/texture.cpp
+	model/aabb_mesh.cpp
 
 	shader/shader.cpp
 	shader/buffer/uniform_buffer.cpp
@@ -24,7 +27,6 @@ add_library(engine-lib
 	shader/entity_shader.cpp
 	shader/terrain_shader.cpp
 	shader/debug_physics_shader.cpp
-
 	terrain/terrain.cpp
 	terrain/terrain_grid.cpp
 	terrain/physics_terrain.cpp
