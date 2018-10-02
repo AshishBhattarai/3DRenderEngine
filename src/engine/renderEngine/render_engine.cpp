@@ -13,11 +13,10 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		fsUBO(),
 		coloredEntityShader(),
 		entityShader(),
-		entityRenderer(entityShader, coloredEntityShader),
+		bbShader(),
+		entityRenderer(entityShader, coloredEntityShader, bbShader),
 		terrainShader(),
 		terrainRenderer(terrainShader),
-		bbShader(),
-		bbRenderer(bbShader),
 		camera(camera),
 		sun(sun),
 		renderFilter(entities, terrains),
@@ -108,31 +107,6 @@ void RenderEngine::sortEntities() {
 	});
 }
 
-void RenderEngine::occlusionCull(std::vector<Entity*>& entity_list) {
-	// get all the visable entities only
-	std::for_each(entities.begin(), entities.end(), [&entity_list](Entity* e) {
-		if(e->getOcclusionQuery()->getResult())
-			entity_list.push_back(e);
-	});
-}
-
-void RenderEngine::drawEntityBB() {
-	// disable writing to frame buffer
-	glDepthMask(GL_FALSE);
-	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-
-	// remove all visible entites
-	std::remove_if(entities.begin(), entities.end(), [](Entity* e)->bool {
-		return e->getOcclusionQuery()->getLastResult();
-	});
-
-	bbRenderer.render(entities);
-
-	// enable again
-	glDepthMask(GL_TRUE);
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-}
-
 void RenderEngine::clearRenderData() {
 	entities.clear(); // clear entity_map
 	terrains.clear(); // clear Terrain
@@ -143,10 +117,8 @@ void RenderEngine::clearRenderData() {
 
 void RenderEngine::render() {
 	// optimize
-	std::vector<Entity*> filtered_entities;
 	frustumCull();
 	sortEntities();
-	occlusionCull(filtered_entities);
 
 	// update global uniforms
 	vsUBO.setViewMatrix(camera->getViewMatrix());
@@ -157,9 +129,7 @@ void RenderEngine::render() {
 	// render terrain
 	terrainRenderer.render(terrains);
 	// render entity
-	entityRenderer.render(filtered_entities);
-	// Note:: drawEntityBB() removes all the visble entities from the vector(entities).
-	drawEntityBB();
+	entityRenderer.render(entities);
 
 	clearRenderData();
 }

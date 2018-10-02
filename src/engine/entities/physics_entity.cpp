@@ -3,15 +3,21 @@
 #include "physics/physics_body/static_body.hpp"
 #include "physics/physics_body/rigid_body.hpp"
 
+#include "utils/math.hpp"
+
 PhysicsEntity::PhysicsEntity(std::shared_ptr<Model> model, std::shared_ptr<CollisionShape> shape,
-	const glm::vec3& position, const glm::vec3& rotation, float mass) :
-	Entity(model)
+		const glm::vec3& position, const glm::vec3& rotation, float mass) :
+	Entity(model, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, EntityFlags::PHYSICS)
 {
 	if(mass == 0.0f) {
 		physicsBody = std::make_unique<StaticBody>(shape, position, rotation);
+		flags |= EntityFlags::STATIC;
 	} else {
 		physicsBody = std::make_unique<RigidBody>(shape, position, rotation, mass);
+		flags &= ~EntityFlags::STATIC;
 	}
+	physicsBody->addToWorld();
+	updateAABB();
 }
 
 PhysicsEntity::PhysicsEntity(std::shared_ptr<Model> model, std::shared_ptr<CollisionShape> shape, float mass) :

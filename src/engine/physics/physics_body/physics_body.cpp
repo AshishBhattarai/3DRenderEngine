@@ -37,6 +37,10 @@ void PhysicsBody::addToWorld() {
 	PhysicsWorld::getInstance().addCollisionObject(physicsBody);
 }
 
+void PhysicsBody::removeFromWorld() {
+	PhysicsWorld::getInstance().removePhyiscBody(physicsBody);
+}
+
 void PhysicsBody::setPosition(const glm::vec3& pos) {
 	btTransform trans = physicsBody->getWorldTransform();
 	trans.setOrigin(btVector3(pos.x, pos.y, pos.z));

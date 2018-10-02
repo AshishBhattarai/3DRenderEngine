@@ -2,6 +2,12 @@
 
 #include "model/model.hpp"
 
+EntityRenderer::EntityRenderer(EntityShader& entityShader, ColoredEntityShader& coloredEntityShader, BoundingBoxShader& boundingBoxShader) :
+	entityShader(&entityShader),
+	coloredEntityShader(&coloredEntityShader),
+	boundingBoxShader(&boundingBoxShader)
+{}
+
 void EntityRenderer::loadTransformation(Entity* entity, Shader* shader) {
 	// transformation
 	glm::mat4 transform_mat;
@@ -30,34 +36,70 @@ void EntityRenderer::prepareMesh(const MaterialMesh* mesh) {
 	glBindVertexArray(mesh->getVAO());
 }
 
-EntityRenderer::EntityRenderer(EntityShader& entityShader, ColoredEntityShader& coloredEntityShader) :
-	entityShader(&entityShader),
-	coloredEntityShader(&coloredEntityShader)
-{}
+void EntityRenderer::renderTexturedEntity(Entity* entity) {
+	// render entites with texture
+	entityShader->start();
+	auto model = entity->getModel();
+
+	loadTransformation(entity, entityShader);
+	for(u_int i = 0; i < model->getNumMeshes(); ++i) {
+		auto mesh = model->getTexturedMesh(i);
+		prepareMesh(mesh);
+		glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, 0);
+	}
+}
+void EntityRenderer::renderColoredEntity(Entity* entity) {
+	// render entites with material color
+	coloredEntityShader->start();
+	auto model = entity->getModel();
+
+	loadTransformation(entity, coloredEntityShader);
+	for(u_int i = 0; i < model->getNumMeshes(); ++i) {
+		auto mesh = model->getMaterialMesh(i);
+		prepareMesh(mesh);
+		glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, 0);
+	}
+}
+void EntityRenderer::renderBoundingBox(Entity* entity) {
+	// disable writing to frame buffer
+	glDepthMask(GL_FALSE);
+	// glDisable(GL_CULL_FACE);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+	// draw bounding box
+	boundingBoxShader->start();
+	AABBMesh* mesh = entity->getAABBMesh();
+	glBindVertexArray(mesh->getVAO());
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+
+	// enable writing
+	glDepthMask(GL_TRUE);
+	// glEnable(GL_CULL_FACE);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+}
 
 // batch render
 void EntityRenderer::render(std::vector<Entity*>& entities) {
 	for(auto& entity : entities) {
-		// query
-		auto query = entity->getOcclusionQuery();
-
-		// check model type
+		auto query = entity->getOcclusionQuery(); // null for objects which are never occluded
 		auto model = entity->getModel();
-		bool textured = (model->getModelType() == Model::MATERIAL_TEXTURE);
-		Shader* shader = (textured)? static_cast<Shader*>(entityShader) : static_cast<Shader*>(coloredEntityShader);
-		shader->start();
 
-		query->start();
-		// render mehes
-		loadTransformation(entity, shader);
-		for(unsigned i = 0; i < model->getnumMeshes(); ++i) {
-			if(textured)
-				prepareMesh(model->getTexturedMesh(i));
+		// visible last frame?
+		bool visible = (query)? query->getResult(): true;
+
+		if(query) // if the entity is OCCLUDEE
+			query->start();
+
+		if(visible) {
+			if(model->isTextured())
+				renderTexturedEntity(entity);
 			else
-				prepareMesh(model->getMaterialMesh(i));
-
-			glDrawElements(GL_TRIANGLES, model->getRawMesh(i)->getIndicesCount(), GL_UNSIGNED_INT, 0);
+				renderColoredEntity(entity);
+		} else {
+			renderBoundingBox(entity);
 		}
-		query->end();
+
+		if(query)
+			query->end();
 	}
 }

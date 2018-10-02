@@ -20,7 +20,7 @@ enum Movement {
 class Camera : public BaseEntity {
 private:
 	// default settings
-	static constexpr float YAW 					=	0.0f;
+	static constexpr float YAW 					=	180.0f;
 	static constexpr float PITCH				=	0.0f;
 	static constexpr float ROLL					= 0.0f;
 	static constexpr float SPEED 				= 5.5f;
@@ -47,7 +47,7 @@ private:
 	}
 
 public:
-	Camera(const glm::vec3& position = glm::vec3(0.0f), const glm::vec3& rotation = glm::vec3(0.0f));
+	Camera(const glm::vec3& position = glm::vec3(0.0f), const glm::vec3& rotation = glm::vec3(PITCH, YAW, ROLL));
 
 	void processKeyboard(Movement dir, float dt);
 	void processMouseMovement(float xoffset, float yoffset, float dt);

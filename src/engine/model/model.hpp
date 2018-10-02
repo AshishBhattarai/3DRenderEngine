@@ -55,7 +55,7 @@ private:
 public:
 	Model(std::string_view path, Type type, int flags = 0);
 
-	u_int getnumMeshes() const {
+	u_int getNumMeshes() const {
 		return numMeshes;
 	}
 
@@ -69,6 +69,10 @@ public:
 
 	glm::vec3 getMaxBB() const {
 		return maxbb;
+	}
+
+	bool isTextured() const {
+		return (modelType == MATERIAL_TEXTURE);
 	}
 
 	const TexturedMesh* getTexturedMesh(int i = 0) const {

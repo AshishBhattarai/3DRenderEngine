@@ -8,7 +8,6 @@ add_library(engine-lib
 	renderEngine/terrain_renderer.cpp
 	renderEngine/render_engine.cpp
 	renderEngine/render_filter.cpp
-	renderEngine/bounding_box_renderer.cpp
 	renderEngine/opengl_query.cpp
 
 	entities/entity.cpp

@@ -40,8 +40,9 @@ namespace Math {
 		if(rotation == glm::vec3(0.0f)) return;
 
 		glm::mat4 rmat(1.0f);
-		rmat = glm::rotate(rmat, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		// y first to match bullet
 		rmat = glm::rotate(rmat, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		rmat = glm::rotate(rmat, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		rmat = glm::rotate(rmat, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		glm::vec3 halfsize = (maxBB - minBB) * 0.5f;
@@ -55,6 +56,22 @@ namespace Math {
 
 		minBB = center - rot;
 		maxBB = center + rot;
+	}
+
+	inline void transformAABB(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, glm::vec3& minBB, glm::vec3& maxBB) {
+		// scale
+		glm::mat4 mat(1.0f);
+		mat = glm::scale(mat, glm::vec3(scale.x, scale.y, scale.z));
+		minBB = glm::vec3(mat * glm::vec4(minBB, 1.0f));
+		maxBB = glm::vec3(mat * glm::vec4(maxBB, 1.0f));
+
+		// rotate
+		Math::rotateBB(minBB, maxBB, rotation);
+
+		// translate
+		mat = glm::translate(glm::mat4(1.0f), position);
+		minBB = glm::vec3(mat * glm::vec4(minBB, 1.0f));
+		maxBB = glm::vec3(mat * glm::vec4(maxBB, 1.0f));
 	}
 };
 

@@ -15,15 +15,14 @@
 #include "terrain_renderer.hpp"
 #include "render_filter.hpp"
 #include "utils/type_conversion.hpp"
-#include "bounding_box_renderer.hpp"
 
 // renders the world(everything) with help of other sub renderers
 
 class RenderEngine {
 private:
-	static constexpr float FOV = 70.0f;
+	static constexpr float FOV = 75.0f;
 	static constexpr float NEAR = 0.1f;
-	static constexpr float FAR = 800.0f;
+	static constexpr float FAR = 350.0f; //~380
 
 	static constexpr float FOG_DENSITY = 0.0038f;
 	static constexpr float FOG_GRADIENT = 10.0f;
@@ -39,14 +38,12 @@ private:
 	// entity
 	ColoredEntityShader coloredEntityShader;
 	EntityShader entityShader;
+	BoundingBoxShader bbShader; // entity bounding box shader
 	EntityRenderer entityRenderer;
 
 	// Terrain
 	TerrainShader terrainShader;
 	TerrainRenderer terrainRenderer;
-
-	BoundingBoxShader bbShader;
-	BoundingBoxRenderer bbRenderer;
 
 	Camera* camera;
 	Light* sun;
@@ -65,9 +62,6 @@ private:
 	void prepare(); // prepare for rendering
 	void frustumCull();
 	void sortEntities();
-	void occlusionCull(std::vector<Entity*>& entity_list);
-	void drawEntityBB();
-
 	void clearRenderData();
 
 public:

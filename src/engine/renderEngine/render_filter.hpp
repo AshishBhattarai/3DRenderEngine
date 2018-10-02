@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include <vector>
-#include <BulletCollision/BroadphaseCollision/btDbvt.h>
+#include <bullet/BulletCollision/BroadphaseCollision/btDbvt.h>
 
 #include "entities/entity.hpp"
 #include "terrain/terrain.hpp"

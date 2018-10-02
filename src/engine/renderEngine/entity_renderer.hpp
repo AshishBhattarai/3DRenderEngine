@@ -12,6 +12,7 @@
 
 #include "shader/colored_entity_shader.hpp"
 #include "shader/entity_shader.hpp"
+#include "shader/bounding_box_shader.hpp"
 
 // This class renders entities in batch
 
@@ -21,13 +22,17 @@ public:
 private:
 	EntityShader* entityShader;
 	ColoredEntityShader* coloredEntityShader;
+	BoundingBoxShader* boundingBoxShader;
 
 	void loadTransformation(Entity* entity, Shader* shader);
 	void prepareMesh(const TexturedMesh* mesh);
 	void prepareMesh(const MaterialMesh* mesh);
+	void renderTexturedEntity(Entity* entity);
+	void renderColoredEntity(Entity* entity);
+	void renderBoundingBox(Entity* entity);
 
 public:
-	EntityRenderer(EntityShader& entityShader, ColoredEntityShader& coloredEntityShader);
+	EntityRenderer(EntityShader& entityShader, ColoredEntityShader& coloredEntityShader, BoundingBoxShader& boundingBoxShader);
 
 	void render(std::vector<Entity*>& entities);
 };

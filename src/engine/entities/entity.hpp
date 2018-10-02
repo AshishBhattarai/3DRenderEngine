@@ -14,8 +14,8 @@
 
 namespace EntityFlags {
 	constexpr int PHYSICS 	=	 	01;
-	constexpr int STATIC		= 	02;
-	constexpr int OCCLUDER  =		04;
+	constexpr int STATIC		=		02;
+	constexpr int OCCLUDEE  =		04;
 }
 
 class Entity : public BaseEntity {
@@ -24,7 +24,7 @@ private:
 	glm::vec3 minBB;
 	glm::vec3 maxBB;
 
-	OpenglQuery occu_query;
+	std::unique_ptr<OpenglQuery> occu_query;
 
 	void applyRotationBB();
 	void applyTranslationBB();
@@ -36,12 +36,16 @@ protected:
 	AABBMesh aabb_mesh;
 	int flags;
 
+	Entity(std::shared_ptr<Model> model, const glm::vec3& position,
+		const glm::vec3& rotation, float scale, int flags);
+
 public:
 	Entity(std::shared_ptr<Model> model, const glm::vec3& position = glm::vec3(0.0f),
 		const glm::vec3& rotation = glm::vec3(0.0f), float scale = 1.0f);
 
 	virtual void getTransMatrix(glm::mat4& mat);
 	virtual void updateAABB();
+	void makeOccludee(bool make = true);
 
 	void increasePosition(float dx, float dy, float dz) {
 		position.x += dx;
@@ -84,15 +88,19 @@ public:
 	}
 
 	OpenglQuery* getOcclusionQuery() {
-		return &occu_query;
+		return occu_query.get();
 	}
 
 	int getFlags() const {
 		return flags;
 	}
 
-	void setFlags(int flag) {
-		flags = flag;
+	bool isStatic() const {
+		return (flags & EntityFlags::STATIC);
+	}
+
+	bool isPhysics() const {
+		return (flags & EntityFlags::PHYSICS);
 	}
 };
 

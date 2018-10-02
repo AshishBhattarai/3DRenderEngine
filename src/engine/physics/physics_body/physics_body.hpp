@@ -33,6 +33,7 @@ public:
 	void updateAABB();
 	void scaleCollisionShape(const glm::vec3& scale);
 	virtual void addToWorld();
+	void removeFromWorld();
 
 	// setters
 	void setPosition(const glm::vec3& pos);
