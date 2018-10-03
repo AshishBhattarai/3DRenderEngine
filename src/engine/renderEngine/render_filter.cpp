@@ -10,15 +10,6 @@ void RenderFilter::Process(const btDbvtNode* node, btScalar) {
 }
 
 void RenderFilter::Process(const btDbvtNode* node) {
-	RenderObject* obj = static_cast<RenderObject*>(node->data);
-	if(obj->type == RenderObject::ENTITY) {
-		// entities
-		Entity* entity = static_cast<Entity*>(obj->data);
+		Entity* entity = static_cast<Entity*>(node->data);
 		entities.emplace_back(entity);
-	} else {
-		// terrains
-		Terrain* terrain = static_cast<Terrain*>(obj->data);
-		terrains.emplace_back(terrain);
-	}
-	delete obj;
 }

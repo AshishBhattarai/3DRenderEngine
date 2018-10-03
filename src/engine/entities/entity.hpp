@@ -42,6 +42,7 @@ protected:
 public:
 	Entity(std::shared_ptr<Model> model, const glm::vec3& position = glm::vec3(0.0f),
 		const glm::vec3& rotation = glm::vec3(0.0f), float scale = 1.0f);
+	virtual ~Entity();
 
 	virtual void getTransMatrix(glm::mat4& mat);
 	virtual void updateAABB();

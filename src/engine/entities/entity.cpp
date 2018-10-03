@@ -21,6 +21,8 @@ Entity::Entity(std::shared_ptr<Model> model, const glm::vec3& position,
 	updateAABB();
 }
 
+Entity::~Entity() {}
+
 void Entity::getTransMatrix(glm::mat4& mat) {
 	mat = glm::translate(glm::mat4(1.0f), position);
 	// roate on y first to match bullet physics rotation

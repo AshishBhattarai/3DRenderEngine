@@ -19,12 +19,12 @@ PhysicsWorld::PhysicsWorld()
 
 PhysicsWorld::~PhysicsWorld() {
 	// clearnup
+	dynamicsWorld->setDebugDrawer(0);
 	delete dynamicsWorld;
 	delete solver;
 	delete dispatcher;
 	delete broadphase;
 	delete collConfig;
-	dynamicsWorld->setDebugDrawer(0);
 	delete debug_drawer;
 }
 

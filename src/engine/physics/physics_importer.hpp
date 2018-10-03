@@ -12,24 +12,16 @@ class PhysicsImporter : private btWorldImporter {
 private:
 	bParse::btBulletFile* bulletFile;
 
-	PhysicsImporter();
-	~PhysicsImporter();
-
 	bool parseFile(const char* file);
 
 public:
-	// singleton
-	static PhysicsImporter& getInstance() {
-		static PhysicsImporter instance;
-		return instance;
-	}
-	PhysicsImporter(PhysicsImporter&) = delete;
-	PhysicsImporter& operator=(PhysicsImporter&) = delete;
+	PhysicsImporter();
+	~PhysicsImporter();
 
 	// import phsyics data
 	bool import(const char* file);
 
-	int getNumCollisionShape() const;
+	int getNumCollisionShapes() const;
 
 	// get collision shape from import
 	std::shared_ptr<CollisionShape> getCollisionShape(int index = 0);

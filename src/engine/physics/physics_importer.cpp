@@ -31,7 +31,7 @@ bool PhysicsImporter::import(const char* file) {
 	return parseFile(file);
 }
 
-int PhysicsImporter::getNumCollisionShape() const {
+int PhysicsImporter::getNumCollisionShapes() const {
 	return bulletFile->m_collisionShapes.size();
 }
 
@@ -43,6 +43,8 @@ std::shared_ptr<CollisionShape> PhysicsImporter::getCollisionShape(int index) {
 }
 
 void PhysicsImporter::clearImport() {
-	if(bulletFile)
+	if(bulletFile) {
 		delete bulletFile;
+		bulletFile = nullptr;
+	}
 }

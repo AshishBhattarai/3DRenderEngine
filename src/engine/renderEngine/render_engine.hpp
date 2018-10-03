@@ -72,15 +72,11 @@ public:
 	void processEntity(std::vector<std::unique_ptr<Entity>>& entities) {
 		for(auto& e : entities) {
 			Entity* entity = e.get();
-			// create render object
-			RenderObject* obj = new RenderObject;
-			obj->data =  static_cast<void*>(entity);
-			obj->type = RenderObject::ENTITY;
 			// create a broadphase
 			btVector3 minBB = VEC3::glmToBt(entity->getMinBB());
 			btVector3 maxBB = VEC3::glmToBt(entity->getMaxBB());
 			// this->entities.push_back(entity);
-			dbvt->insert(btDbvtVolume::FromMM(minBB, maxBB), static_cast<void*>(obj));
+			dbvt->insert(btDbvtVolume::FromMM(minBB, maxBB), static_cast<void*>(entity));
 		}
 	}
 
