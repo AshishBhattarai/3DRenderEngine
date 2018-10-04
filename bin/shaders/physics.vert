@@ -12,7 +12,6 @@ layout (std140) uniform GeneralVSData {
 };
 
 void main() {
-
 	vec4 position = projection_mat * view_mat * vec4(pos, 1.0f);
 	gl_PointSize = (isContactPoint)? 4.0f : 1.0f;
 

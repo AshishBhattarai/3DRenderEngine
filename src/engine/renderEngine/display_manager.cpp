@@ -207,3 +207,7 @@ const char* DisplayManager::getClipboardText() const {
 void DisplayManager::getFramebufferSize(int& width, int& height) {
 	glfwGetFramebufferSize(window, &width, &height);
 }
+
+float DisplayManager::getTimeSec() const {
+	return (float)(glfwGetTime()*1000.0f);
+}

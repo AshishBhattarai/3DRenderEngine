@@ -4,12 +4,13 @@
 #include "shader/shader_config.hpp"
 #include "opengl_query.hpp"
 #include "gui/gui.hpp"
+#include "model/skybox.hpp"
 
 #include "utils/math.hpp"
 
 RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		projection_mat(1.0f),
-		fogColor(0.1f, 0.8f, 0.8f),
+		fogColor(1.0f, 1.0f, 1.0f),
 		vsUBO(),
 		fsUBO(),
 		coloredEntityShader(),
@@ -21,6 +22,9 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		gui(Gui::initGui()), // must be called before guiRenderer
 		guiShader(),
 		guiRenderer(guiShader),
+		skybox(nullptr),
+		skyboxShader(),
+		skyboxRenderer(skyboxShader),
 		camera(camera),
 		sun(sun),
 		renderFilter(entities, terrains),
@@ -41,12 +45,12 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	setUniformBinding(
 		ShaderConfig::GeneralVSData,
 		vsUBO.getBindingPoint(),
-		{&coloredEntityShader, &entityShader, &terrainShader, &bbShader}
+		{&coloredEntityShader, &entityShader, &terrainShader, &bbShader, &skyboxShader}
 	);
 	setUniformBinding(
 		ShaderConfig::GeneralFSData,
 		fsUBO.getBindingPoint(),
-		{&coloredEntityShader, &entityShader, &terrainShader}
+		{&coloredEntityShader, &entityShader, &terrainShader, &skyboxShader}
 	);
 
 	// enables
@@ -140,6 +144,9 @@ void RenderEngine::render() {
 	terrainRenderer.render(terrains);
 	// render entity
 	entityRenderer.render(entities);
+	// render skybox
+	skyboxRenderer.render(skybox);
+	skyboxShader.loadSkyboxMatrix(camera->getViewMatrix(), skybox->getRPM());
 
 	clearRenderData();
 }

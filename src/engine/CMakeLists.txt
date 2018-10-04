@@ -10,6 +10,7 @@ add_library(engine-lib
 	renderEngine/render_filter.cpp
 	renderEngine/opengl_query.cpp
 	renderEngine/gui_renderer.cpp
+	renderEngine/skybox_renderer.cpp
 
 	entities/entity.cpp
 	entities/camera.cpp
@@ -20,6 +21,7 @@ add_library(engine-lib
 	model/textured_mesh.cpp
 	model/texture.cpp
 	model/aabb_mesh.cpp
+	model/skybox.cpp
 
 	shader/shader.cpp
 	shader/buffer/uniform_buffer.cpp
@@ -28,6 +30,7 @@ add_library(engine-lib
 	shader/terrain_shader.cpp
 	shader/debug_physics_shader.cpp
 	shader/gui_shader.cpp
+	shader/skybox_shader.cpp
 
 	terrain/terrain.cpp
 	terrain/terrain_grid.cpp

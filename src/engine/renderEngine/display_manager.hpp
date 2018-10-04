@@ -99,6 +99,7 @@ public:
 	void setClipboardText(const char* text);
 	const char* getClipboardText() const;
 	void getFramebufferSize(int& width, int& height);
+	float getTimeSec() const;
 
 	float getDelta() const {
 		return delta;

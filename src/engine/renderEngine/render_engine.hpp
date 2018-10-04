@@ -8,10 +8,12 @@
 #include "entities/light.hpp"
 #include "entity_renderer.hpp"
 #include "gui_renderer.hpp"
+#include "skybox_renderer.hpp"
 #include "shader/colored_entity_shader.hpp"
 #include "shader/entity_shader.hpp"
 #include "shader/terrain_shader.hpp"
 #include "shader/gui_shader.hpp"
+// #include "shader/skybox_shader.hpp"
 #include "shader/buffer/general_vs_ubo.hpp"
 #include "shader/buffer/general_fs_ubo.hpp"
 #include "terrain_renderer.hpp"
@@ -20,6 +22,7 @@
 
 // renders the world(everything) with help of other sub renderers
 class Gui;
+class Skybox;
 class RenderEngine {
 private:
 	static constexpr float FOV = 75.0f;
@@ -27,7 +30,7 @@ private:
 	static constexpr float FAR = 350.0f; //~380
 
 	static constexpr float FOG_DENSITY = 0.0038f;
-	static constexpr float FOG_GRADIENT = 10.0f;
+	static constexpr float FOG_GRADIENT = 20.0f;
 
 	glm::mat4 projection_mat;
 	glm::vec3 fogColor;
@@ -51,6 +54,11 @@ private:
 	Gui& gui;
 	GuiShader guiShader;
 	GuiRenderer guiRenderer;
+
+	// Skybox
+	Skybox* skybox;
+	SkyboxShader skyboxShader;
+	SkyboxRenderer skyboxRenderer;
 
 	Camera* camera;
 	Light* sun;
@@ -111,6 +119,10 @@ public:
 	void setSun(Light* sun) {
 		this->sun = sun;
 		reloadSun();
+	}
+
+	void setSkybox(Skybox* skybox) {
+		this->skybox = skybox;
 	}
 
 	void setCamera(Camera* camera) {
