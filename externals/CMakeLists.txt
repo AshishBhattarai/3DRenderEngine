@@ -1,6 +1,9 @@
 # glad
 add_subdirectory(glad)
 
+# imgui
+add_subdirectory(imgui)
+
 # glfw
 if(NOT USE_SHARED_GLFW)
 # disable glfw test, docs and examples

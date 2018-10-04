@@ -12,6 +12,9 @@
  */
 
 class DisplayManager {
+public:
+	static constexpr int MAJOR_VERSION = 3;
+	static constexpr int MINOR_VERSION = 3;
 
 private:
 	// typedefs
@@ -19,17 +22,15 @@ private:
 	using keyCallback = std::function<void(int key, int action, int mods)>;
 	using mouseMovementCallback = std::function<void(float xoffset, float yoffset)>;
 	using mouseButtonCallback = keyCallback;
+	using charCallBack = std::function<void(unsigned int c)>;
 
 	// members
 	static constexpr int DEFAULT_WIDTH 	= 800;
 	static constexpr int DEFAULT_HEIGHT =	600;
 
-	static constexpr int MAJOR_VERSION = 3;
-	static constexpr int MINOR_VERSION = 3;
-
 	int fps_cnt;
 	float fps_time;
-	float delta_time;
+	double delta_time;
 	float delta;
 
 	int screen_width;
@@ -48,7 +49,7 @@ private:
 	std::vector<mouseMovementCallback> vec_mouseMovCallback;
 	std::vector<mouseButtonCallback> vec_mouseBtnCallback;
 	std::vector<scrollCallback> vec_scrollCallback;
-
+	std::vector<charCallBack> vec_charCallback;
 
 	DisplayManager();
 	~DisplayManager();
@@ -85,12 +86,19 @@ public:
 	void addScrollCallback(scrollCallback cb) {
 		vec_scrollCallback.push_back(cb);
 	}
+	void addCharCallback(charCallBack cb) {
+		vec_charCallback.push_back(cb);
+	}
 
 	void setCursorMode(int mode);
-
-	void setShouldClose(bool value) {
-		glfwSetWindowShouldClose(window, value);
-	}
+	int getCursorMode() const;
+	void setCursor(GLFWcursor* cursor);
+	void setCursorPos(float x, float y);
+	void getCursorPos(float& x, float& y);
+	void setShouldClose(bool value);
+	void setClipboardText(const char* text);
+	const char* getClipboardText() const;
+	void getFramebufferSize(int& width, int& height);
 
 	float getDelta() const {
 		return delta;
@@ -100,8 +108,16 @@ public:
 		return glfwWindowShouldClose(window);
 	}
 
+	bool isFocused() const {
+		return glfwGetWindowAttrib(window, GLFW_FOCUSED);
+	}
+
 	int getKey(int key) const {
 		return glfwGetKey(window, key);
+	}
+
+	int getMouseButton(int button) const {
+		return glfwGetMouseButton(window, button);
 	}
 
 	bool isFailed() const {

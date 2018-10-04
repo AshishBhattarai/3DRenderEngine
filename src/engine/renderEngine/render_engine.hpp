@@ -7,9 +7,11 @@
 #include "entities/camera.hpp"
 #include "entities/light.hpp"
 #include "entity_renderer.hpp"
+#include "gui_renderer.hpp"
 #include "shader/colored_entity_shader.hpp"
 #include "shader/entity_shader.hpp"
 #include "shader/terrain_shader.hpp"
+#include "shader/gui_shader.hpp"
 #include "shader/buffer/general_vs_ubo.hpp"
 #include "shader/buffer/general_fs_ubo.hpp"
 #include "terrain_renderer.hpp"
@@ -17,7 +19,7 @@
 #include "utils/type_conversion.hpp"
 
 // renders the world(everything) with help of other sub renderers
-
+class Gui;
 class RenderEngine {
 private:
 	static constexpr float FOV = 75.0f;
@@ -44,6 +46,11 @@ private:
 	// Terrain
 	TerrainShader terrainShader;
 	TerrainRenderer terrainRenderer;
+
+	// Gui
+	Gui& gui;
+	GuiShader guiShader;
+	GuiRenderer guiRenderer;
 
 	Camera* camera;
 	Light* sun;
@@ -80,6 +87,9 @@ public:
 		}
 	}
 
+	// call at start for each frame
+	void newFrame();
+
 	// add Terrains to map
 	void processTerrain(Terrain* terrain) {
 		terrains.emplace_back(terrain);
@@ -92,6 +102,10 @@ public:
 
 	// call renderers
 	void render();
+
+	void renderGui() {
+		guiRenderer.render();
+	}
 
 	// setters
 	void setSun(Light* sun) {

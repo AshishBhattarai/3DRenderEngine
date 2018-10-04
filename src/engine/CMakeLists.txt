@@ -9,6 +9,7 @@ add_library(engine-lib
 	renderEngine/render_engine.cpp
 	renderEngine/render_filter.cpp
 	renderEngine/opengl_query.cpp
+	renderEngine/gui_renderer.cpp
 
 	entities/entity.cpp
 	entities/camera.cpp
@@ -26,6 +27,8 @@ add_library(engine-lib
 	shader/entity_shader.cpp
 	shader/terrain_shader.cpp
 	shader/debug_physics_shader.cpp
+	shader/gui_shader.cpp
+
 	terrain/terrain.cpp
 	terrain/terrain_grid.cpp
 	terrain/physics_terrain.cpp
@@ -40,6 +43,8 @@ add_library(engine-lib
 	physics/physics_body/physics_body.cpp
 	physics/physics_body/rigid_body.cpp
 	physics/physics_body/static_body.cpp
+
+	gui/gui.cpp
 )
 
 target_link_libraries(
@@ -51,6 +56,7 @@ target_link_libraries(
 	${BULLET_LIBRARIES}
 	BulletWorldImporter
 	BulletFileLoader
+	${IMGUI_LIBRARIES}
 	dl
 )
 

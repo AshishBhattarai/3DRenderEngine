@@ -16,7 +16,7 @@ void main() {
 	vec4 position = projection_mat * view_mat * vec4(pos, 1.0f);
 	gl_PointSize = (isContactPoint)? 4.0f : 1.0f;
 
-	position.z = 0;
+	// position.z = 0;
 	gl_Position = position;
 	out_color = color;
 }

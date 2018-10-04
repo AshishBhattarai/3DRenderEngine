@@ -3,6 +3,7 @@
 #include "display_manager.hpp"
 #include "shader/shader_config.hpp"
 #include "opengl_query.hpp"
+#include "gui/gui.hpp"
 
 #include "utils/math.hpp"
 
@@ -17,6 +18,9 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		entityRenderer(entityShader, coloredEntityShader, bbShader),
 		terrainShader(),
 		terrainRenderer(terrainShader),
+		gui(Gui::initGui()), // must be called before guiRenderer
+		guiShader(),
+		guiRenderer(guiShader),
 		camera(camera),
 		sun(sun),
 		renderFilter(entities, terrains),
@@ -57,11 +61,17 @@ RenderEngine::~RenderEngine() {
 void RenderEngine::setProjectionMatrix() {
 	// setup projection matrix
 	DisplayManager& display = DisplayManager::getInstance();
-	projection_mat = glm::perspective(glm::radians(FOV),
-		(float)display.getScreenWidth() / (float)display.getScreenHeight(), NEAR, FAR);
+	float width = (float)display.getScreenWidth();
+	float height = (float)display.getScreenHeight();
 
+	projection_mat = glm::perspective(glm::radians(FOV), width / height, NEAR, FAR);
 	// load projection matrix to uniform
 	vsUBO.setProjectionMatrix(projection_mat);
+
+	// ortho graphic projection
+	guiShader.start();
+	guiShader.loadProjectionMatrix(glm::ortho(0.0f, width, height, 0.0f));
+	guiShader.stop();
 }
 
 void RenderEngine::setUniformBinding(const std::string& bname, u_int bpoint,
@@ -132,4 +142,8 @@ void RenderEngine::render() {
 	entityRenderer.render(entities);
 
 	clearRenderData();
+}
+
+void RenderEngine::newFrame() {
+	gui.newFrame();
 }

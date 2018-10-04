@@ -83,7 +83,7 @@ void DisplayManager::setupDisplay() {
 
 void DisplayManager::setupCallbacks() {
 
-	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode,
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int /* scancode */,
 			int action, int mods) {
 		// get this pointer
 		auto self = static_cast<DisplayManager*>(glfwGetWindowUserPointer(window));
@@ -127,6 +127,14 @@ void DisplayManager::setupCallbacks() {
 			cb((float)xoffset, (float)yoffset);
 		}
 	});
+
+	glfwSetCharCallback(window, [](GLFWwindow* window, unsigned int c){
+		auto self = static_cast<DisplayManager*>(glfwGetWindowUserPointer(window));
+		// callbacks
+		for(auto cb : self->vec_charCallback) {
+			cb(c);
+		}
+	});
 }
 
 void DisplayManager::calcFps() {
@@ -142,13 +150,15 @@ void DisplayManager::calcFps() {
 void DisplayManager::initLoop() {
 	glfwSwapInterval(1);
 	glfwSetCursorPos(window, mouse_lastx, mouse_lasty);
-	fps_time = delta_time = (float) glfwGetTime();
+	delta_time = glfwGetTime();
+	fps_time = (float)delta_time;
 }
 
 void DisplayManager::update() {
 	// calc delta
-	delta = (float)glfwGetTime() - delta_time;
-	delta_time = (float)glfwGetTime();
+	double current_time = glfwGetTime();
+	delta = (float)(current_time - delta_time);
+	delta_time = current_time;
 
 	calcFps();
 	glfwSwapBuffers(window);
@@ -162,4 +172,38 @@ void DisplayManager::setCursorMode(int mode) {
 		glfwSetInputMode(window, GLFW_CURSOR, mode);
 		cursor_mode = mode;
 	}
+}
+
+int DisplayManager::getCursorMode() const {
+	return cursor_mode;
+}
+
+void DisplayManager::setCursor(GLFWcursor* cursor) {
+	glfwSetCursor(window, cursor);
+}
+
+void DisplayManager::setShouldClose(bool value) {
+	glfwSetWindowShouldClose(window, value);
+}
+
+void DisplayManager::setCursorPos(float x, float y) {
+	glfwSetCursorPos(window, (double)x, (double)y);
+}
+void DisplayManager::getCursorPos(float& x, float& y) {
+	double d_x, d_y;
+	glfwGetCursorPos(window, &d_x, &d_y);
+	x = (float) d_x;
+	y = (float) d_y;
+}
+
+void DisplayManager::setClipboardText(const char* text) {
+	glfwSetClipboardString(window, text);
+}
+
+const char* DisplayManager::getClipboardText() const {
+	return glfwGetClipboardString(window);
+}
+
+void DisplayManager::getFramebufferSize(int& width, int& height) {
+	glfwGetFramebufferSize(window, &width, &height);
 }

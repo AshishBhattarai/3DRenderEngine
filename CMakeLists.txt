@@ -27,6 +27,7 @@ set(GLM_DIR ${CMAKE_SOURCE_DIR}/externals/glm)
 set(STB_IMAGE_DIR ${CMAKE_SOURCE_DIR}/externals/stb_image)
 set(ASSIMP_DIR ${CMAKE_SOURCE_DIR}/externals/assimp)
 set(BULLET_DIR ${CMAKE_SOURCE_DIR}/externals/bullet3)
+set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/externals/imgui)
 
 # opengl
 find_package(OpenGL REQUIRED)
@@ -73,6 +74,10 @@ else()
 	set(BULLET_INCLUDE_DIR ${BULLET_DIR}/include)
 endif()
 include_directories(${BULLET_INCLUDE_DIR})
+
+#imgui
+set(IMGUI_LIBRARIES imgui-lib)
+include_directories(${IMGUI_DIR})
 
 # external libraries
 add_subdirectory(externals)
