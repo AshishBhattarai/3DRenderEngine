@@ -81,6 +81,7 @@ void SkyboxRenderer::render(Skybox* skybox) {
   glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->getCubemapID());
 	shader->start();
+  shader->loadEnableFog(skybox->getFogEnable());
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
   glDepthFunc(GL_LESS);

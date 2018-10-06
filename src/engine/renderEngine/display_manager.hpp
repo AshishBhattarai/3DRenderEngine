@@ -25,8 +25,8 @@ private:
 	using charCallBack = std::function<void(unsigned int c)>;
 
 	// members
-	static constexpr int DEFAULT_WIDTH 	= 800;
-	static constexpr int DEFAULT_HEIGHT =	600;
+	static constexpr int DEFAULT_WIDTH 	= 1024;
+	static constexpr int DEFAULT_HEIGHT =	700;
 
 	int fps_cnt;
 	float fps_time;

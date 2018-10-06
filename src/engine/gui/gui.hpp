@@ -18,8 +18,11 @@ private:
 	Gui();
 	~Gui();
 
+	void updateMousePosAndButtons();
+	void updateMouseCursor();
+
 public:
-	static Gui& initGui() {
+	static Gui& getGui() {
 		static Gui instance;
 		return instance;
 	}
@@ -28,6 +31,10 @@ public:
 	Gui& operator=(const Gui&) = delete;
 
 	void newFrame();
+
+	void setGlobalFontScale(float scale);
+
+	void scaleAllSizes(float scale);
 };
 
 #endif

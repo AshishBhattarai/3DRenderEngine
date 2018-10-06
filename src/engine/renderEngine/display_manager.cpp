@@ -41,6 +41,7 @@ void DisplayManager::setupDisplay() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR_VERSION);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR_VERSION);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // disable resize
 
 	window = glfwCreateWindow(screen_width, screen_height, window_title.c_str(),
 			NULL, NULL);

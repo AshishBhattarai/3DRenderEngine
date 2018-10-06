@@ -19,7 +19,7 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		entityRenderer(entityShader, coloredEntityShader, bbShader),
 		terrainShader(),
 		terrainRenderer(terrainShader),
-		gui(Gui::initGui()), // must be called before guiRenderer
+		gui(Gui::getGui()), // must be called before guiRenderer
 		guiShader(),
 		guiRenderer(guiShader),
 		skybox(nullptr),
@@ -145,9 +145,10 @@ void RenderEngine::render() {
 	// render entity
 	entityRenderer.render(entities);
 	// render skybox
-	skyboxRenderer.render(skybox);
-	skyboxShader.loadSkyboxMatrix(camera->getViewMatrix(), skybox->getRPM());
-
+	if(skybox) {
+		skyboxRenderer.render(skybox);
+		skyboxShader.loadSkyboxMatrix(camera->getViewMatrix(), skybox->getRPM());
+	}
 	clearRenderData();
 }
 

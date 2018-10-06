@@ -109,20 +109,9 @@ Gui::~Gui() {
 	ImGui::DestroyContext();
 }
 
-void Gui::newFrame() {
-	// font atlas needs to be build before calling newFrame
+void Gui::updateMousePosAndButtons() {
 	DisplayManager& display = DisplayManager::getInstance();
-
 	ImGuiIO& io = ImGui::GetIO();
-	IM_ASSERT(io.Fonts->IsBuilt());
-
-	// set up display size
-	int fb_width, fb_height;
-	float s_width = (float)display.getScreenWidth();
-	float s_height = (float)display.getScreenHeight();
-	display.getFramebufferSize(fb_width, fb_height);
-	io.DisplaySize = ImVec2(s_width, s_height);
-	io.DisplayFramebufferScale = ImVec2(fb_width > 0 ? (s_width/fb_width) : 0, fb_height > 0 ? (s_height/fb_height) : 0);
 
 	// update mouse buttons
 	for(int i = 0; i < IM_ARRAYSIZE(io.MouseDown); ++i) {
@@ -143,8 +132,13 @@ void Gui::newFrame() {
 			io.MousePos = ImVec2(x, y);
 		}
 	}
+}
 
-		// update mouse cursor
+void Gui::updateMouseCursor() {
+	DisplayManager& display = DisplayManager::getInstance();
+	ImGuiIO& io = ImGui::GetIO();
+
+	// update mouse cursor
 	if((io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange) || display.getCursorMode() == GLFW_CURSOR_DISABLED)
 		return;
 
@@ -159,6 +153,36 @@ void Gui::newFrame() {
 		display.setCursor(mouseCursors[imgui_cursor]? mouseCursors[imgui_cursor] : mouseCursors[ImGuiMouseCursor_Arrow]);
 		display.setCursorMode(GLFW_CURSOR_NORMAL);
 	}
+}
+
+void Gui::newFrame() {
+	// font atlas needs to be build before calling newFrame
+	DisplayManager& display = DisplayManager::getInstance();
+
+	ImGuiIO& io = ImGui::GetIO();
+	IM_ASSERT(io.Fonts->IsBuilt());
+
+	// set up display size
+	int fb_width, fb_height;
+	float s_width = (float)display.getScreenWidth();
+	float s_height = (float)display.getScreenHeight();
+	display.getFramebufferSize(fb_width, fb_height);
+	io.DisplaySize = ImVec2(s_width, s_height);
+	io.DisplayFramebufferScale = ImVec2(fb_width > 0 ? (s_width/fb_width) : 0, fb_height > 0 ? (s_height/fb_height) : 0);
+	io.DeltaTime = display.getDelta();
+
+	updateMousePosAndButtons();
+	updateMouseCursor();
 
 	ImGui::NewFrame();
+}
+
+void Gui::setGlobalFontScale(float scale) {
+	ImGuiIO& io = ImGui::GetIO();
+	io.FontGlobalScale = scale;
+}
+
+void Gui::scaleAllSizes(float scale) {
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.ScaleAllSizes(scale);
 }

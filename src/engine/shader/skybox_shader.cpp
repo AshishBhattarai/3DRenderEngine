@@ -8,6 +8,7 @@ SkyboxShader::SkyboxShader():
 	this->start();
 	loadInt("skyboxTexture", 0);
 	loc_skyboxMat = getUniformLoc("skybox_mat");
+	loc_enableFog = getUniformLoc("enable_fog");
 	this->stop();
 }
 
@@ -20,4 +21,8 @@ void SkyboxShader::loadSkyboxMatrix(const glm::mat4& view, float rmp) {
 		skyboxMat  = glm::rotate(skyboxMat, rot, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 	uniformMatrix4fv(loc_skyboxMat, skyboxMat);
+}
+
+void SkyboxShader::loadEnableFog(bool enable) {
+	uniform1i(loc_enableFog, enable);
 }

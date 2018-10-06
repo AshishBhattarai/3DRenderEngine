@@ -129,6 +129,11 @@ public:
 		this->camera = camera;
 	}
 
+	void setFogColor(const glm::vec3& color) {
+		fogColor = color;
+		fsUBO.setFogColor(fogColor);
+	}
+
 	// TODO: Remove this later
 	const glm::mat4& getProjectionMatrix() const {
 		return projection_mat;

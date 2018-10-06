@@ -11,11 +11,13 @@ private:
 
 	// skybox view * roation matrix
 	GLint loc_skyboxMat;
+	GLint loc_enableFog;
 
 public:
 	SkyboxShader();
 	// view+rotation - rmp - rotation per min
 	void loadSkyboxMatrix(const glm::mat4& view, float rmp = 0.0f);
+	void loadEnableFog(bool enable);
 
 };
 

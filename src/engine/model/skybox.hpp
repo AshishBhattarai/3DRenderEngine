@@ -17,6 +17,9 @@ class Skybox {
 private:
 	Texture texture;
 	float rpm; // rotation per min
+	float lowerFogLimit; // must be in normal(-1.0f to 1.0f) form
+	float upperFogLimit; // must be in normal(-1.0f to 1.0f) form
+	bool fogEnable;
 
 public:
 	Skybox(SkyboxPath& path, float rpm = 0.0f);
@@ -24,6 +27,8 @@ public:
 public:
 	GLuint getCubemapID() const;
 	float getRPM() const;
+	void setFogEnable(bool enable);
+	bool getFogEnable() const;
 };
 
 
