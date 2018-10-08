@@ -39,6 +39,10 @@ public:
 	void setPosition(const glm::vec3& pos);
 	void setRotation(const glm::vec3& rot);
 
+	void setFriction(float fri);
+	void setRestitution(float res);
+	void setRollingFriction(float fri);
+
 	// getters
 	glm::vec3 getPosition() const;
 	glm::vec3 getRotation() const;

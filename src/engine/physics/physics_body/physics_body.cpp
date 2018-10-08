@@ -80,3 +80,15 @@ glm::vec3 PhysicsBody::getMaxBB() const {
 PhysicsBody::Type PhysicsBody::getType() const {
 	return type;
 }
+
+void PhysicsBody::setFriction(float fri) {
+	physicsBody->setFriction(fri);
+}
+
+void PhysicsBody::setRestitution(float res) {
+	physicsBody->setRestitution(res);
+}
+
+void PhysicsBody::setRollingFriction(float fri) {
+	physicsBody->setRollingFriction(fri);
+}

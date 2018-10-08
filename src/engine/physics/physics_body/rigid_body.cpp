@@ -37,22 +37,10 @@ void RigidBody::addToWorld() {
 	PhysicsWorld::getInstance().addRigidBody(static_cast<btRigidBody*>(physicsBody));
 }
 
-glm::vec3 RigidBody::getLinearVelocity() {
-	return VEC3::btToGlm(rigidBody->getLinearVelocity());
-}
-
-void RigidBody::setFriction(float fri) {
-	rigidBody->setFriction(fri);
-}
-
-void RigidBody::setRestitution(float res) {
-	rigidBody->setRestitution(res);
-}
-
-void RigidBody::setRollingFriction(float fri) {
-	rigidBody->setRollingFriction(fri);
-}
-
 void RigidBody::applyCentralImpulse(const glm::vec3& imp) {
 	rigidBody->applyCentralImpulse(VEC3::glmToBt(imp));
+}
+
+glm::vec3 RigidBody::getLinearVelocity() const {
+	return VEC3::btToGlm(rigidBody->getLinearVelocity());
 }

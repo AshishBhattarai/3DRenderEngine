@@ -20,11 +20,8 @@ public:
 
 	void addToWorld() override;
 
-	glm::vec3 getLinearVelocity();
-	void setFriction(float fri);
-	void setRestitution(float res);
-	void setRollingFriction(float fri);
 	void applyCentralImpulse(const glm::vec3& imp);
+	glm::vec3 getLinearVelocity() const;
 };
 
 #endif

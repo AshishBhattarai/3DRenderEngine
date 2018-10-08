@@ -14,7 +14,7 @@ DisplayManager::DisplayManager() :
 		cursor_mode(GLFW_CURSOR_HIDDEN),
 		display_failed(false),
 		window(nullptr),
-		window_title("Engine1")
+		window_title("Physics Simulation")
 {
 	setupDisplay();
 	setupCallbacks();

@@ -4,7 +4,7 @@ add_subdirectory(engine)
 
 # game source
 set(GAME_SRC
-	game/main.cpp
+	simphy/main.cpp
 )
 
 add_executable(${PROJECT_NAME} ${GAME_SRC})
