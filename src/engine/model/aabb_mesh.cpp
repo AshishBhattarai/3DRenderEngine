@@ -2,7 +2,7 @@
 
 AABBMesh::AABBMesh(bool static_aabb) {
 	GLenum draw_type;
-	u_int indexData[] = {
+	GLuint indexData[] = {
 		0, 1, 3, 3, 1, 2,	4, 5, 7, 7, 5, 6, 8, 9, 11, 11, 9, 10, 12, 13,
 		15, 15,13, 14, 16, 17, 19, 19, 17, 18, 20, 21, 23, 23, 21, 22
    };
@@ -25,7 +25,7 @@ AABBMesh::AABBMesh(bool static_aabb) {
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6*2*3*sizeof(u_int), indexData, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6*2*3*sizeof(GLuint), indexData, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -86,6 +86,6 @@ void AABBMesh::updateData(glm::vec3 minBB, glm::vec3 maxBB) {
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 6*4*3*sizeof(float), vertices);
 }
 
-u_int AABBMesh::getVAO() {
+GLuint AABBMesh::getVAO() {
 	return vao;
 }

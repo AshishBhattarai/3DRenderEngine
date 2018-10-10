@@ -1,7 +1,7 @@
 #ifndef PHYSICS_WORLD_HPP
 #define PHYSICS_WORLD_HPP
 
-#include <bullet/btBulletDynamicsCommon.h>
+#include <btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 
 // singleton class represents physics world
@@ -70,7 +70,7 @@ public:
 
 	DebugDrawer* getDebugDrawer() const;
 
-	void setVSDataBinding(u_int point);
+	void setVSDataBinding(unsigned int point);
 };
 
 #endif

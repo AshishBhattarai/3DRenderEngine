@@ -9,4 +9,4 @@ set(GAME_SRC
 
 add_executable(${PROJECT_NAME} ${GAME_SRC})
 # link engine library
-target_link_libraries(${PROJECT_NAME}  engine-lib)
+target_link_libraries(${PROJECT_NAME}  engine-lib ${GLAD_LIBRARIES})

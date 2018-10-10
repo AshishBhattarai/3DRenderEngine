@@ -34,7 +34,7 @@ private:
 
 	Type modelType;
 	int flags;
-	u_int numMeshes; // no of meshes in the model;
+	unsigned int numMeshes; // no of meshes in the model;
 
 	glm::vec3 minbb; // min bounding box
 	glm::vec3 maxbb; // max bounding box
@@ -55,7 +55,7 @@ private:
 public:
 	Model(std::string_view path, Type type, int flags = 0);
 
-	u_int getNumMeshes() const {
+	unsigned int getNumMeshes() const {
 		return numMeshes;
 	}
 

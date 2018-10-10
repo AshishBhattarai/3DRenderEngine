@@ -12,7 +12,7 @@ private:
 	int height;
 	int numChannels; //no.of color channels
 	// image bytes data
-	u_char* data;
+	unsigned char* data;
 
 	void loadImageData(const std::string& path, bool flip = false);
 
@@ -21,14 +21,14 @@ public:
 	~Image();
 
 	// get r+g+b value of x,y pixel
-	float getRGB(u_int x, u_int y);
+	float getRGB(unsigned int x, unsigned int y);
 
 	bool failed() const {
 		return !data;
 	}
 
 	// getters
-	const u_char* getData() const {
+	const unsigned char* getData() const {
 		return data;
 	}
 

@@ -78,7 +78,7 @@ void RenderEngine::setProjectionMatrix() {
 	guiShader.stop();
 }
 
-void RenderEngine::setUniformBinding(const std::string& bname, u_int bpoint,
+void RenderEngine::setUniformBinding(const std::string& bname, GLuint bpoint,
 	std::initializer_list<Shader*> list)
 {
 	for(auto& s : list) {

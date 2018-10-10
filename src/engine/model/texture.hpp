@@ -36,8 +36,8 @@ public:
 	static constexpr float LOW_LOD		=		 0.0f;
 
 	// wraps
-	static constexpr u_int CLAMP 	=	GL_CLAMP_TO_EDGE;
-	static constexpr u_int REPEAT	=	GL_REPEAT;
+	static constexpr GLenum CLAMP 	=	GL_CLAMP_TO_EDGE;
+	static constexpr GLenum REPEAT	=	GL_REPEAT;
 
 	static constexpr int CUBEMAP_NUM_FACES = 6; // cubemap faces
 
@@ -61,7 +61,7 @@ public:
 	void setLOD(float lod_bias);
 
 	// set wrap
-	void setTextureWrap(u_int wrap);
+	void setTextureWrap(GLenum wrap);
 
 	// getters
 	GLuint getID() const {

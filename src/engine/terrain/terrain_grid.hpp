@@ -20,8 +20,8 @@ private:
 	// Terrain grid
 	Grid grid;
 
-	u_int numGridX; // total no. of Terrain in grid x, starts from 1
-	u_int numGridZ; // in z
+	unsigned int numGridX; // total no. of Terrain in grid x, starts from 1
+	unsigned int numGridZ; // in z
 
 	int terSize; // Terrain size
 	int vertexCount; // total num of vertex
@@ -30,20 +30,20 @@ private:
 	int numTerrain; // no. of terrins in grid
 
 public:
-	TerrainGrid(u_int numGridX, u_int numGridZ, int size = SIZE,
+	TerrainGrid(unsigned int numGridX, unsigned int numGridZ, int size = SIZE,
 		int vertexCount = VERTEX_COUNT, float maxHeight = MAX_HEIGHT,
 		int tilingFactor = TILING_FACTOR);
 
 	// add a Terrain to the grid - overrides old Terrain if there is any
-	void addTerrain(u_int gridX, u_int gridZ, Texture::Map& textures);
+	void addTerrain(unsigned int gridX, unsigned int gridZ, Texture::Map& textures);
 	// Terrains with heightmap
-	void addTerrain(u_int gridX, u_int gridZ, Image& heightMap, Texture::Map& textures);
+	void addTerrain(unsigned int gridX, unsigned int gridZ, Image& heightMap, Texture::Map& textures);
 
 	// get Terrain in grid x, z
-	PhysicsTerrain* getTerrain(u_int gridX, u_int gridZ);
+	PhysicsTerrain* getTerrain(unsigned int gridX, unsigned int gridZ);
 
 	// get grid for correspoind world x, z, returns 0 if no Terrain in gri
-	std::pair<u_int, u_int> posToGrid(float x, float z);
+	std::pair<unsigned int, unsigned int> posToGrid(float x, float z);
 
 	// get height at position x, y (world position)
 	float getHeightAt(float x, float z);
@@ -53,7 +53,7 @@ public:
 		return numTerrain;
 	}
 
-	bool hasTerrainAt(u_int x, u_int z) const {
+	bool hasTerrainAt(unsigned int x, unsigned int z) const {
 		return grid[x + z*numGridZ].get();
 	}
 

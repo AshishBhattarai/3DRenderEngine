@@ -22,7 +22,7 @@ private:
 	Mode mode;
 
 protected:
-	u_int vertexCount;
+	unsigned int vertexCount;
 	int size;
 	// world position
 	float posX;
@@ -33,25 +33,25 @@ protected:
 	float maxHeight;
 	std::vector<float> heights;
 
-	float calcHeightAt(u_int x, u_int z, Image& heightMap);
-	glm::vec3 calcNormalAt(u_int x, u_int z, Image& heightMap);
+	float calcHeightAt(unsigned int x, unsigned int z, Image& heightMap);
+	glm::vec3 calcNormalAt(unsigned int x, unsigned int z, Image& heightMap);
 
 	// generates the Terrain mesh -
 	void generateVertices(std::vector<TexturedMesh::Vertex>& vertices, std::vector<glm::vec2>& texCoords);
-	void generateIndices(std::vector<u_int>& indices);
+	void generateIndices(std::vector<unsigned int>& indices);
 	void generateHeightWMap(std::vector<TexturedMesh::Vertex>& vertices, Image& image);
 
 	std::unique_ptr<TexturedMesh> generateTerrain(std::function<void(std::vector<TexturedMesh::Vertex>&)> caculateHeight = {});
 		// function to calculate Terrain height (empty by default)
 
 	// intilizing constructor
-	Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, float maxHeight, Mode mode);
+	Terrain(unsigned int gridX, unsigned int gridZ, int size, unsigned int vertexCount, float maxHeight, Mode mode);
 
 public:
 	// flat Terrain constructor
-	Terrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Texture::Map& textures);
+	Terrain(unsigned int gridX, unsigned int gridZ, int size, unsigned int vertexCount, Texture::Map& textures);
 	// height map constructor
-	Terrain(u_int gridX, u_int gridZ, int size, float maxHeight, Image& heightMap,
+	Terrain(unsigned int gridX, unsigned int gridZ, int size, float maxHeight, Image& heightMap,
 	Texture::Map& textures);
 
 	// get height at a world position

@@ -21,16 +21,16 @@ private:
 
 public:
 	// only texCoords
-	TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
+	TexturedMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices,
 		std::vector<glm::vec2>& texCoords, float shininess = 1, std::string name = "");
 
 	// single texture
-	TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
+	TexturedMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices,
 		std::vector<glm::vec2>& texCoords, std::shared_ptr<Texture> tex_diffuse,
 		float shininess = 1, std::string name = "");
 
 	// texCoords + texture map
-	TexturedMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
+	TexturedMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices,
 		std::vector<glm::vec2>& texCoords, Texture::Map&& textures,
 		float shininess = 1, std::string name = "");
 
@@ -52,7 +52,7 @@ public:
 		textures[texture->getType()] = texture;
 	}
 
-	void setTextureWrapAll(u_int wrap) {
+	void setTextureWrapAll(GLuint wrap) {
 		for(auto pair : textures) {
 			pair.second->setTextureWrap(wrap);
 		}

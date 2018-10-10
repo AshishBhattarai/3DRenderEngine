@@ -1,8 +1,8 @@
 #ifndef COLLISION_SHAPE_HPP
 #define COLLISION_SHAPE_HPP
 
-#include <bullet/btBulletCollisionCommon.h>
-#include <bullet/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
+#include <btBulletCollisionCommon.h>
+#include <BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
 #include <glm/glm.hpp>
 #include <vector>
 

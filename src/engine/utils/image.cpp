@@ -24,8 +24,8 @@ Image::Image(const std::string& path, bool flip) :
 }
 
 // get rbg value of pixel
-float Image::getRGB(u_int x, u_int y) {
-	if(x >= (u_int)height || y >= (u_int)height)
+float Image::getRGB(unsigned int x, unsigned int y) {
+	if(x >= (unsigned int)height || y >= (unsigned int)height)
 		return 0.0f;
 
 	// index for pixel color(red), g = red_index + 1, b = red_index + 2

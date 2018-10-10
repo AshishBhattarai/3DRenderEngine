@@ -31,7 +31,7 @@ public:
 	GLint getUniformLoc(const char* name) const;
 
 	// set binding point for the number block name
-	void setUniformBlockBinding(const char* name, u_int point);
+	void setUniformBlockBinding(const char* name, GLuint point);
 
 	// load uniforms
 	void uniform1i(int loc, int value) {

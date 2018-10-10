@@ -111,7 +111,7 @@ GLint Shader::getUniformLoc(const char* name) const {
 	return loc;
 }
 
-void Shader::setUniformBlockBinding(const char* name, u_int point) {
+void Shader::setUniformBlockBinding(const char* name, GLuint point) {
 	// get block index
 	GLuint index = glGetUniformBlockIndex(program, name);
 	// check for errors

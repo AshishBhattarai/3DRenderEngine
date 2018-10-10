@@ -1,6 +1,6 @@
 #include "mesh.hpp"
 
-void Mesh::setupMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices) {
+void Mesh::setupMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices) {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &v_VBO);
 	glGenBuffers(1, &EBO);
@@ -22,7 +22,7 @@ void Mesh::setupMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices) 
 
 	// indices
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -31,7 +31,7 @@ void Mesh::setupMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices) 
 	attributesCount = 2; // no. of attributes set
 }
 
-Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
+Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices,
 		std::string name) :
 		indicesCount(indices.size()), //NOTE: imp don't miss this in another MESH-REDO
 		name(name)

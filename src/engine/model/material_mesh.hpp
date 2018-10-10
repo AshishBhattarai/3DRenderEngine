@@ -25,13 +25,13 @@ protected:
 	// mesh data
 	Material material;
 
-	MaterialMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
+	MaterialMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices,
 		std::string name = "") :
 		Mesh(vertices, indices, name)
 	{}
 
 public:
-	MaterialMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
+	MaterialMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices,
 			Material material, std::string name = "") :
 			Mesh(vertices, indices, name),
 			material(material)

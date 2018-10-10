@@ -42,7 +42,7 @@ void EntityRenderer::renderTexturedEntity(Entity* entity) {
 	auto model = entity->getModel();
 
 	loadTransformation(entity, entityShader);
-	for(u_int i = 0; i < model->getNumMeshes(); ++i) {
+	for(unsigned int i = 0; i < model->getNumMeshes(); ++i) {
 		auto mesh = model->getTexturedMesh(i);
 		prepareMesh(mesh);
 		glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, 0);
@@ -54,7 +54,7 @@ void EntityRenderer::renderColoredEntity(Entity* entity) {
 	auto model = entity->getModel();
 
 	loadTransformation(entity, coloredEntityShader);
-	for(u_int i = 0; i < model->getNumMeshes(); ++i) {
+	for(unsigned int i = 0; i < model->getNumMeshes(); ++i) {
 		auto mesh = model->getMaterialMesh(i);
 		prepareMesh(mesh);
 		glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, 0);

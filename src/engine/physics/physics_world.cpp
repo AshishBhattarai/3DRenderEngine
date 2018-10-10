@@ -32,6 +32,6 @@ DebugDrawer* PhysicsWorld::getDebugDrawer() const {
 	return debug_drawer;
 }
 
-void PhysicsWorld::setVSDataBinding(u_int point) {
+void PhysicsWorld::setVSDataBinding(unsigned int point) {
 	debug_drawer->setVSDataBinding(point);
 }

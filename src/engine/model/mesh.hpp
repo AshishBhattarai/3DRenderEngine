@@ -25,7 +25,7 @@ private:
 	GLuint v_VBO, EBO;
 
 	// load vertices
-	void setupMesh(std::vector<Vertex>& vertices, std::vector<uint>& indices);
+	void setupMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices);
 
 protected:
 	// vertex data
@@ -33,7 +33,7 @@ protected:
 	int attributesCount; // no. of vertex attributes
 
 public:
-	Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices,
+	Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices,
 		std::string name = "");
 	// move
 	Mesh(Mesh&& mesh);

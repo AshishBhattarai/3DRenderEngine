@@ -1,8 +1,8 @@
 #ifndef PHYSICS_IMPORTER_HPP
 #define PHYSICS_IMPORTER_HPP
 
-#include <bullet/BulletWorldImporter/btWorldImporter.h>
-#include <bullet/BulletFileLoader/btBulletFile.h>
+#include <BulletWorldImporter/btWorldImporter.h>
+#include <BulletFileLoader/btBulletFile.h>
 #include <memory>
 
 #include "collision_shape/collision_shape.hpp"

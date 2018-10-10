@@ -1,5 +1,8 @@
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/renderEngine)
 
+# compiler warnings
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+
 # NOTE: Don't forget to update this after new .cpp file
 # renderEngine
 add_library(engine-lib
@@ -53,15 +56,15 @@ add_library(engine-lib
 target_link_libraries(
 	engine-lib
 	${OPENGL_LIBRARIES}
-	${GLAD_LIBRARIES}
 	${GLFW_LIBRARIES}
 	${ASSIMP_LIBRARIES}
 	${BULLET_LIBRARIES}
-	BulletWorldImporter
-	BulletFileLoader
 	${IMGUI_LIBRARIES}
-	dl
 )
+
+if(UNIX)
+	target_link_libraries(engine-lib dl)
+endif()
 
 # add to engine-lib
 # if(ENABLE_SCRIPTING)

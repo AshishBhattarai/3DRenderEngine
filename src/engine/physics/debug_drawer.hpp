@@ -1,7 +1,7 @@
 #ifndef DEBUG_DRAWER_HPP
 #define DEBUG_DRAWER_HPP
 
-#include <bullet/LinearMath/btIDebugDraw.h>
+#include <LinearMath/btIDebugDraw.h>
 
 #include "shader/debug_physics_shader.hpp"
 #include "shader/shader_config.hpp"
@@ -41,7 +41,7 @@ public:
 						btIDebugDraw::DBG_DrawAabb |  btIDebugDraw:: DBG_DrawContactPoints);
 	}
 
-	void setVSDataBinding(u_int point) {
+	void setVSDataBinding(GLuint point) {
 		shader.setUniformBlockBinding(ShaderConfig::GeneralVSData, point);
 	}
 

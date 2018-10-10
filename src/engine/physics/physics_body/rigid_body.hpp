@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <glm/glm.hpp>
-#include <bullet/BulletDynamics/Dynamics/btRigidBody.h>
+#include <BulletDynamics/Dynamics/btRigidBody.h>
 
 #include "physics_body.hpp"
 

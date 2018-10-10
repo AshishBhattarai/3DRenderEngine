@@ -2,7 +2,7 @@
 #define TYPE_CONVERSION_HPP
 
 #include <glm/glm.hpp>
-#include <bullet/LinearMath/btVector3.h>
+#include <LinearMath/btVector3.h>
 
 namespace VEC3 {
 

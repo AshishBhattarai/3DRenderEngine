@@ -73,7 +73,7 @@ private:
 	void setProjectionMatrix();
 	// load mat Uniform binding point to the shaders(list arguments)
 	void setMatUniformBinding(std::initializer_list<Shader*> list);
-	void setUniformBinding(const std::string& bname, u_int bpoint, std::initializer_list<Shader*> list);
+	void setUniformBinding(const std::string& bname, GLuint bpoint, std::initializer_list<Shader*> list);
 	void prepare(); // prepare for rendering
 	void frustumCull();
 	void sortEntities();

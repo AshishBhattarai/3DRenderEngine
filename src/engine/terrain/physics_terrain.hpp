@@ -16,9 +16,9 @@ private:
 	void initPhysicsBody(float x, float z);
 
 public:
-	PhysicsTerrain(u_int gridX, u_int gridZ, int size, float maxHeight, Image& heightMap,
+	PhysicsTerrain(unsigned int gridX, unsigned int gridZ, int size, float maxHeight, Image& heightMap,
 		Texture::Map& textures);
-	PhysicsTerrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Texture::Map& textures);
+	PhysicsTerrain(unsigned int gridX, unsigned int gridZ, int size, unsigned int vertexCount, Texture::Map& textures);
 
 	StaticBody* getPhysicsBody() const;
 };

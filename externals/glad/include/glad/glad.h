@@ -27,6 +27,11 @@
 #endif
 #define __gl_h_
 
+// disable windows.h
+#ifdef _WIN32
+    #define APIENTRY __stdcall
+#endif
+
 #if defined(_WIN32) && !defined(APIENTRY) && !defined(__CYGWIN__) && !defined(__SCITECH_SNAP__)
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1

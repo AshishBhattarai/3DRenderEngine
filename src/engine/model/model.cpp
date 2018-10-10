@@ -40,7 +40,7 @@ void Model::loadModel(std::string_view path) {
 	directory = path.substr(0, path.find_last_of('/'));
 
 	// process all the meshes in the scene
-	for(u_int i = 0; i < scene->mNumMeshes; ++i) {
+	for(unsigned int i = 0; i < scene->mNumMeshes; ++i) {
 		meshes.emplace_back(processMesh(scene->mMeshes[i], scene));
 	}
 	numMeshes = meshes.size();
@@ -49,7 +49,7 @@ void Model::loadModel(std::string_view path) {
 std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scene) {
 	// mesh attributes
 	std::vector<Mesh::Vertex> vertices;
-	std::vector<uint> indices;
+	std::vector<GLuint> indices;
 	std::vector<glm::vec2> texCoords;
 	MaterialMesh::Material color;
 	Texture::Map textures;
@@ -64,7 +64,7 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 	if(hasTexture) texCoords.reserve(mesh->mNumVertices);
 
 	// load vertices and textureCoords
-	for(u_int i = 0; i < mesh->mNumVertices; ++i) {
+	for(unsigned int i = 0; i < mesh->mNumVertices; ++i) {
 		Mesh::Vertex vertex;
 		glm::vec2 texCoord;
 
@@ -94,9 +94,9 @@ std::unique_ptr<Mesh> Model::processMesh(const aiMesh* mesh, const aiScene* scen
 	}
 
 	// load indices
-	for(u_int i = 0; i < mesh->mNumFaces; ++i) { // get faces
+	for(unsigned int i = 0; i < mesh->mNumFaces; ++i) { // get faces
 		aiFace face = mesh->mFaces[i];
-		for(u_int j = 0; j < face.mNumIndices; ++j) // get indices
+		for(GLuint j = 0; j < face.mNumIndices; ++j) // get indices
 			indices.emplace_back(face.mIndices[j]);
 	}
 

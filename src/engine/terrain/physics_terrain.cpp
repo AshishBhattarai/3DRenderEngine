@@ -15,13 +15,13 @@ void PhysicsTerrain::initPhysicsBody(float x, float z) {
 	physicsBody->disableDebugDraw();
 }
 
-PhysicsTerrain::PhysicsTerrain(u_int gridX, u_int gridZ, int size, u_int vertexCount, Texture::Map& textures) :
+PhysicsTerrain::PhysicsTerrain(unsigned int gridX, unsigned int gridZ, int size, unsigned int vertexCount, Texture::Map& textures) :
 	Terrain(gridX, gridZ, size, vertexCount, textures)
 {
 	initPhysicsBody(gridX, gridZ);
 }
 
-PhysicsTerrain::PhysicsTerrain(u_int gridX, u_int gridZ, int size,
+PhysicsTerrain::PhysicsTerrain(unsigned int gridX, unsigned int gridZ, int size,
 	float maxHeight, Image& heightMap, Texture::Map& textures) :
 	Terrain(gridX, gridZ, size, maxHeight, heightMap, textures)
 {
