@@ -1,8 +1,9 @@
 #include "entity_shader.hpp"
 
 void EntityShader::loadTextureUnits() {
-	loadInt("material.texture_diffuse", DIFFUSE_UINT);
-	loadInt("material.texture_specular", SPECULAR_UINT);
+	loadInt("material.texture_diffuse", DIFFUSE_UNIT);
+	loadInt("material.texture_specular", SPECULAR_UNIT);
+	loadInt("material.texture_emission", EMISSION_UNIT);
 }
 
 void EntityShader::getUniformLocations() {

@@ -15,6 +15,7 @@ public:
 		// model textures
 		DIFFUSE_MAP				=			000,
 		SPECULAR_MAP			=			001,
+		EMISSION_MAP			=			003,
 
 		// terrian textures(splat map)
 		BLEND_MAP							=			100,

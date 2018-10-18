@@ -54,6 +54,7 @@ struct SpotLight {
 struct Material {
 	sampler2D texture_diffuse;
 	sampler2D texture_specular;
+	sampler2D texture_emission;
 
 	float shininess;
 };
@@ -150,6 +151,9 @@ void main() {
 	outputColor = max(outputColor, ambientFactor * texture_maps[0].xyz);
 
 	// emission
+	if(textureSize(material.texture_emission, 0).x != 1.0f) {
+		outputColor += texture(material.texture_emission, fs_in.tex_coords).xyz;
+	}
 
 	FragColor = vec4(mix(fogColor.xyz, outputColor, fs_in.fogFactor), 1.0f);
 }

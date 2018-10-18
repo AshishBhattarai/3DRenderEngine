@@ -22,11 +22,15 @@ void EntityRenderer::prepareMesh(const TexturedMesh* mesh) {
 	// load textures & bind
 	entityShader->loadMaterialShininess(mesh->getSpecularShininess());
 
-	glActiveTexture(GL_TEXTURE0+entityShader->DIFFUSE_UINT);
+	glActiveTexture(GL_TEXTURE0+entityShader->DIFFUSE_UNIT);
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID(Texture::DIFFUSE_MAP));
 
-	glActiveTexture(GL_TEXTURE0+entityShader->SPECULAR_UINT);
+	glActiveTexture(GL_TEXTURE0+entityShader->SPECULAR_UNIT);
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID(Texture::SPECULAR_MAP));
+
+	glActiveTexture(GL_TEXTURE0+entityShader->EMISSION_UNIT);
+	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID(Texture::EMISSION_MAP));
+
 	glBindVertexArray(mesh->getVAO());
 }
 

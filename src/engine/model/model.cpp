@@ -164,6 +164,11 @@ void Model::loadMaterialTexture(const aiMaterial* mat, Texture::Map& textures) {
 		mat->GetTexture(aiTextureType_SPECULAR, 0, &path);
 		textures[Texture::SPECULAR_MAP] = loadTexture(path.C_Str(), Texture::SPECULAR_MAP);
 	}
+	if(mat->GetTextureCount(aiTextureType_EMISSIVE)) {
+		// emission
+		mat->GetTexture(aiTextureType_EMISSIVE, 0, &path);
+		textures[Texture::EMISSION_MAP] = loadTexture(path.C_Str(), Texture::EMISSION_MAP);
+	}
 }
 
 std::shared_ptr<Texture> Model::loadTexture(std::string path, Texture::Type type) {
@@ -202,4 +207,5 @@ Model::Model(std::string_view path, Type type, int flags):
 		maxbb(glm::vec3(0.0f))
 {
 	loadModel(path);
+	textures_loaded.clear();
 }

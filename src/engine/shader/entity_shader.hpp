@@ -10,8 +10,9 @@
 class EntityShader : public Shader {
 public:
 	// texture uints for texture
-	static constexpr int DIFFUSE_UINT  = 0;
-	static constexpr int SPECULAR_UINT = 1;
+	static constexpr int DIFFUSE_UNIT  = 0;
+	static constexpr int SPECULAR_UNIT = 1;
+	static constexpr int EMISSION_UNIT = 2;
 
 private:
 	static constexpr std::string_view VERTEX_FILE = "shaders/entity.vert";
