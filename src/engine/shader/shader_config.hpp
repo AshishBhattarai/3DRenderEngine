@@ -9,8 +9,8 @@ namespace ShaderConfig {
 	constexpr const char* GeneralVSData			 = "GeneralVSData";
 	constexpr const char* GeneralFSData			 = "GeneralFSData";
 
-	constexpr int MAX_POINT_LIGHTS = 100;
-	constexpr int MAX_SPOT_LIGHTS  = 100;
+	constexpr int MAX_POINT_LIGHTS = 10;
+	constexpr int MAX_SPOT_LIGHTS  = 10;
 };
 
 #endif

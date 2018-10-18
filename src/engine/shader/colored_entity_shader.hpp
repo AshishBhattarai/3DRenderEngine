@@ -15,7 +15,6 @@ private:
 	GLint loc_transformMat;
 	GLint loc_normalMat;
 
-	GLint loc_materialAmbient;
 	GLint loc_materialDiffuse;
 	GLint loc_materialSpecular;
 	GLint loc_materialShininess;
@@ -34,9 +33,8 @@ public:
 	}
 
 	void loadMaterial(const MaterialMesh::Material& material) {
-		uniform3fv(loc_materialAmbient, material.ambient);
-		uniform3fv(loc_materialDiffuse, material.diffuse);
-		uniform3fv(loc_materialSpecular, material.specular);
+		uniform4fv(loc_materialDiffuse, glm::vec4(material.diffuse, 0.0f));
+		uniform4fv(loc_materialSpecular, glm::vec4(material.specular, 0.0f));
 		uniform1f(loc_materialShininess, material.shininess);
 	}
 };

@@ -127,10 +127,6 @@ void Model::loadMaterialColor(const aiMaterial* mat, MaterialMesh::Material& col
 	};
 
 	// load material rest colors
-	aiColor3D ambient(MaterialMesh::default_ambient);
-	if(aiReturn_SUCCESS != mat->Get(AI_MATKEY_COLOR_AMBIENT, ambient))
-		message("ambient");
-
 	aiColor3D diffuse(MaterialMesh::default_diffuse);
 	if(aiReturn_SUCCESS != mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse))
 		message("diffuse");
@@ -149,7 +145,6 @@ void Model::loadMaterialColor(const aiMaterial* mat, MaterialMesh::Material& col
 	mat->Get(AI_MATKEY_NAME, name);
 
 	// createing MaterialMesh::Material
-	color.ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
 	color.diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
 	color.specular = glm::vec3(specular.r, specular.g, specular.b);
 	color.shininess = shininess;

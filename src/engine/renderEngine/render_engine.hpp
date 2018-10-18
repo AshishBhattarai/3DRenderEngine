@@ -13,11 +13,11 @@
 #include "shader/entity_shader.hpp"
 #include "shader/terrain_shader.hpp"
 #include "shader/gui_shader.hpp"
-// #include "shader/skybox_shader.hpp"
 #include "shader/buffer/general_vs_ubo.hpp"
 #include "shader/buffer/general_fs_ubo.hpp"
 #include "terrain_renderer.hpp"
 #include "render_filter.hpp"
+#include "entities/point_light.hpp"
 #include "utils/type_conversion.hpp"
 
 // renders the world(everything) with help of other sub renderers
@@ -31,6 +31,10 @@ private:
 
 	static constexpr float FOG_DENSITY = 0.0038f;
 	static constexpr float FOG_GRADIENT = 20.0f;
+
+	static constexpr float D_SCENE_AMBIENT = 0.2f;
+
+	float scene_ambient;
 
 	glm::mat4 projection_mat;
 	glm::vec3 fogColor;
@@ -69,6 +73,7 @@ private:
 	// list to render
 	std::vector<Terrain*> terrains;
 	std::vector<Entity*> entities;
+	std::vector<PointLight*> pointLights;
 
 	void setProjectionMatrix();
 	// load mat Uniform binding point to the shaders(list arguments)
@@ -142,6 +147,17 @@ public:
 	GLuint getGeneralVSBinding() const {
 		return vsUBO.getBindingPoint();
 	}
+
+	float getSceneAmbient() const {
+		return scene_ambient;
+	}
+
+	void setSceneAmbient(float val) {
+		scene_ambient = val;
+		fsUBO.setAmbient(val);
+	}
+
+	void addPointLight(PointLight* light);
 };
 
 #endif

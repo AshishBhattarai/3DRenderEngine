@@ -7,14 +7,12 @@
 class MaterialMesh : public Mesh {
 public:
 	// default colors - white;
-	static constexpr float default_ambient = 0.1f;
 	static constexpr float default_diffuse = 0.5f;
 	static constexpr float default_specular = 1.0f;
 	static constexpr float default_shininess = 1.0f;
 
 	// color of the mesh
 	struct Material {
-		glm::vec3 ambient;
 		glm::vec3 diffuse;
 		glm::vec3 specular;
 		float shininess;

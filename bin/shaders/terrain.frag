@@ -3,8 +3,8 @@
 #define TILING_FACTOR 80
 #define MAX_TEXTURE_MAPS 3
 
-#define MAX_POINT_LIGHTS 100
-#define MAX_SPOT_LIGHTS 100
+#define MAX_POINT_LIGHTS 10
+#define MAX_SPOT_LIGHTS 10
 
 out vec4 FragColor;
 
@@ -20,34 +20,30 @@ vec4 texture_maps[MAX_TEXTURE_MAPS]; // 0 - diffuse, 1 - specular
 
 // color
 struct Color {
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
+	vec4 diffuse;
+	vec4 specular;
 };
 
 // lights
 // direction light
 struct DirLight {
-	vec3 direction;
+	vec4 direction;
 
 	Color color;
 };
 
 // point light
 struct PointLight {
-	vec3 position;
+	vec4 position;
+	Color color;
 
 	// attenuation factors
-	float constant;
-	float linear;
-	float quadratic;
-
-	Color color;
+	vec4 attenuation; // constant, linear, quadratic
 };
 
 // spot light
 struct SpotLight {
-	vec3 direction;
+	vec4 direction;
 	PointLight attribs;
 
 	float cutoff;
@@ -70,8 +66,10 @@ struct Material {
 uniform Material material;
 
 layout(std140) uniform GeneralFSData {
-	vec3 fogColor;
+	vec4 fogColor;
+	float ambientFactor;
 	DirLight sun;
+	PointLight pointLights[MAX_POINT_LIGHTS];
 };
 
 // calcuate light
@@ -83,16 +81,15 @@ vec3 calculateLight(Color lightColor, vec3 toLight, vec3 normal, vec3 toCamera) 
 	float specular = pow(max(dot(reflectDir, toCamera), 0.0f), material.shininess);
 
 	// combine result
-	vec3 ambientColor = lightColor.ambient * texture_maps[0].rgb;
-	vec3 diffuseColor = lightColor.diffuse * diffuse * texture_maps[0].rgb;
-	vec3 specularColor = lightColor.specular * specular * texture_maps[1].rgb;
-	return (ambientColor + diffuseColor + specularColor);
+	vec3 diffuseColor = lightColor.diffuse.xyz * diffuse * texture_maps[0].rgb;
+	vec3 specularColor = lightColor.specular.xyz * specular * texture_maps[1].rgb;
+	return (diffuseColor + specularColor);
 }
 
 // calculate directional light
 vec3 applyDirLight(DirLight light, vec3 normal, vec3 toCamera) {
 	// frag pos to light direction
-	vec3 toLight = normalize(light.direction);
+	vec3 toLight = normalize(light.direction.xyz);
 	// calculate light
 	vec3 dirLightColor = calculateLight(light.color, toLight, normal, toCamera);
 
@@ -102,31 +99,31 @@ vec3 applyDirLight(DirLight light, vec3 normal, vec3 toCamera) {
 // calculate point light
 vec3 applyPointLight(PointLight light, vec3 normal, vec3 toCamera) {
 	// frag pos to light direction
-	vec3 toLight = normalize(light.position - fs_in.fragPos);
+	vec3 toLight = normalize(light.position.xyz - fs_in.fragPos);
 	// calculate light
 	vec3 pointLightColor = calculateLight(light.color, toLight, normal, toCamera);
 
 	// attenuation
-	float dist = length(light.position - fs_in.fragPos); // distance
-	float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * (dist * dist));
+	float dist = length(light.position.xyz - fs_in.fragPos); // distance
+	float attenuation = 1.0 / (light.attenuation.x + light.attenuation.y * dist + light.attenuation.z * (dist * dist));
 
 	return pointLightColor * attenuation;
 }
 
 // calculate spotlight
-vec3 applySpotLight(SpotLight light, vec3 normal, vec3 toCamera) {
-	// frag pos to light direction
-	vec3 toLight = normalize(light.attribs.position - fs_in.fragPos);
-	// calculate light based on point light for attenuation
-	vec3 spotLightColor = applyPointLight(light.attribs, normal, toCamera);
+// vec3 applySpotLight(SpotLight light, vec3 normal, vec3 toCamera) {
+// 	// frag pos to light direction
+// 	vec3 toLight = normalize(light.attribs.position.xyz - fs_in.fragPos);
+// 	// calculate light based on point light for attenuation
+// 	vec3 spotLightColor = applyPointLight(light.attribs, normal, toCamera);
 
-	// spotlight calc
-	float theta = dot(toLight, normalize(light.direction));
-	// spotlight intensity smooth step from outerCutoff(0) to innerCuttoff(1)
-	float intensity = smoothstep(light.outerCutoff, light.cutoff, theta);
+// 	// spotlight calc
+// 	float theta = dot(toLight, normalize(light.direction.xyz));
+// 	// spotlight intensity smooth step from outerCutoff(0) to innerCuttoff(1)
+// 	float intensity = smoothstep(light.outerCutoff, light.cutoff, theta);
 
-	return spotLightColor * intensity;
-}
+// 	return spotLightColor * intensity;
+// }
 
 void main() {
 	vec3 outputColor = vec3(0.0f); // output color
@@ -154,6 +151,15 @@ void main() {
 	// apply directional light
 	outputColor = applyDirLight(sun, normal, toCamera);
 
+	// point lights
+	for(int i = 0; i < 4; ++i) {
+		if(pointLights[i].attenuation.x != 0.0f)
+			outputColor += applyPointLight(pointLights[i], normal, toCamera);
+	}
+
+	// ambinet
+	outputColor = max(outputColor, ambientFactor * texture_maps[0].xyz);
+
 	// calculate fog
-	FragColor = vec4(mix(fogColor, outputColor, fs_in.fogFactor), 1.0f);
+	FragColor = vec4(mix(fogColor.xyz, outputColor, fs_in.fogFactor), 1.0f);
 }

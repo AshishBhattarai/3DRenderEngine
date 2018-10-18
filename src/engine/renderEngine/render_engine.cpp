@@ -9,6 +9,7 @@
 #include "utils/math.hpp"
 
 RenderEngine::RenderEngine(Camera* camera, Light* sun):
+		scene_ambient(D_SCENE_AMBIENT),
 		projection_mat(1.0f),
 		fogColor(1.0f, 1.0f, 1.0f),
 		vsUBO(),
@@ -33,12 +34,19 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	// reserve space
 	entities.reserve(1000);
 	terrains.reserve(20);
+	pointLights.reserve(ShaderConfig::MAX_POINT_LIGHTS);
+	// set all point lights to 0
+	PointLight dummyLight;
+	for(int i = 0; i < ShaderConfig::MAX_POINT_LIGHTS; ++i) {
+		fsUBO.setPointLight(dummyLight, i);
+	}
 
 	setProjectionMatrix();
 	vsUBO.setFogProperty(FOG_DENSITY, FOG_GRADIENT);
 
 	// TODO: create a seperate fog class
 	fsUBO.setFogColor(fogColor);
+	fsUBO.setAmbient(scene_ambient);
 	fsUBO.setSun(*sun);
 
 	// set uniform block binding point
@@ -154,4 +162,10 @@ void RenderEngine::render() {
 
 void RenderEngine::newFrame() {
 	gui.newFrame();
+}
+
+void RenderEngine::addPointLight(PointLight* light) {
+	if(pointLights.size() > ShaderConfig::MAX_POINT_LIGHTS) return;
+	pointLights.emplace_back(light);
+	fsUBO.setPointLight(*light, pointLights.size()-1);
 }

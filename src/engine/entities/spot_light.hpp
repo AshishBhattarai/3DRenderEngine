@@ -11,11 +11,10 @@ private:
 
 public:
 	SpotLight(glm::vec3 position = glm::vec3(0.0f), glm::vec3 direction = glm::vec3(0.0f),
-			glm::vec3 ambient = glm::vec3(0.0f), glm::vec3 diffuse = glm::vec3(0.0f),
-			glm::vec3 specular = glm::vec3(0.0f), float cutoffAngle = 0.0f,
-			float outer_cutoffAngle = 0.0f, float constant = 0.0f, float linear = 0.0f,
-			float quadratic = 0.0f) :
-			PointLight(position, ambient, diffuse, specular, constant, linear, quadratic),
+			glm::vec3 diffuse = glm::vec3(0.0f), glm::vec3 specular = glm::vec3(0.0f),
+			float cutoffAngle = 0.0f, float outer_cutoffAngle = 0.0f,
+			float constant = 0.0f, float linear = 0.0f, float quadratic = 0.0f) :
+			PointLight(position, diffuse, specular, constant, linear, quadratic),
 			direction(direction),
 			cutoffAngle(cutoffAngle),
 			outer_cutoffAngle(outer_cutoffAngle)
