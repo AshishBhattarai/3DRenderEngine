@@ -40,7 +40,7 @@ void Entity::updateAABB() {
 void Entity::makeOccludee(bool make) {
 	// faster than GL_ANY_SAMPLES_PASSED but not always accurate
 	if(make) {
-		occu_query = std::make_unique<OpenglQuery>(GL_ANY_SAMPLES_PASSED_CONSERVATIVE);
+		occu_query = std::make_unique<OpenglQuery>(GL_ANY_SAMPLES_PASSED); // GL_ANY_SAMPLES_PASSED_CONSERVATIVE opengl 4.3+
 		flags |= EntityFlags::OCCLUDEE;
 	} else {
 		occu_query.reset();
