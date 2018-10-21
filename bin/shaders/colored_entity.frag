@@ -47,6 +47,7 @@ layout(std140) uniform GeneralFSData {
 	vec4 fogColor;
 	float ambientFactor;
 	DirLight sun;
+	int numPointLight;
 	PointLight pointLights[MAX_POINT_LIGHTS];
 };
 
@@ -97,7 +98,7 @@ void main() {
 	outputColor = applyDirLight(sun, normal, toCamera);
 
 	// point lights
-	for(int i = 0; i < 4; ++i) {
+	for(int i = 0; i < numPointLight; ++i) {
 		if(pointLights[i].attenuation.x != 0.0f)
 			outputColor += applyPointLight(pointLights[i], normal, toCamera);
 	}

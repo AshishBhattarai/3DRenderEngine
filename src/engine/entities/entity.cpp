@@ -3,7 +3,7 @@
 #include "utils/math.hpp"
 
 Entity::Entity(std::shared_ptr<Model> model, const glm::vec3& position,
-		const glm::vec3& rotation, float scale, int flags) :
+		const glm::vec3& rotation, float scale, int flags, Type type) :
 	BaseEntity(position, rotation),
 	model(model),
 	minBB(model->getMinBB()),
@@ -11,12 +11,13 @@ Entity::Entity(std::shared_ptr<Model> model, const glm::vec3& position,
 	occu_query(nullptr),
 	scale(scale),
 	aabb_mesh(),
-	flags(flags)
+	flags(flags),
+	type(type)
 {}
 
 Entity::Entity(std::shared_ptr<Model> model, const glm::vec3& position,
 		const glm::vec3& rotation, float scale) :
-	Entity(model, position, rotation, scale, 0)
+	Entity(model, position, rotation, scale, 0, BASIC)
 {
 	updateAABB();
 }

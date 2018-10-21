@@ -130,8 +130,11 @@ void RenderEngine::sortEntities() {
 }
 
 void RenderEngine::clearRenderData() {
-	entities.clear(); // clear entity_map
+	entities.clear(); // clear entity_vector
 	terrains.clear(); // clear Terrain
+	for(unsigned int i = 0; i < pointLights.size(); i++)
+		fsUBO.setPointLight(PointLight(), pointLights.size());
+	pointLights.clear(); // clear pointLights
 
 	// clear dbvt
 	dbvt->clear();
@@ -145,6 +148,7 @@ void RenderEngine::render() {
 	// update global uniforms
 	vsUBO.setViewMatrix(camera->getViewMatrix());
 	vsUBO.setCameraPos(camera->getPosition());
+	fsUBO.setNumPointLight(pointLights.size());
 
 	// start render
 	prepare();
@@ -162,6 +166,22 @@ void RenderEngine::render() {
 
 void RenderEngine::newFrame() {
 	gui.newFrame();
+}
+
+	// add entites to vector
+void RenderEngine::processEntity(std::vector<std::unique_ptr<Entity>>& entities) {
+	for(auto& e : entities) {
+		Entity* entity = e.get();
+		// create a broadphase
+		btVector3 minBB = VEC3::glmToBt(entity->getMinBB());
+		btVector3 maxBB = VEC3::glmToBt(entity->getMaxBB());
+		// this->entities.push_back(entity);
+		dbvt->insert(btDbvtVolume::FromMM(minBB, maxBB), static_cast<void*>(entity));
+
+		// check if lamp
+		if(entity->getType() == Entity::LAMP)
+			addPointLight(static_cast<PointLight*>(static_cast<Lamp*>(entity)));
+	}
 }
 
 void RenderEngine::addPointLight(PointLight* light) {

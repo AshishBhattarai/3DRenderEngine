@@ -8,7 +8,7 @@ void UniformBuffer::createBuffer() {
 	glGenBuffers(1, &UBO);
 	// reserver space
 	glBindBuffer(GL_UNIFORM_BUFFER, UBO);
-	glBufferData(GL_UNIFORM_BUFFER, total_size, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, total_size, NULL, GL_STREAM_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	// set binding point
 	bindingPoint = usedBindingPoint++;

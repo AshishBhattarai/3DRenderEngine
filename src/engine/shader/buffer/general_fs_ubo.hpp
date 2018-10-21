@@ -17,16 +17,18 @@ private:
 	static constexpr int DIR_LIGHT_SIZE = 3*SIZE_VEC3;	// 64
 	static constexpr int POINT_LIGHT_SIZE = 3*SIZE_VEC3 + SIZE_VEC4; // 92
 
-	// offsets																																	// offset
-	static constexpr int FOG_COLOR_OFFSET = 0;																	//		0
+	// offsets																																				// offset
+	static constexpr int FOG_COLOR_OFFSET = 0;																				//		0
 	// scene ambient factor
-	static constexpr int AMBIENT_OFFSET = SIZE_VEC3; 														//		16
+	static constexpr int AMBIENT_OFFSET = SIZE_VEC3; 																	//		16
 	// directional light	-	dir + colors
-	static constexpr int DIR_LIGHT_OFFSET	=	AMBIENT_OFFSET + 4*SIZE_BASIC;			//	  32
+	static constexpr int DIR_LIGHT_OFFSET	=	AMBIENT_OFFSET + 4*SIZE_BASIC;						//	  32
+	// num of active point lights
+	static constexpr int NUM_POINT_LIGHT_OFFSET = DIR_LIGHT_OFFSET + DIR_LIGHT_SIZE;	//		96
 	// point lights
-	static constexpr int POINT_LIGHT_OFFSET = DIR_LIGHT_OFFSET + DIR_LIGHT_SIZE ;	//		96
+	static constexpr int POINT_LIGHT_OFFSET = NUM_POINT_LIGHT_OFFSET + 4*SIZE_BASIC;	//		112
 	// total
-	static constexpr int TOTAL_SIZE = POINT_LIGHT_OFFSET + ShaderConfig::MAX_POINT_LIGHTS * POINT_LIGHT_SIZE; // 856
+	static constexpr int TOTAL_SIZE = POINT_LIGHT_OFFSET + ShaderConfig::MAX_POINT_LIGHTS * POINT_LIGHT_SIZE; // 872
 
 public:
 	GeneralFSUBO():
@@ -49,6 +51,10 @@ public:
 		// set 2 colors
 		setBufferData(glm::value_ptr(light.getDiffuse()), DIR_LIGHT_OFFSET	+	SIZE_VEC3, SIZE_VEC3);
 		setBufferData(glm::value_ptr(light.getSpecular()), DIR_LIGHT_OFFSET	+	2*SIZE_VEC3, SIZE_VEC3);
+	}
+
+	void setNumPointLight(int num) {
+		setBufferData(&num, NUM_POINT_LIGHT_OFFSET, SIZE_BASIC);
 	}
 
 	void setPointLight(const PointLight& light, unsigned int index) {

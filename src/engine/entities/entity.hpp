@@ -19,6 +19,12 @@ namespace EntityFlags {
 }
 
 class Entity : public BaseEntity {
+public:
+	enum Type {
+		BASIC = 0,
+		LAMP	=	1
+	};
+
 private:
 	std::shared_ptr<Model> model;
 	glm::vec3 minBB;
@@ -35,9 +41,10 @@ protected:
 	float scale;
 	AABBMesh aabb_mesh;
 	int flags;
+	Type type;
 
 	Entity(std::shared_ptr<Model> model, const glm::vec3& position,
-		const glm::vec3& rotation, float scale, int flags);
+		const glm::vec3& rotation, float scale, int flags, Type type = BASIC);
 
 public:
 	Entity(std::shared_ptr<Model> model, const glm::vec3& position = glm::vec3(0.0f),
@@ -102,6 +109,10 @@ public:
 
 	bool isPhysics() const {
 		return (flags & EntityFlags::PHYSICS);
+	}
+
+	Type getType() const {
+		return type;
 	}
 };
 

@@ -18,6 +18,7 @@
 #include "terrain_renderer.hpp"
 #include "render_filter.hpp"
 #include "entities/point_light.hpp"
+#include "entities/lamp.hpp"
 #include "utils/type_conversion.hpp"
 
 // renders the world(everything) with help of other sub renderers
@@ -88,22 +89,13 @@ public:
 	RenderEngine(Camera* camera, Light* sun);
 	~RenderEngine();
 
-	// add entites to map
-	void processEntity(std::vector<std::unique_ptr<Entity>>& entities) {
-		for(auto& e : entities) {
-			Entity* entity = e.get();
-			// create a broadphase
-			btVector3 minBB = VEC3::glmToBt(entity->getMinBB());
-			btVector3 maxBB = VEC3::glmToBt(entity->getMaxBB());
-			// this->entities.push_back(entity);
-			dbvt->insert(btDbvtVolume::FromMM(minBB, maxBB), static_cast<void*>(entity));
-		}
-	}
+	// add entites to vector
+	void processEntity(std::vector<std::unique_ptr<Entity>>& entities);
 
 	// call at start for each frame
 	void newFrame();
 
-	// add Terrains to map
+	// add Terrains to vector
 	void processTerrain(Terrain* terrain) {
 		terrains.emplace_back(terrain);
 	}
