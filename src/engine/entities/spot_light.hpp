@@ -5,19 +5,17 @@
 
 class SpotLight : public PointLight {
 private:
+	static constexpr float DEFAULT_INNER_CUTOFF = 12.0f;
+	static constexpr float DEFAULT_OUTER_CUTOFF = 18.0f;
+
 	glm::vec3 direction;
-	float cutoffAngle; // indder cuttoff angle
-	float outer_cutoffAngle;
+	glm::vec2 cutoffAngle; // inner, outer cutoff
 
 public:
-	SpotLight(glm::vec3 position = glm::vec3(0.0f), glm::vec3 direction = glm::vec3(0.0f),
-			glm::vec3 diffuse = glm::vec3(0.0f), glm::vec3 specular = glm::vec3(0.0f),
-			float cutoffAngle = 0.0f, float outer_cutoffAngle = 0.0f,
-			float constant = 0.0f, float linear = 0.0f, float quadratic = 0.0f) :
-			PointLight(position, diffuse, specular, constant, linear, quadratic),
+	SpotLight(glm::vec3 position = glm::vec3(0.0f)) :
+			PointLight(position),
 			direction(direction),
-			cutoffAngle(cutoffAngle),
-			outer_cutoffAngle(outer_cutoffAngle)
+			cutoffAngle(DEFAULT_INNER_CUTOFF, DEFAULT_OUTER_CUTOFF)
 	{
 
 	}
@@ -27,25 +25,13 @@ public:
 		return direction;
 	}
 
-	float getCutoffAngle() const {
+	glm::vec2 getCutoffAngle() const {
 		return cutoffAngle;
 	}
 
-	float getOuterCutoffAngle() const {
-		return outer_cutoffAngle;
-	}
-
 	// setters
-	void setDirection(const glm::vec3& dir) {
-		direction = dir;
-	}
-
-	void setCutoffAngle(float angle) {
-		cutoffAngle = angle;
-	}
-
-	void setOuterCutoffAngle(float angle) {
-		outer_cutoffAngle = angle;
+	void setCutoffAngle(const glm::vec2& cutoffAngle) {
+		this->cutoffAngle = cutoffAngle;
 	}
 };
 

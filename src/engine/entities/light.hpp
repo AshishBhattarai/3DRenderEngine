@@ -11,11 +11,10 @@ protected:
 	glm::vec3 specular;
 
 public:
-	Light(glm::vec3 position = glm::vec3(0.0f), glm::vec3 diffuse = glm::vec3(0.0f),
-		glm::vec3 specular = glm::vec3(0.0f)) :
+	Light(glm::vec3 position = glm::vec3(0.0f)) :
 			position(position),
-			diffuse(diffuse),
-			specular(specular)
+			diffuse(0.0f),
+			specular(0.0f)
 	{
 
 	}

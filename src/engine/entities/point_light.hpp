@@ -4,46 +4,34 @@
 #include "light.hpp"
 
 class PointLight : public Light {
+
+private:
+	static constexpr float DEFAULT_CONSTANT 	= 	1.0f;
+	static constexpr float DEFAULT_LINEAR 		=		0.045f;
+	static constexpr float DEFAULT_QUADRATIC 	=		0.0075f;
+	static constexpr float DEFAULT_DISTANCE		=		100.0f;
+
 protected:
 	// attenuation factors
 	float constant;
 	float linear;
 	float quadratic;
+	glm::vec4 attenuation; // constant, linear, quadratic, distance
 
 public:
-	PointLight(glm::vec3 position = glm::vec3(0.0f),
-			glm::vec3 diffuse  = glm::vec3(0.0f),	glm::vec3 specular = glm::vec3(0.0f),
-			float constant = 0.0f, float linear = 0.0f, float quadratic = 0.0f) :
-			Light(position, diffuse, specular),
-			constant(constant),
-			linear(linear),
-			quadratic(quadratic)
+	PointLight(glm::vec3 position = glm::vec3(0.0f)) :
+			Light(position),
+			attenuation(DEFAULT_CONSTANT, DEFAULT_LINEAR, DEFAULT_QUADRATIC, DEFAULT_DISTANCE)
 	{}
 
 	// getters
-	float getConstantFactor() const {
-		return constant;
-	}
-
-	float getLinearFactor() const {
-		return linear;
-	}
-
-	float getQuadraticFactor() const {
-		return quadratic;
+	glm::vec4 getAttenuation() const {
+		return attenuation;
 	}
 
 	// setters
-	void setConstantFactor(float factor) {
-		constant = factor;
-	}
-
-	void setLinearFactor(float factor) {
-		linear = factor;
-	}
-
-	void setQuadraticFactor(float factor) {
-		quadratic = factor;
+	void setAttenuation(const glm::vec4& attenuation) {
+		this->attenuation = attenuation;
 	}
 };
 

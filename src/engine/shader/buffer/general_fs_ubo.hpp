@@ -15,7 +15,7 @@ class GeneralFSUBO : public UniformBuffer {
 private:
 	// sizes
 	static constexpr int DIR_LIGHT_SIZE = 3*SIZE_VEC3;	// 64
-	static constexpr int POINT_LIGHT_SIZE = 4*SIZE_VEC3; // 92
+	static constexpr int POINT_LIGHT_SIZE = 3*SIZE_VEC3 + SIZE_VEC4; // 92
 
 	// offsets																																	// offset
 	static constexpr int FOG_COLOR_OFFSET = 0;																	//		0
@@ -54,14 +54,13 @@ public:
 	void setPointLight(const PointLight& light, unsigned int index) {
 		if(index > ShaderConfig::MAX_POINT_LIGHTS) return;
 		int offset = POINT_LIGHT_OFFSET + index*POINT_LIGHT_SIZE;
-		glm::vec3 data = glm::vec3(light.getConstantFactor(), light.getLinearFactor(), light.getQuadraticFactor());
 
 		setBufferData(glm::value_ptr(light.getPosition()), offset, SIZE_VEC3);
 		setBufferData(glm::value_ptr(light.getDiffuse()), offset + SIZE_VEC3, SIZE_VEC3);
 		setBufferData(glm::value_ptr(light.getSpecular()), offset + 2*SIZE_VEC3, SIZE_VEC3);
 
 		offset += 3*SIZE_VEC3;
-		setBufferData(glm::value_ptr(data), offset, SIZE_VEC3);
+		setBufferData(glm::value_ptr(light.getAttenuation()), offset, SIZE_VEC4);
 	}
 };
 
