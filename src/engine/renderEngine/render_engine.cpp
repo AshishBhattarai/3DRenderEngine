@@ -27,9 +27,7 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		skyboxShader(),
 		skyboxRenderer(skyboxShader),
 		camera(camera),
-		sun(sun),
-		renderFilter(entities, terrains),
-		dbvt(new btDbvt)
+		sun(sun)
 {
 	// reserve space
 	entities.reserve(1000);
@@ -42,6 +40,8 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	}
 
 	setProjectionMatrix();
+	frustum = Math::extractViewFrustum(projection_mat, camera->getViewMatrix());
+
 	vsUBO.setFogProperty(FOG_DENSITY, FOG_GRADIENT);
 
 	// TODO: create a seperate fog class
@@ -66,9 +66,7 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	glEnable(GL_DEPTH_TEST);
 }
 
-RenderEngine::~RenderEngine() {
-	delete dbvt;
-}
+RenderEngine::~RenderEngine() {}
 
 void RenderEngine::setProjectionMatrix() {
 	// setup projection matrix
@@ -99,21 +97,6 @@ void RenderEngine::prepare() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void RenderEngine::frustumCull() {
-	// perform frustum culling
-	std::array<glm::vec4, 6> frustum = Math::extractViewFrustum(projection_mat, camera->getViewMatrix());
-	btVector3 plane_normals[6];
-	btScalar plane_offsets[6];
-
-	for(int i = 0; i < 6; ++i) {
-		// frustum[i] = glm::normalize(frustum[i]);
-		plane_normals[i] = btVector3(frustum[i].x, frustum[i].y, frustum[i].z);
-		plane_offsets[i] = btScalar(frustum[i].w);
-	}
-
-	btDbvt::collideKDOP(dbvt->m_root, plane_normals, plane_offsets, 6, renderFilter);
-}
-
 void RenderEngine::sortEntities() {
 	// sort entites
 	std::sort(entities.begin(), entities.end(), [&camera = camera](Entity* e1, Entity* e2)->bool {
@@ -135,14 +118,10 @@ void RenderEngine::clearRenderData() {
 	for(unsigned int i = 0; i < pointLights.size(); i++)
 		fsUBO.setPointLight(PointLight(), pointLights.size());
 	pointLights.clear(); // clear pointLights
-
-	// clear dbvt
-	dbvt->clear();
 }
 
 void RenderEngine::render() {
 	// optimize
-	frustumCull();
 	sortEntities();
 
 	// update global uniforms
@@ -166,17 +145,18 @@ void RenderEngine::render() {
 
 void RenderEngine::newFrame() {
 	gui.newFrame();
+	// calculate frustum planes
+	frustum = Math::extractViewFrustum(projection_mat, camera->getViewMatrix());
 }
 
 	// add entites to vector
 void RenderEngine::processEntity(std::vector<std::unique_ptr<Entity>>& entities) {
 	for(auto& e : entities) {
 		Entity* entity = e.get();
-		// create a broadphase
-		btVector3 minBB = VEC3::glmToBt(entity->getMinBB());
-		btVector3 maxBB = VEC3::glmToBt(entity->getMaxBB());
-		// this->entities.push_back(entity);
-		dbvt->insert(btDbvtVolume::FromMM(minBB, maxBB), static_cast<void*>(entity));
+
+		// check if inside view frustum
+		if(entity->getAABB().inFrustum(frustum))
+			this->entities.push_back(entity);
 
 		// check if lamp
 		if(entity->getType() == Entity::LAMP)

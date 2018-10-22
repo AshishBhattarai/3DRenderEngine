@@ -90,8 +90,16 @@ glm::vec3 PhysicsEntity::getMaxBB() const {
 	return physicsBody->getMaxBB();
 }
 
+AABB PhysicsEntity::getAABB() const {
+	return AABB(physicsBody->getMinBB(), physicsBody->getMaxBB());
+}
+
 void PhysicsEntity::updateAABB() {
-	aabb_mesh.updateData(physicsBody->getMinBB(), physicsBody->getMaxBB());
+	curr_aabb.setMinMaxBB(physicsBody->getMinBB(), physicsBody->getMaxBB());
+	if(curr_aabb == last_aabb)
+		return;
+	aabb_mesh.updateData(curr_aabb);
+	last_aabb = curr_aabb;
 }
 
 PhysicsBody* PhysicsEntity::getPhysicsBody() const {

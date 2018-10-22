@@ -16,7 +16,6 @@
 #include "shader/buffer/general_vs_ubo.hpp"
 #include "shader/buffer/general_fs_ubo.hpp"
 #include "terrain_renderer.hpp"
-#include "render_filter.hpp"
 #include "entities/point_light.hpp"
 #include "entities/lamp.hpp"
 #include "utils/type_conversion.hpp"
@@ -38,6 +37,7 @@ private:
 	float scene_ambient;
 
 	glm::mat4 projection_mat;
+	std::array<glm::vec4, 6> frustum;
 	glm::vec3 fogColor;
 
 	// uniform buffers
@@ -68,9 +68,6 @@ private:
 	Camera* camera;
 	Light* sun;
 
-	RenderFilter renderFilter;
-	btDbvt* dbvt;
-
 	// list to render
 	std::vector<Terrain*> terrains;
 	std::vector<Entity*> entities;
@@ -81,7 +78,6 @@ private:
 	void setMatUniformBinding(std::initializer_list<Shader*> list);
 	void setUniformBinding(const std::string& bname, GLuint bpoint, std::initializer_list<Shader*> list);
 	void prepare(); // prepare for rendering
-	void frustumCull();
 	void sortEntities();
 	void clearRenderData();
 

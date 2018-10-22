@@ -43,8 +43,10 @@ AABBMesh::~AABBMesh() {
 	glDeleteBuffers(1, &ibo);
 }
 
-void AABBMesh::updateData(glm::vec3 minBB, glm::vec3 maxBB) {
+void AABBMesh::updateData(const AABB& aabb) {
 	glm::vec3 vertices[24];
+	glm::vec3 minBB = aabb.getMinBB();
+	glm::vec3 maxBB = aabb.getMaxBB();
 
 	// back
 	vertices[0] = glm::vec3(minBB.x, maxBB.y, maxBB.z);

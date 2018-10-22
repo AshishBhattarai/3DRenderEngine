@@ -65,6 +65,10 @@ void EntityRenderer::renderColoredEntity(Entity* entity) {
 	}
 }
 void EntityRenderer::renderBoundingBox(Entity* entity) {
+	// update aabb mesh if non-static entity
+	if(entity->getFlags() & ~EntityFlags::STATIC)
+		entity->updateAABB();
+
 	// disable writing to frame buffer
 	glDepthMask(GL_FALSE);
 	// glDisable(GL_CULL_FACE);

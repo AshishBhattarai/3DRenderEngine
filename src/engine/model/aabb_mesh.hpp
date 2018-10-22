@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
+#include "shapes/aabb.hpp"
+
 class AABBMesh {
 private:
 	GLuint vao;
@@ -15,7 +17,7 @@ public:
 
 	~AABBMesh();
 
-	void updateData(glm::vec3 minBB, glm::vec3 maxBB);
+	void updateData(const AABB& aabb);
 
 	GLuint getVAO();
 

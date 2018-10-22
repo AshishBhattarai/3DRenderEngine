@@ -9,6 +9,7 @@
 #include "model/model.hpp"
 #include "model/aabb_mesh.hpp"
 #include "renderEngine/opengl_query.hpp"
+#include "shapes/aabb.hpp"
 
 // Represent the entities which will be rendered
 
@@ -39,9 +40,12 @@ private:
 protected:
 	// uniform scale
 	float scale;
+	AABB curr_aabb; // current aabb
+	AABB last_aabb; // last aabb - before current transformation
 	AABBMesh aabb_mesh;
 	int flags;
 	Type type;
+
 
 	Entity(std::shared_ptr<Model> model, const glm::vec3& position,
 		const glm::vec3& rotation, float scale, int flags, Type type = BASIC);
@@ -84,11 +88,15 @@ public:
 	}
 
 	virtual glm::vec3 getMinBB() const {
-		return minBB;
+		return curr_aabb.getMinBB();
 	}
 
 	virtual glm::vec3 getMaxBB() const {
-		return maxBB;
+		return curr_aabb.getMaxBB();
+	}
+
+	virtual AABB getAABB() const {
+		return curr_aabb;
 	}
 
 	AABBMesh* getAABBMesh() {

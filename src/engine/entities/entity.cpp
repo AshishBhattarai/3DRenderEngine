@@ -6,10 +6,10 @@ Entity::Entity(std::shared_ptr<Model> model, const glm::vec3& position,
 		const glm::vec3& rotation, float scale, int flags, Type type) :
 	BaseEntity(position, rotation),
 	model(model),
-	minBB(model->getMinBB()),
-	maxBB(model->getMaxBB()),
 	occu_query(nullptr),
 	scale(scale),
+	curr_aabb(model->getMinBB(), model->getMaxBB()),
+	last_aabb(curr_aabb),
 	aabb_mesh(),
 	flags(flags),
 	type(type)
@@ -17,7 +17,7 @@ Entity::Entity(std::shared_ptr<Model> model, const glm::vec3& position,
 
 Entity::Entity(std::shared_ptr<Model> model, const glm::vec3& position,
 		const glm::vec3& rotation, float scale) :
-	Entity(model, position, rotation, scale, 0, BASIC)
+	Entity(model, position, rotation, scale, EntityFlags::STATIC, BASIC)
 {
 	updateAABB();
 }
@@ -34,8 +34,11 @@ void Entity::getTransMatrix(glm::mat4& mat) {
 }
 
 void Entity::updateAABB() {
-	Math::transformAABB(position, rotation, glm::vec3(scale, scale, scale), minBB, maxBB);
-	aabb_mesh.updateData(minBB, maxBB);
+	curr_aabb.transform(position, rotation, glm::vec3(scale));
+	if(curr_aabb == last_aabb)
+		return;
+	aabb_mesh.updateData(curr_aabb);
+	last_aabb = curr_aabb;
 }
 
 void Entity::makeOccludee(bool make) {

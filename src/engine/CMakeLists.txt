@@ -10,7 +10,6 @@ add_library(engine-lib
 	renderEngine/entity_renderer.cpp
 	renderEngine/terrain_renderer.cpp
 	renderEngine/render_engine.cpp
-	renderEngine/render_filter.cpp
 	renderEngine/opengl_query.cpp
 	renderEngine/gui_renderer.cpp
 	renderEngine/skybox_renderer.cpp
@@ -52,6 +51,8 @@ add_library(engine-lib
 	physics/physics_body/static_body.cpp
 
 	gui/gui.cpp
+
+	shapes/aabb.cpp
 )
 
 target_link_libraries(
