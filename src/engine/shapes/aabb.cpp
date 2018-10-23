@@ -1,4 +1,5 @@
 #include "aabb.hpp"
+#include "utils/slogger.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -74,41 +75,23 @@ bool AABB::planeCollision(const glm::vec4& plane) {
 }
 
 bool AABB::inFrustum(const std::array<glm::vec4, 6>& frustum) {
-	glm::vec3 vmin(0.0f), vmax(0.0f);
+	glm::vec3 maxBB(0.0f);
 
 	// loop through all six planes
 	for(auto& plane : frustum) {
-		// set vmin and vmax
-		// x
-		if(plane.x < 0.0f) {
-			vmin.x = world_minBB.x;
-			vmax.x = world_maxBB.x;
-		} else {
-			vmin.x = world_maxBB.x;
-			vmax.x = world_minBB.x;
-		}
-		// y
-		if(plane.y < 0.0f) {
-			vmin.y = world_minBB.y;
-			vmax.y = world_maxBB.y;
-		} else {
-			vmin.y = world_maxBB.y;
-			vmax.y = world_minBB.y;
-		}
-		// z
-		if(plane.z < 0.0f) {
-			vmin.z = world_minBB.z;
-			vmax.z = world_maxBB.z;
-		} else {
-			vmin.z = world_maxBB.z;
-			vmax.z = world_minBB.z;
-		}
+		// set maxBB - checking if plane is on positive or negative quadrant.
+		maxBB.x = (plane.x > 0.0f)? world_maxBB.x : world_minBB.x;
+		maxBB.y = (plane.y > 0.0f)? world_maxBB.y : world_minBB.y;
+		maxBB.z = (plane.z > 0.0f)? world_maxBB.z : world_minBB.z;
 
-		if(glm::dot(glm::vec3(plane), vmin) + plane.w < 0.0f)
+		/**
+		 * Dot product between plane normal and maximum aabb point(maxBB).
+		 * if < 0.0f ie maxBB lies behind/outside the plane,
+		 * 							Hence the AABB lies outside the plane.
+		 */
+		if(glm::dot(glm::vec3(plane), maxBB) + plane.w < 0.0f)
 			return false; // outside
-
-		if(glm::dot(glm::vec3(plane), vmax) + plane.w == 0.0f)
-			return true; // intersection
 	}
+	// if not outside any of the six frustum planes
 	return true; // inside
 }
