@@ -56,8 +56,8 @@ uniform Material material;
 vec3 calculateLight(Color lightColor, vec3 toLight, vec3 normal, vec3 toCamera) {
 	float diffuse = max(dot(normal, toLight), 0.0f);
 
-	vec3 reflectDir = reflect(-toLight, normal);
-	float specular = pow(max(dot(reflectDir, toCamera), 0.0f), material.shininess);
+	vec3 halfway = normalize(toLight + toCamera);
+	float specular = pow(max(dot(normal, halfway), 0.0f), material.shininess);
 
 	vec3 diffuseColor = lightColor.diffuse.xyz * diffuse * material.color.diffuse.xyz;
 	vec3 specularColor = lightColor.specular.xyz * specular * material.color.specular.xyz;
