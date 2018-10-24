@@ -24,7 +24,7 @@ public:
 		DIFFUSE_BLUE_MAP			=			103,
 		DIFFUSE_BLACK_MAP			=			104,
 
-		CUBE_MAP							=			500
+		DIFFUSE_CUBE_MAP							=			500
 	};
 
 	// texture map
@@ -48,6 +48,7 @@ private:
 	Type type;
 	float lod_bias;
 
+	bool converSRGB();
 	void loadTexture(const std::string& path, bool flip_y);
 	void loadCubeMap(const std::array<std::string, CUBEMAP_NUM_FACES>& paths, bool flip_y);
 

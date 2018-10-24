@@ -12,7 +12,7 @@ Texture::Texture(const std::string& path, Type type, bool flip_y, float lod_bias
 
 Texture::Texture(const std::array<std::string, CUBEMAP_NUM_FACES>& paths, bool flip_y) :
 	id(0),
-	type(CUBE_MAP),
+	type(DIFFUSE_CUBE_MAP),
 	lod_bias(0)
 {
 	loadCubeMap(paths, flip_y);
@@ -23,20 +23,28 @@ Texture::~Texture() {
 	glDeleteTextures(1, &id);
 }
 
+bool Texture::converSRGB() {
+	if(type == DIFFUSE_MAP || type == DIFFUSE_BLACK_MAP ||
+			type == DIFFUSE_RED_MAP || type == DIFFUSE_GREEN_MAP ||
+			type == DIFFUSE_BLUE_MAP || type == EMISSION_MAP ||
+			type == DIFFUSE_CUBE_MAP)
+		return true;
+	return true;
+}
+
 void Texture::loadTexture(const std::string& path,  bool flip_y) {
 	// load image
 	Image image(path, flip_y);
 	if(image.failed()) return;
 
-	// type
-	GLenum type;
+	// color types
+	GLenum typeA, typeB;
 	int nrChannels = image.getNumChannels();
-	if(nrChannels == 1)
-		type = GL_RED;
-	else if(nrChannels == 3)
-		type = GL_RGB;
-	else
-		type = GL_RGBA;
+	typeB = typeA = (nrChannels == 4)? GL_RGBA : GL_RGB;
+
+	// check if texture needs to converted to RGB from sRGB
+	if(converSRGB())
+		typeA = (typeA == GL_RGB)? GL_SRGB : GL_SRGB_ALPHA;
 
 	// setup texture
 	glGenTextures(1, &id);
@@ -48,8 +56,8 @@ void Texture::loadTexture(const std::string& path,  bool flip_y) {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, lod_bias);
 
 	// load image
-	glTexImage2D(GL_TEXTURE_2D, 0, type, image.getWidth(), image.getHeight(), 0,
-			type, GL_UNSIGNED_BYTE, image.getData());
+	glTexImage2D(GL_TEXTURE_2D, 0, typeA, image.getWidth(), image.getHeight(), 0,
+		typeB, GL_UNSIGNED_BYTE, image.getData());
 	// mipmap
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -59,8 +67,6 @@ void Texture::loadCubeMap(const std::array<std::string, CUBEMAP_NUM_FACES>& path
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
-	int nrChannels;
-	GLenum type;
 	// iterate through each face
 	for(int i = 0; i < CUBEMAP_NUM_FACES; ++i) {
 		// load image
@@ -68,18 +74,18 @@ void Texture::loadCubeMap(const std::array<std::string, CUBEMAP_NUM_FACES>& path
 		if(image.failed())
 			continue;
 
-		// channels
-		nrChannels = image.getNumChannels();
-		if(nrChannels == 1)
-			type = GL_RED;
-		else if(nrChannels == 3)
-			type = GL_RGB;
-		else
-			type = GL_RGBA;
+	// color types
+	GLenum typeA, typeB;
+	int nrChannels = image.getNumChannels();
+	typeB = typeA = (nrChannels == 4)? GL_RGBA : GL_RGB;
+
+	// check if texture needs to converted to RGB from sRGB
+	if(converSRGB())
+		typeA = (typeA == GL_RGB)? GL_SRGB : GL_SRGB_ALPHA;
 
 		// load texture to cubemap
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, type,
-			image.getWidth(), image.getHeight(), 0, type, GL_UNSIGNED_BYTE, image.getData());
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, typeA,
+			image.getWidth(), image.getHeight(), 0, typeB, GL_UNSIGNED_BYTE, image.getData());
 	}
 
   // texture parameters for the cubemap
@@ -93,7 +99,7 @@ void Texture::loadCubeMap(const std::array<std::string, CUBEMAP_NUM_FACES>& path
 }
 
 void Texture::setLOD(float lod_bias) {
-	if(type == CUBE_MAP) return;
+	if(type == DIFFUSE_CUBE_MAP) return;
 
 	this->lod_bias = lod_bias;
 	glBindTexture(GL_TEXTURE_2D, id);
@@ -101,7 +107,7 @@ void Texture::setLOD(float lod_bias) {
 }
 
 void Texture::setTextureWrap(GLenum wrap) {
-	if(type == CUBE_MAP) return;
+	if(type == DIFFUSE_CUBE_MAP) return;
 
 	glBindTexture(GL_TEXTURE_2D, id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
