@@ -98,14 +98,13 @@ vec3 applyDirLight(DirLight light, vec3 normal, vec3 toCamera) {
 }
 
 // calculate point light
-vec3 applyPointLight(PointLight light, vec3 normal, vec3 toCamera) {
+vec3 applyPointLight(PointLight light, float dist, vec3 normal, vec3 toCamera) {
 	// frag pos to light direction
 	vec3 toLight = normalize(light.position.xyz - fs_in.fragPos);
 	// calculate light
 	vec3 pointLightColor = calculateLight(light.color, toLight, normal, toCamera);
 
 	// attenuation
-	float dist = length(light.position.xyz - fs_in.fragPos); // distance
 	float attenuation = 1.0 / (light.attenuation.x + light.attenuation.y * dist + light.attenuation.z * (dist * dist));
 
 	return pointLightColor * attenuation;
@@ -154,8 +153,12 @@ void main() {
 
 	// point lights
 	for(int i = 0; i < numPointLight; ++i) {
-		if(pointLights[i].attenuation.x != 0.0f)
-			outputColor += applyPointLight(pointLights[i], normal, toCamera);
+		if(pointLights[i].attenuation.x != 0.0f) {
+			// distance between light and fragment
+			float dist = length(pointLights[i].position.xyz - fs_in.fragPos);
+			if(dist < 2.0f*pointLights[i].attenuation.w)
+				outputColor += applyPointLight(pointLights[i], dist, normal, toCamera);
+		}
 	}
 
 	// ambinet

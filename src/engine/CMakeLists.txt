@@ -18,6 +18,7 @@ add_library(engine-lib
 	entities/camera.cpp
 	entities/physics_entity.cpp
 	entities/lamp.cpp
+	entities/point_light.cpp
 
 	model/model.cpp
 	model/mesh.cpp
