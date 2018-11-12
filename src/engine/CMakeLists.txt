@@ -14,6 +14,8 @@ add_library(engine-lib
 	renderEngine/gui_renderer.cpp
 	renderEngine/skybox_renderer.cpp
 
+	framebuffer/framebuffer.cpp
+
 	entities/entity.cpp
 	entities/camera.cpp
 	entities/physics_entity.cpp
