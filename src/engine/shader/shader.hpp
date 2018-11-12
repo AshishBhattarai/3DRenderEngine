@@ -23,7 +23,7 @@ public:
 	virtual ~Shader();
 
 	void start();
-	void stop();
+	static void stop();
 
 	virtual void loadTransformMatrix(const glm::mat4&) {}
 	virtual void loadNormalMatrix(const glm::mat3&) {}

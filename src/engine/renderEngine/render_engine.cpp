@@ -106,10 +106,11 @@ void RenderEngine::sortEntities() {
 		glm::vec3 x1 = e1->getPosition();
 		glm::vec3 x2 = e2->getPosition();
 
-		float dst1 = glm::dot(x1 - cp, cz);
-		float dst2 = glm::dot(x2 - cp, cz);
+		// calculate entites z position WRT camera
+		float z1 = glm::dot(x1 - cp, cz);
+		float z2 = glm::dot(x2 - cp, cz);
 
-		return dst1 > dst2; // front to back
+		return z1 > z2; // front to back
 	});
 }
 

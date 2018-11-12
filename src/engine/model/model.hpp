@@ -14,7 +14,7 @@
 namespace ModelFlags {
 	constexpr int FAKE_NORMAL = 0x1;
 	constexpr int	TRANSPARENT = 0x2;
-};
+}
 
 class Model {
 public:
