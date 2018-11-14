@@ -10,6 +10,7 @@
 
 RenderEngine::RenderEngine(Camera* camera, Light* sun):
 		scene_ambient(D_SCENE_AMBIENT),
+		numPointLights(0),
 		projection_mat(1.0f),
 		fogColor(1.0f, 1.0f, 1.0f),
 		vsUBO(),
@@ -32,7 +33,6 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	// reserve space
 	entities.reserve(1000);
 	terrains.reserve(20);
-	pointLights.reserve(ShaderConfig::MAX_POINT_LIGHTS);
 	// set all point lights to 0
 	for(int i = 0; i < ShaderConfig::MAX_POINT_LIGHTS; ++i) {
 		fsUBO.setPointLight(PointLight(), i);
@@ -116,9 +116,11 @@ void RenderEngine::sortEntities() {
 void RenderEngine::clearRenderData() {
 	entities.clear(); // clear entity_vector
 	terrains.clear(); // clear Terrain
-	for(unsigned int i = 0; i < pointLights.size(); i++)
-		fsUBO.setPointLight(PointLight(), pointLights.size()-1);
-	pointLights.clear(); // clear pointLights
+
+	// clear pointLights
+	for(unsigned int i = 0; i < numPointLights; i++)
+		fsUBO.setPointLight(PointLight(), i);
+	numPointLights = 0;
 }
 
 void RenderEngine::render() {
@@ -128,7 +130,7 @@ void RenderEngine::render() {
 	// update global uniforms
 	vsUBO.setViewMatrix(camera->getViewMatrix());
 	vsUBO.setCameraPos(camera->getPosition());
-	fsUBO.setNumPointLight(pointLights.size());
+	fsUBO.setNumPointLight(numPointLights);
 
 	// start render
 	prepare();
@@ -166,7 +168,7 @@ void RenderEngine::processEntity(std::vector<std::unique_ptr<Entity>>& entities)
 }
 
 void RenderEngine::addPointLight(PointLight* light) {
-	if(pointLights.size() >= ShaderConfig::MAX_POINT_LIGHTS) return;
-	pointLights.emplace_back(light);
-	fsUBO.setPointLight(*light, pointLights.size()-1);
+	if(numPointLights >= ShaderConfig::MAX_POINT_LIGHTS) return;
+	fsUBO.setPointLight(*light, numPointLights);
+	++numPointLights;
 }

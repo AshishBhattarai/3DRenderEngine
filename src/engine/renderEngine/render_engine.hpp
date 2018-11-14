@@ -36,6 +36,8 @@ private:
 
 	float scene_ambient;
 
+	unsigned int numPointLights; // number of point lights in the world
+
 	glm::mat4 projection_mat;
 	std::array<glm::vec4, 6> frustum;
 	glm::vec3 fogColor;
@@ -71,7 +73,7 @@ private:
 	// list to render
 	std::vector<Terrain*> terrains;
 	std::vector<Entity*> entities;
-	std::vector<PointLight*> pointLights;
+	// std::vector<PointLight*> pointLights;
 
 	void setProjectionMatrix();
 	// load mat Uniform binding point to the shaders(list arguments)
