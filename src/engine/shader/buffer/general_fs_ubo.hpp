@@ -14,8 +14,8 @@
 class GeneralFSUBO : public UniformBuffer {
 private:
 	// sizes
-	static constexpr int DIR_LIGHT_SIZE = 3*SIZE_VEC3;	// 64
-	static constexpr int POINT_LIGHT_SIZE = 3*SIZE_VEC3 + SIZE_VEC4; // 92
+	static constexpr int DIR_LIGHT_SIZE = 3*SIZE_VEC3;	// 48
+	static constexpr int POINT_LIGHT_SIZE = 3*SIZE_VEC3 + SIZE_VEC4; // 64
 
 	// offsets																																				// offset
 	static constexpr int FOG_COLOR_OFFSET = 0;																				//		0
@@ -24,11 +24,11 @@ private:
 	// directional light	-	dir + colors
 	static constexpr int DIR_LIGHT_OFFSET	=	AMBIENT_OFFSET + 4*SIZE_BASIC;						//	  32
 	// num of active point lights
-	static constexpr int NUM_POINT_LIGHT_OFFSET = DIR_LIGHT_OFFSET + DIR_LIGHT_SIZE;	//		96
+	static constexpr int NUM_POINT_LIGHT_OFFSET = DIR_LIGHT_OFFSET + DIR_LIGHT_SIZE;	//		80
 	// point lights
-	static constexpr int POINT_LIGHT_OFFSET = NUM_POINT_LIGHT_OFFSET + 4*SIZE_BASIC;	//		112
+	static constexpr int POINT_LIGHT_OFFSET = NUM_POINT_LIGHT_OFFSET + 4*SIZE_BASIC;	//		96
 	// total
-	static constexpr int TOTAL_SIZE = POINT_LIGHT_OFFSET + ShaderConfig::MAX_POINT_LIGHTS * POINT_LIGHT_SIZE; // 872
+	static constexpr int TOTAL_SIZE = POINT_LIGHT_OFFSET + ShaderConfig::MAX_POINT_LIGHTS * POINT_LIGHT_SIZE; // 736
 
 public:
 	GeneralFSUBO():
@@ -58,8 +58,7 @@ public:
 	}
 
 	void setPointLight(const PointLight& light, unsigned int index) {
-		if(index > ShaderConfig::MAX_POINT_LIGHTS) return;
-		int offset = POINT_LIGHT_OFFSET + index*POINT_LIGHT_SIZE;
+		unsigned int offset = POINT_LIGHT_OFFSET + index*POINT_LIGHT_SIZE;
 
 		setBufferData(glm::value_ptr(light.getPosition()), offset, SIZE_VEC3);
 		setBufferData(glm::value_ptr(light.getDiffuse()), offset + SIZE_VEC3, SIZE_VEC3);

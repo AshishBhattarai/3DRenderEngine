@@ -34,9 +34,8 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	terrains.reserve(20);
 	pointLights.reserve(ShaderConfig::MAX_POINT_LIGHTS);
 	// set all point lights to 0
-	PointLight dummyLight;
 	for(int i = 0; i < ShaderConfig::MAX_POINT_LIGHTS; ++i) {
-		fsUBO.setPointLight(dummyLight, i);
+		fsUBO.setPointLight(PointLight(), i);
 	}
 
 	setProjectionMatrix();
@@ -118,7 +117,7 @@ void RenderEngine::clearRenderData() {
 	entities.clear(); // clear entity_vector
 	terrains.clear(); // clear Terrain
 	for(unsigned int i = 0; i < pointLights.size(); i++)
-		fsUBO.setPointLight(PointLight(), pointLights.size());
+		fsUBO.setPointLight(PointLight(), pointLights.size()-1);
 	pointLights.clear(); // clear pointLights
 }
 
@@ -167,7 +166,7 @@ void RenderEngine::processEntity(std::vector<std::unique_ptr<Entity>>& entities)
 }
 
 void RenderEngine::addPointLight(PointLight* light) {
-	if(pointLights.size() > ShaderConfig::MAX_POINT_LIGHTS) return;
+	if(pointLights.size() >= ShaderConfig::MAX_POINT_LIGHTS) return;
 	pointLights.emplace_back(light);
 	fsUBO.setPointLight(*light, pointLights.size()-1);
 }
