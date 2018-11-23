@@ -8,7 +8,8 @@ FrameBuffer::FrameBuffer(int width, int height, unsigned int numColorAttach):
 	numColorAttach(numColorAttach),
 	color_type(NONE),
 	depth_type(NONE),
-	stencil_type(NONE)
+	stencil_type(NONE),
+	depth_stencil_type(NONE)
 {
 	if(numColorAttach)
 		color_buffer = new unsigned int[numColorAttach];
@@ -30,9 +31,26 @@ FrameBuffer::~FrameBuffer() {
 	// delete stencil attachment
 	cleanUp(stencil_type, &stencil_buffer, 1);
 
+	// delete depth_stencil attachment
+	cleanUp(depth_stencil_type, &depth_buffer, 1);
+
 	// delete framebuffer
 	glDeleteFramebuffers(1, &fbo);
 	delete[] color_buffer;
+}
+
+void FrameBuffer::use(UseType type) {
+	if(type == NORMAL) {
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	} else if(type == READ) {
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+	} else if(type == DRAW) {
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+	}
+}
+
+void FrameBuffer::useDefault() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void FrameBuffer::cleanUp(AttachType type, unsigned int* buffer, int num) {
@@ -50,7 +68,7 @@ void FrameBuffer::setColorAttachment(AttachType type) {
 		for(unsigned int i = 0; i < numColorAttach; ++i) {
 			glBindTexture(GL_TEXTURE_2D, color_buffer[i]);
 			// create an empty texture
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -65,9 +83,7 @@ void FrameBuffer::setColorAttachment(AttachType type) {
 		for(unsigned int i = 0; i < numColorAttach; ++i) {
 			// create rbo
 			glBindRenderbuffer(GL_RENDERBUFFER, color_buffer[i]);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB, width, height);
-
-			// atch rbo to fbo
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_SRGB, width, height);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+i, GL_RENDERBUFFER, color_buffer[i]);
 		}
 	}
@@ -91,23 +107,54 @@ void FrameBuffer::setDepthAttachment(AttachType type) {
 	} else if(type == RBUFFER) {
 		glGenRenderbuffers(1, &depth_buffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer);
-
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
 	}
 }
 
 void FrameBuffer::setStencilAttachment(AttachType type) {
+	stencil_type = type;
+	if(type == TEXTURE) {
+		glGenTextures(1, &stencil_buffer);
+		glBindTexture(GL_TEXTURE_2D, stencil_buffer);
+
+		// Stencil ONLY texture available only in opengl 4.4+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_STENCIL_INDEX, width, height, 0, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, stencil_buffer, 0);
+	} else if(type == RBUFFER) {
+		glGenRenderbuffers(1, &stencil_buffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, stencil_buffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencil_buffer);
+	}
 }
 
 void FrameBuffer::setDepthStencilAttachment(AttachType type) {
+	depth_stencil_type = type;
+	if(type == TEXTURE) {
+		glGenTextures(1, &depth_buffer);
+		glBindTexture(GL_TEXTURE_2D, depth_buffer);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0, GL_DEPTH24_STENCIL8, GL_UNSIGNED_INT_24_8, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, depth_buffer, 0);
+	} else if(type == RBUFFER) {
+		glGenRenderbuffers(1, &depth_buffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
+	}
 }
 
-void FrameBuffer::use() {
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-}
-
-void FrameBuffer::useDefault() {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+bool FrameBuffer::isComplete() {
+	return (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 }
