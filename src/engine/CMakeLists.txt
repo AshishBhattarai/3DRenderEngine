@@ -53,7 +53,9 @@ add_library(engine-lib
 
 	gui/gui.cpp
 
-	shapes/aabb.cpp
+	shape/aabb.cpp
+	shape/shape_mesh.cpp
+	shape/display_plane.cpp
 )
 
 target_link_libraries(

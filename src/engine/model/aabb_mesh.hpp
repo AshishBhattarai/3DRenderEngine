@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
-#include "shapes/aabb.hpp"
+#include "shape/aabb.hpp"
 
 class AABBMesh {
 private:

@@ -1,80 +1,32 @@
 #include "render_engine.hpp"
 
 SkyboxRenderer::SkyboxRenderer(SkyboxShader& shader) :
-	shader(&shader)
+	shader(&shader),
+  skybox_mesh(nullptr)
 {
-	float skyboxVertices[] = {
-  // positions
-  -1.0f,  1.0f, -1.0f,
-  -1.0f, -1.0f, -1.0f,
-   1.0f, -1.0f, -1.0f,
-   1.0f, -1.0f, -1.0f,
-   1.0f,  1.0f, -1.0f,
-  -1.0f,  1.0f, -1.0f,
+  float skyboxVertices[]  = {
+    1.0f, 1.0f, 1.0f,   1.0f,-1.0f, 1.0f,  -1.0f,-1.0f, 1.0f,  -1.0f, 1.0f, 1.0f,   // (front)
+    1.0f, 1.0f, 1.0f,   1.0f, 1.0f,-1.0f,   1.0f,-1.0f,-1.0f,   1.0f,-1.0f, 1.0f,   // (right)
+    1.0f, 1.0f, 1.0f,  -1.0f, 1.0f, 1.0f,  -1.0f, 1.0f,-1.0f,   1.0f, 1.0f,-1.0f,   // (top)
+   -1.0f, 1.0f, 1.0f,  -1.0f,-1.0f, 1.0f,  -1.0f,-1.0f,-1.0f,  -1.0f, 1.0f,-1.0f,   // (left)
+   -1.0f,-1.0f,-1.0f,  -1.0f,-1.0f, 1.0f,   1.0f,-1.0f, 1.0f,   1.0f,-1.0f,-1.0f,   // (bottom)
+    1.0f,-1.0f,-1.0f,   1.0f, 1.0f,-1.0f,  -1.0f, 1.0f,-1.0f,  -1.0f,-1.0f,-1.0f    // (back)
+  };
 
-  -1.0f, -1.0f,  1.0f,
-  -1.0f, -1.0f, -1.0f,
-  -1.0f,  1.0f, -1.0f,
-  -1.0f,  1.0f, -1.0f,
-  -1.0f,  1.0f,  1.0f,
-  -1.0f, -1.0f,  1.0f,
+  unsigned int indices[] = {
+     0, 1, 2,   2, 3, 0,    //  (front)
+     4, 5, 6,   6, 7, 4,    //  (right)
+     8, 9,10,  10,11, 8,    //  (top)
+    12,13,14,  14,15,12,    //  (left)
+    16,17,18,  18,19,16,    //  (bottom)
+    20,21,22,  22,23,20     //  (back)
+  };
 
-   1.0f, -1.0f, -1.0f,
-   1.0f, -1.0f,  1.0f,
-   1.0f,  1.0f,  1.0f,
-   1.0f,  1.0f,  1.0f,
-   1.0f,  1.0f, -1.0f,
-   1.0f, -1.0f, -1.0f,
-
-  -1.0f, -1.0f,  1.0f,
-  -1.0f,  1.0f,  1.0f,
-   1.0f,  1.0f,  1.0f,
-   1.0f,  1.0f,  1.0f,
-   1.0f, -1.0f,  1.0f,
-  -1.0f, -1.0f,  1.0f,
-
-  -1.0f,  1.0f, -1.0f,
-   1.0f,  1.0f, -1.0f,
-   1.0f,  1.0f,  1.0f,
-   1.0f,  1.0f,  1.0f,
-  -1.0f,  1.0f,  1.0f,
-  -1.0f,  1.0f, -1.0f,
-
-  -1.0f, -1.0f, -1.0f,
-  -1.0f, -1.0f,  1.0f,
-   1.0f, -1.0f, -1.0f,
-   1.0f, -1.0f, -1.0f,
-  -1.0f, -1.0f,  1.0f,
-   1.0f, -1.0f,  1.0f
-	};
-
-	// create vao, vbo
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	// load vertices
-	glBufferData(GL_ARRAY_BUFFER, sizeof skyboxVertices, skyboxVertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
-
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	glDisableVertexAttribArray(0);
+  skybox_mesh = std::make_unique<ShapeMesh>(skyboxVertices, 3, 24, false, false);
+  skybox_mesh->setIndices(indices, 36);
 }
 
-SkyboxRenderer::~SkyboxRenderer() {
-	// clean up
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	glDeleteBuffers(1, &vbo);
-	glDeleteVertexArrays(1, &vao);
-}
+SkyboxRenderer::~SkyboxRenderer() {}
 
 void SkyboxRenderer::render(Skybox* skybox) {
   glDepthFunc(GL_LEQUAL);
@@ -82,7 +34,7 @@ void SkyboxRenderer::render(Skybox* skybox) {
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->getCubemapID());
 	shader->start();
   shader->loadEnableFog(skybox->getFogEnable());
-	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(skybox_mesh->getVAO());
+  glDrawElements(GL_TRIANGLES, skybox_mesh->getCount(), GL_UNSIGNED_INT, 0);
   glDepthFunc(GL_LESS);
 }

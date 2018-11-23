@@ -9,7 +9,7 @@
 #include "model/model.hpp"
 #include "model/aabb_mesh.hpp"
 #include "renderEngine/opengl_query.hpp"
-#include "shapes/aabb.hpp"
+#include "shape/aabb.hpp"
 
 // Represent the entities which will be rendered
 
