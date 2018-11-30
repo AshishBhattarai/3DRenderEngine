@@ -29,7 +29,7 @@ bool Texture::converSRGB() {
 			type == DIFFUSE_BLUE_MAP || type == EMISSION_MAP ||
 			type == DIFFUSE_CUBE_MAP)
 		return true;
-	return true;
+	return false;
 }
 
 void Texture::loadTexture(const std::string& path,  bool flip_y) {
