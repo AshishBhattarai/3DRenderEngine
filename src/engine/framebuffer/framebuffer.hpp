@@ -1,14 +1,15 @@
 #ifndef FRAMEBUFFER_HPP
 #define FRAMEBUFFER_HPP
 
-// This class represents opengl fbo
+#include <functional>
 
+// This class represents opengl fbo
 class FrameBuffer {
 public:
 	enum AttachType {
 		NONE,
-		TEXTURE,
-		RBUFFER
+		TBUFFER, // TEXTURE BUFFER
+		RBUFFER // RENDER BUFFER
 	};
 
 	enum UseType {
@@ -37,22 +38,46 @@ private:
 	void cleanUp(AttachType type, unsigned int* buffer, int num);
 
 public:
-	FrameBuffer(int width, int height, unsigned int numColorAttach = 1);
+	FrameBuffer(int width, int height);
 	~FrameBuffer();
 
 	// set framebuffer attachments
-	void setColorAttachment(AttachType type);
+	void setColorAttachment(AttachType type, unsigned int numColorAttach = 1);
 	void setDepthAttachment(AttachType type);
 	void setStencilAttachment(AttachType type);
 	void setDepthStencilAttachment(AttachType type);
 
 	bool isComplete();
-
 	void use(UseType type = NORMAL);
 	static void useDefault();
 
+	// clean ups
+	std::function<void()> clearColorAttachment = [this]	{
+		cleanUp(color_type, color_buffer, numColorAttach);
+		color_buffer = (delete[] color_buffer, nullptr);
+	};
+	std::function<void()> clearDepthAttachment = [this]{cleanUp(depth_type, &depth_buffer, 1);};
+	std::function<void()> clearStencilAttachment = [this]{cleanUp(stencil_type, &stencil_buffer, 1);};
+	std::function<void()> clearDepthStencilAttachment = [this]{cleanUp(depth_stencil_type, &depth_buffer, 1);};
+
 	unsigned int getID() const {
 		return fbo;
+	}
+
+	unsigned int getColorID(int i = 0) const {
+		return color_buffer[i];
+	}
+
+	unsigned int getDepthID() const {
+		return depth_buffer;
+	}
+
+	unsigned int getStencilID() const {
+		return stencil_buffer;
+	}
+
+	unsigned int getDepthStencilID() const {
+		return depth_buffer;
 	}
 
 	int getWidth() const {
