@@ -63,3 +63,12 @@ void ShapeMesh::setIndices(unsigned int* data, int numIndices) {
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
+
+void ShapeMesh::draw() {
+	glBindVertexArray(VAO);
+	if(EBO)
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
+	else
+		glDrawArrays(GL_TRIANGLES, 0, count);
+	glBindVertexArray(0);
+}

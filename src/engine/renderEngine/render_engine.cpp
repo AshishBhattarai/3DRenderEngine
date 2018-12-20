@@ -63,7 +63,6 @@ RenderEngine::RenderEngine(Camera* camera, Light* sun):
 	// enables
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_FRAMEBUFFER_SRGB);
 }
 
 RenderEngine::~RenderEngine() {}

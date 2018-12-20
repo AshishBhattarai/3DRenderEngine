@@ -49,6 +49,7 @@ public:
 
 	bool isComplete();
 	void use(UseType type = NORMAL);
+	void clearBuffer();
 	static void useDefault();
 
 	// clean ups

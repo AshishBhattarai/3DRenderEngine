@@ -15,6 +15,7 @@ add_library(engine-lib
 	renderEngine/skybox_renderer.cpp
 
 	framebuffer/framebuffer.cpp
+	framebuffer/post_processor.cpp
 
 	entities/entity.cpp
 	entities/camera.cpp
@@ -37,6 +38,9 @@ add_library(engine-lib
 	shader/debug_physics_shader.cpp
 	shader/gui_shader.cpp
 	shader/skybox_shader.cpp
+
+	shader/postprocessor/visual_perception.cpp
+	shader/postprocessor/paint_effect.cpp
 
 	terrain/terrain.cpp
 	terrain/terrain_grid.cpp

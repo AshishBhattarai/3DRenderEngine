@@ -40,12 +40,20 @@ void FrameBuffer::useDefault() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void FrameBuffer::clearBuffer() {
+	unsigned int clear = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+	if(stencil_type != NONE || depth_stencil_type != NONE)
+		clear |= GL_STENCIL_BUFFER_BIT;
+	glClear(clear);
+}
+
 void FrameBuffer::cleanUp(AttachType type, unsigned int* buffer, int num) {
 	if(type == TBUFFER) {
 		glDeleteTextures(num, buffer);
 	} else if(type == RBUFFER) {
 		glDeleteRenderbuffers(num, buffer);
 	}
+	type = NONE;
 }
 
 void FrameBuffer::setColorAttachment(AttachType type, unsigned int numColorAttach) {
@@ -58,7 +66,7 @@ void FrameBuffer::setColorAttachment(AttachType type, unsigned int numColorAttac
 		for(unsigned int i = 0; i < numColorAttach; ++i) {
 			glBindTexture(GL_TEXTURE_2D, color_buffer[i]);
 			// create an empty texture
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_HALF_FLOAT, NULL);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

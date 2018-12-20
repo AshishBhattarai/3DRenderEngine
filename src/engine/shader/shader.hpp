@@ -42,6 +42,10 @@ public:
 		glUniform1f(loc, value);
 	}
 
+	void uniform2fv(int loc, const glm::vec2& value) {
+		glUniform2fv(loc, 1, glm::value_ptr(value));
+	}
+
 	void uniform3f(int loc, float x, float y, float z) {
 		glUniform3f(loc, x, y, z);
 	}

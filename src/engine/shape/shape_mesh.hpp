@@ -11,10 +11,12 @@ private:
 	int count;
 
 public:
-	ShapeMesh(float* data, int numVertex, int dim/*dimension*/, bool normal, bool texCoords);
+	ShapeMesh(float* data, int dim/*dimension*/, int numVertex, bool normal, bool texCoords);
 	~ShapeMesh();
 
 	void setIndices(unsigned int* data, int numIndices);
+
+	void draw();
 
 	unsigned int getVAO() const {
 		return VAO;
