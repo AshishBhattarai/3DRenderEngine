@@ -67,7 +67,7 @@ vec3 calculateLight(Color lightColor, vec3 toLight, vec3 normal, vec3 toCamera) 
 
 vec3 applyDirLight(DirLight light, vec3 normal, vec3 toCamera) {
 	vec3 toLight = normalize(light.direction.xyz);
-	return calculateLight(light.color, toLight, toCamera, normal);
+	return calculateLight(light.color, toLight, normal, toCamera);
 }
 
 vec3 applyPointLight(PointLight light, vec3 normal, vec3 toCamera) {

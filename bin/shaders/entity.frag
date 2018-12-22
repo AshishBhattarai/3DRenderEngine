@@ -91,9 +91,7 @@ vec3 applyDirLight(DirLight light, vec3 normal, vec3 toCamera) {
 	// frag to light direction
 	vec3 toLight = normalize(light.direction.xyz);
 	// calculate light
-	vec3 dirLightColor = calculateLight(light.color, toLight, normal, toCamera);
-
-	return dirLightColor;
+	return calculateLight(light.color, toLight, normal, toCamera);
 }
 
 // calculate point light
