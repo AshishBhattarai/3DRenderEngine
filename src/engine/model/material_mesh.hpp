@@ -20,6 +20,7 @@ public:
 	};
 
 protected:
+	static constexpr float REMOVE_GAMMA = 2.2f;
 	// mesh data
 	Material material;
 
@@ -27,6 +28,8 @@ protected:
 		std::string name = "") :
 		Mesh(vertices, indices, name)
 	{}
+
+	void removeGamma();
 
 public:
 	MaterialMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices,
@@ -39,9 +42,7 @@ public:
 		return material;
 	}
 
-	void setMaterial(Material material) {
-		material = material;
-	}
+	void setMaterial(Material material);
 };
 
 #endif
