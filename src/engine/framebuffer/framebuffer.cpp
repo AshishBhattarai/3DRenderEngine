@@ -3,6 +3,10 @@
 #include <glad/glad.h>
 
 FrameBuffer::FrameBuffer(int width, int height):
+	fbo(0),
+	color_buffer(nullptr),
+	depth_buffer(0),
+	stencil_buffer(0),
 	width(width),
 	height(height),
 	numColorAttach(0),

@@ -37,7 +37,7 @@ if(NOT USE_SHARED_BULLET3)
 	set(BUILD_CLSOCKET OFF CACHE BOOL "" FORCE)
 	set(BUILD_OPENGL3_DEMOS OFF CACHE BOOL "" FORCE)
 	set(BUILD_BULLET2_DEMOS OFF CACHE BOOL "" FORCE)
-	set(BUILD_EXTRAS OFF CACHE BOOL "" FORCE)
+	set(BUILD_EXTRAS OFF CACHE BOOL "" FORCE) # don't want/need all the extras
 	set(INSTALL_LIBS OFF CACHE BOOL "" FORCE)
 	set(BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
 	set(INSTALL_CMAKE_FILES OFF CACHE BOOL "" FORCE)
@@ -45,6 +45,7 @@ if(NOT USE_SHARED_BULLET3)
 	# version required for bullet3/extras
 	set(BULLET_VERSION "")
 	add_subdirectory(bullet3)
+	# extracting bullet version from bullet3 directory for bullet3/Extras
 	get_directory_property(BULLET_VERSION DIRECTORY bullet3 DEFINITION BULLET_VERSION)
 	add_subdirectory(bullet3/Extras/Serialize/BulletFileLoader)
 	add_subdirectory(bullet3/Extras/Serialize/BulletWorldImporter)

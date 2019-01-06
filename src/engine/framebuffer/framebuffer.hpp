@@ -55,7 +55,7 @@ public:
 	// clean ups
 	std::function<void()> clearColorAttachment = [this]	{
 		cleanUp(color_type, color_buffer, numColorAttach);
-		color_buffer = (delete[] color_buffer, nullptr);
+		if(color_buffer) color_buffer = (delete[] color_buffer, nullptr);
 	};
 	std::function<void()> clearDepthAttachment = [this]{cleanUp(depth_type, &depth_buffer, 1);};
 	std::function<void()> clearStencilAttachment = [this]{cleanUp(stencil_type, &stencil_buffer, 1);};
