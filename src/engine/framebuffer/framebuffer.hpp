@@ -52,6 +52,9 @@ public:
 	void clearBuffer();
 	static void useDefault();
 
+	void loadViewport();
+	static void loadDefaultViewport();
+
 	// clean ups
 	std::function<void()> clearColorAttachment = [this]	{
 		cleanUp(color_type, color_buffer, numColorAttach);

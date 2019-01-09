@@ -1,6 +1,7 @@
 #include "framebuffer.hpp"
 
 #include <glad/glad.h>
+#include "renderEngine/display_manager.hpp"
 
 FrameBuffer::FrameBuffer(int width, int height):
 	fbo(0),
@@ -42,6 +43,15 @@ void FrameBuffer::use(UseType type) {
 
 void FrameBuffer::useDefault() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FrameBuffer::loadViewport() {
+	glViewport(0, 0, width, height);
+}
+
+void FrameBuffer::loadDefaultViewport() {
+	DisplayManager& display = DisplayManager::getInstance();
+	glViewport(0, 0, display.getScreenWidth(), display.getScreenHeight());
 }
 
 void FrameBuffer::clearBuffer() {
