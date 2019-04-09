@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 set(OpenGL_GL_PREFERENCE "LEGACY")
 
 # options
-option(BUILD_SHARED_LIBS "build the shared libs" off)
+option(BUILD_SHARED_LIBS "build the shared libs" on)
 if(BUILD_SHARED_LIBS)
 	option(USE_SHARED_GLFW "Use the shared glfw library" off)
 	option(USE_SHARED_GLM "Use the shared glm library" off)
