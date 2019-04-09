@@ -136,8 +136,7 @@ void main() {
 	vec3 toCamera = normalize(fs_in.toCameraVector);
 
 	// load specular map - use diffuse if not available
-	texture_maps[1] = (textureSize(material.texture_specular, 0).x == 1.0f)?
-										texture_maps[0] : texture(material.texture_specular, fs_in.tex_coords);
+	texture_maps[1] = texture(material.texture_specular, fs_in.tex_coords);
 
 	// apply directional light
 	outputColor = applyDirLight(sun, normal, toCamera);
